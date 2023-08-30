@@ -19,12 +19,13 @@ return new class extends Migration
             $table->longText('descripcion');
 
             // Campos de auditoria
-            $table->string('creado_por');
-            $table->dateTime('fecha_creacion');
-            $table->string('actualizado_por');
-            $table->dateTime('fecha_actualizacion');
-            $table->string('bloqueado_por');
-            $table->dateTime('fecha_bloqueo');
+            $table->string('creado_por')->nullable();
+            $table->dateTime('fecha_creacion')->nullable();
+            $table->string('actualizado_por')->nullable();
+            $table->dateTime('fecha_actualizacion')->nullable();
+            $table->string('bloqueado_por')->nullable();
+            $table->dateTime('fecha_bloqueo')->nullable();
+            $table->timestamps();
         });
     }
 
