@@ -15,25 +15,26 @@ return new class extends Migration
 
             // Campos generales de la tabla
             $table->id('usuario_id');
-            $table->string('dui', 10)->unique();
-            $table->string('nombres', 50);
-            $table->string('apellidos', 50);
-            $table->string('telefono', 9);
-            $table->string('departamento');
-            $table->string('municipio');
-            $table->string('direccion');
-            $table->string('fecha_nacimiento');
-            $table->string('email')->unique();
-            $table->string('password');
+            $table->string('dui', 10)->unique()->nullable();
+            $table->string('nombres', 50)->nullable();
+            $table->string('apellidos', 50)->nullable();
+            $table->string('telefono', 9)->nullable();
+            $table->string('departamento')->nullable();
+            $table->string('municipio')->nullable();
+            $table->string('direccion')->nullable();
+            $table->string('fecha_nacimiento')->nullable();
+            $table->string('email')->unique()->nullable();
+            $table->string('password')->nullable();
             $table->rememberToken();
 
             // Campos de auditoria
-            $table->string('creado_por');
-            $table->dateTime('fecha_creacion');
-            $table->string('actualizado_por');
-            $table->dateTime('fecha_actualizacion');
-            $table->string('bloqueado_por');
-            $table->dateTime('fecha_bloqueo');
+            $table->string('creado_por')->nullable();
+            $table->dateTime('fecha_creacion')->nullable();
+            $table->string('actualizado_por')->nullable();
+            $table->dateTime('fecha_actualizacion')->nullable();
+            $table->string('bloqueado_por')->nullable();
+            $table->dateTime('fecha_bloqueo')->nullable();
+            $table->timestamps();
         });
     }
 
