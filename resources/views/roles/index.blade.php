@@ -1,9 +1,9 @@
 @extends('layouts/dashboard')
-@section('title', 'Administracion de menu')
+@section('title', 'Administracion de roles')
 @section('contenido')
 
     <div class="card mt-3">
-        <h5 class="card-header">Administracion del menú</h5>
+        <h5 class="card-header">Administracion del roles</h5>
         <div class="card-body">
             <a href="{{ route('menu.create') }}" class="btn btn-success mb-3">Agregar</a>
             <div class="table-responsive">
@@ -14,7 +14,7 @@
                                 <b>Role</b>
                             </th>
                             <th class="border-bottom-0">
-                                <b>Descripcion</b>
+                                <b>Descripción</b>
                             </th>
                             <th>
                                 <b>Acciones</b>
