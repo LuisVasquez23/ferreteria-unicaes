@@ -34,7 +34,7 @@
                             <span class="hide-menu">Home</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ route('dashboard') }}" aria-expanded="false">
+                            <a class="sidebar-link" href="/dashboard" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-layout-dashboard"></i>
                                 </span>
@@ -43,40 +43,37 @@
                         </li>
                         <li class="nav-small-cap">
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                            <span class="hide-menu">Administracion</span>
+                            <span class="hide-menu">Menu</span>
                         </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="./ui-buttons.html" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-folder"></i>
-                                </span>
-                                <span class="hide-menu">Categorias</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="./ui-alerts.html" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-folder"></i>
-                                </span>
-                                <span class="hide-menu">Productos</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="./ui-card.html" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-folder"></i>
-                                </span>
-                                <span class="hide-menu">Empleados</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="./ui-forms.html" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-folder"></i>
-                                </span>
-                                <span class="hide-menu">Proveedores</span>
-                            </a>
-                        </li>
+
+                        <!-- Inicio del menu -->
+                        @foreach ($menuOptions as $option)
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{{ $option->direccion }}" aria-expanded="false">
+                                    <span>
+                                        <i class="ti ti-folder-plus"></i>
+                                    </span>
+                                    <span class="hide-menu">{{ $option->nombre }}</span>
+                                </a>
+                                @if ($option->children->count() > 0)
+                                    <ul class="ml-3">
+                                        @foreach ($option->children as $child)
+                                            <li class="sidebar-item">
+                                                <a class="sidebar-link" href="{{ $child->direccion }}"
+                                                    aria-expanded="false">
+                                                    <span>
+                                                        <i class="ti ti-folder"></i>
+                                                    </span>
+                                                    <span class="hide-menu">{{ $child->nombre }}</span>
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+                            </li>
+                        @endforeach
+                        <!-- Fin del menu -->
+
                     </ul>
                 </nav>
                 <!-- End Sidebar navigation -->
