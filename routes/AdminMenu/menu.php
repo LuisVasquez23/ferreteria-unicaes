@@ -13,7 +13,12 @@ Route::controller(AdminMenuController::class)->group(function () {
     // GET METHOD
     Route::get('/menu', 'index')->middleware(['auth', 'verified', 'checkRole:MegaAdmin'])->name('menu');
     Route::get('/menu/create', 'create')->middleware(['auth', 'verified', 'checkRole:MegaAdmin'])->name('menu.create');
+    Route::get('/menu/edit/{id}', 'create')->middleware(['auth', 'verified', 'checkRole:MegaAdmin'])->name('menu.edit');
 
     // POST METHOD
+    Route::post('/menu/create', 'store')->middleware(['auth', 'verified', 'checkRole:MegaAdmin'])->name('menu.store');
 
+
+    // DELETE METHOD
+    Route::delete('/menu/destroy', 'store')->middleware(['auth', 'verified', 'checkRole:MegaAdmin'])->name('menu.destroy');
 });

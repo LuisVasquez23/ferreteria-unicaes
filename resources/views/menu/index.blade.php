@@ -11,28 +11,43 @@
                     <thead class="text-dark fs-4">
                         <tr>
                             <th class="border-bottom-0">
-                                <h6 class="fw-semibold mb-0">Nombre</h6>
+                                <b>Nombre</b>
                             </th>
                             <th class="border-bottom-0">
-                                <h6 class="fw-semibold mb-0">Direccion</h6>
+                                <b>Direccion</b>
                             </th>
                             <th class="border-bottom-0">
-                                <h6 class="fw-semibold mb-0">Rol</h6>
+                                <b>Rol</b>
+                            </th>
+                            <th>
+                                <b>Acciones</b>
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($opcionesMenu as $opcionMenu)
                             <tr>
-                                <th class="border-bottom-0">
+                                <td class="border-bottom-0">
                                     <h6 class="fw-semibold mb-0">{{ $opcionMenu->nombre }}</h6>
-                                </th>
-                                <th class="border-bottom-0">
+                                </td>
+                                <td class="border-bottom-0">
                                     <h6 class="fw-semibold mb-0">{{ $opcionMenu->direccion }}</h6>
-                                </th>
-                                <th class="border-bottom-0">
+                                </td>
+                                <td class="border-bottom-0">
                                     <h6 class="fw-semibold mb-0">{{ $opcionMenu->role->role }}</h6>
-                                </th>
+                                </td>
+                                <td class="d-flex gap-1 justify-content-center">
+                                    <a href="{{ route('menu.edit', $opcionMenu->id) }}" class="btn btn-primary">
+                                        <i class="ti ti-pencil"></i>
+                                    </a>
+                                    <form action="{{ route('menu.destroy', $opcionMenu->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="ti ti-trash-x"></i>
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
