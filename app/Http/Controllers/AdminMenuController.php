@@ -63,6 +63,58 @@ class AdminMenuController extends Controller
         $menu->save();
 
         // Redirige a una página de éxito o donde desees después de guardar
-        return redirect()->route('menu'); // Reemplaza 'menu.index'
+        return redirect()->route('menu')->with('success', 'El registro se ha agregado con éxito.');
+    }
+
+    public function edit($id)
+    {
+        // Recupera el registro que deseas editar por su ID
+        $menuOption = MenuOption::find($id);
+        $roles = Role::all();
+        $menusOption = MenuOption::all();
+
+        // Verifica si el registro existe
+        if (!$menuOption) {
+            return redirect()->back()->with('error', 'Ha ocurrido un error. No se pudo realizar la operación.');
+        }
+
+        // Puedes cargar los datos en una vista de edición
+        return view('menu.edit', compact('menuOption', 'menusOption', 'roles'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        // Validación similar a la del método 'store'
+
+        $menuOption = MenuOption::find($id);
+
+        if (!$menuOption) {
+            return redirect()->back()->with('error', 'Ha ocurrido un error. No se pudo realizar la operación.');
+        }
+
+        // Actualiza los datos del registro con los nuevos valores del formulario
+        $menuOption->nombre = $request->input('nombreOpcion');
+        $menuOption->direccion = $request->input('direccion');
+        $menuOption->parent_id = $request->input('parent_id');
+        $menuOption->role_id = $request->input('role_id');
+        $menuOption->save();
+
+        // Redirige a una página de éxito o donde desees después de actualizar
+        return redirect()->route('menu')->with('success', 'El registro se ha actualizado con éxito.');
+    }
+
+    public function destroy($id)
+    {
+        $menuOption = MenuOption::find($id);
+
+        if (!$menuOption) {
+            return redirect()->back()->with('error', 'Ha ocurrido un error. No se pudo realizar la operación.');
+        }
+
+        // Elimina el registro de la base de datos
+        $menuOption->delete();
+
+        // Redirige a una página de éxito o donde desees después de eliminar
+        return redirect()->route('menu')->with('success', 'El registro se ha eliminado con éxito.');
     }
 }

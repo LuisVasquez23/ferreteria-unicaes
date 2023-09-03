@@ -40,10 +40,11 @@
                                     <a href="{{ route('menu.edit', $opcionMenu->id) }}" class="btn btn-primary">
                                         <i class="ti ti-pencil"></i>
                                     </a>
-                                    <form action="{{ route('menu.destroy', $opcionMenu->id) }}" method="POST">
+                                    <form action="{{ route('menu.destroy', $opcionMenu->id) }}" method="POST"
+                                        id="delete-form">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger">
+                                        <button type="button" class="btn btn-danger" onclick="confirmDelete()">
                                             <i class="ti ti-trash-x"></i>
                                         </button>
                                     </form>
@@ -55,5 +56,28 @@
             </div>
         </div>
     </div>
+
+@endsection
+
+@section('AfterScript')
+    <script>
+        function confirmDelete() {
+            Swal.fire({
+                title: '¿Estás seguro en eliminar este registro?',
+                text: 'Esta acción no se puede deshacer.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Si el usuario confirma, envía el formulario de eliminación
+                    document.getElementById('delete-form').submit();
+                }
+            });
+        }
+    </script>
 
 @endsection

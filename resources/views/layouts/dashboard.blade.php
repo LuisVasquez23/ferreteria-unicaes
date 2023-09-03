@@ -8,6 +8,10 @@
     <link rel="shortcut icon" type="image/png" href="{{ asset('images/logos/favicon.png') }}" />
     <link rel="stylesheet" href="{{ asset('css/styles.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}" />
+
+    <!-- Sweat alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.27/dist/sweetalert2.all.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.27/dist/sweetalert2.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -150,14 +154,13 @@
             </div>
         </div>
     </div>
+
     <script src="{{ asset('libs/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('js/sidebarmenu.js') }}"></script>
     <script src="{{ asset('js/app.min.js') }}"></script>
-    <script src="{{ asset('libs/apexcharts/dist/apexcharts.min.js') }}"></script>
     <script src="{{ asset('libs/simplebar/dist/simplebar.js') }}"></script>
     <script src="{{ asset('js/dashboard.js') }}"></script>
-    <script src="{{ asset('libs/jquery/dist/jquery.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             $('.custom-dropdown').on('show.bs.dropdown', function() {
@@ -174,6 +177,32 @@
             });
         });
     </script>
+
+    <script>
+        const AlertMessage = (mensaje) => {
+            Swal.fire({
+                title: 'Éxito',
+                text: mensaje,
+                icon: 'success',
+                toast: true,
+                position: 'top-end', // Puedes ajustar la posición según tus preferencias
+                showConfirmButton: false,
+                timer: 3000 // Controla la duración de la notificación en milisegundos (en este caso, 3 segundos)
+            });
+        }
+
+        // Aquí escuchamos la respuesta JSON del controlador
+        @if (session('success'))
+            AlertMessage('{{ session('success') }}');
+        @endif
+
+        @if (session('error'))
+            AlertMessage('{{ session('error') }}');
+        @endif
+    </script>
+
+    @yield('AfterScript')
+
 
 </body>
 
