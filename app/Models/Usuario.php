@@ -91,7 +91,7 @@ class Usuario extends Authenticatable
 
 	public function detalle_roles()
 	{
-		return $this->hasMany(DetalleRole::class);
+		return $this->hasMany(DetalleRole::class, 'usuario_id');
 	}
 
 	public function productos()

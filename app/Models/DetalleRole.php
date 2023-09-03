@@ -59,11 +59,11 @@ class DetalleRole extends Model
 
 	public function role()
 	{
-		return $this->belongsTo(Role::class);
+		return $this->belongsTo(Role::class, 'role_id');
 	}
 
 	public function usuario()
 	{
-		return $this->belongsTo(Usuario::class);
+		return $this->belongsTo(Usuario::class, 'usuario_id');
 	}
 }

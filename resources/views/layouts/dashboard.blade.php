@@ -48,7 +48,7 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="./ui-buttons.html" aria-expanded="false">
                                 <span>
-                                    <i class="ti ti-category"></i>
+                                    <i class="ti ti-folder"></i>
                                 </span>
                                 <span class="hide-menu">Categorias</span>
                             </a>
@@ -56,7 +56,7 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="./ui-alerts.html" aria-expanded="false">
                                 <span>
-                                    <i class="ti ti-tools"></i>
+                                    <i class="ti ti-folder"></i>
                                 </span>
                                 <span class="hide-menu">Productos</span>
                             </a>
@@ -64,7 +64,7 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="./ui-card.html" aria-expanded="false">
                                 <span>
-                                    <i class="ti ti-users"></i>
+                                    <i class="ti ti-folder"></i>
                                 </span>
                                 <span class="hide-menu">Empleados</span>
                             </a>
@@ -72,7 +72,7 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="./ui-forms.html" aria-expanded="false">
                                 <span>
-                                    <i class="ti ti-forklift"></i>
+                                    <i class="ti ti-folder"></i>
                                 </span>
                                 <span class="hide-menu">Proveedores</span>
                             </a>
