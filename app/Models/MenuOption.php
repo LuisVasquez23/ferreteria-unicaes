@@ -9,7 +9,7 @@ class MenuOption extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'role_id', 'direccion'];
+    protected $fillable = ['nombre', 'role_id', 'direccion'];
 
     public function children()
     {
@@ -19,5 +19,10 @@ class MenuOption extends Model
     public function parent()
     {
         return $this->belongsTo(MenuOption::class, 'parent_id');
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
     }
 }

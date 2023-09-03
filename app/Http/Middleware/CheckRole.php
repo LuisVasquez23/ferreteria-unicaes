@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\DetalleRole;
+use App\Models\MenuOption;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,14 +19,23 @@ class CheckRole
     public function handle($request, Closure $next, $role)
     {
         if (Auth::check()) {
+            // Obtén el usuario autenticado
             $user = Auth::user();
-            $rolDelUsuario = $user->role ? $user->role->role_name : null;
 
-            if ($rolDelUsuario === $role) {
+            // Obtén el ID del usuario
+            $userId = Auth::user()->usuario_id;
+            // Obtén todos los roles del usuario a través de la relación
+            $todosRoles = DetalleRole::where('usuario_id', $userId)->with('role')->get();
+
+            // Pluck para obtener solo el campo 'role' de la relación
+            $roles = $todosRoles->pluck('role.role')->toArray();
+
+            // Verifica si el rol proporcionado está en los roles del usuario
+            if (in_array($role, $roles)) {
                 return $next($request);
             }
         }
 
-        return redirect()->route('/');
+        return redirect()->route('dashboard');
     }
 }

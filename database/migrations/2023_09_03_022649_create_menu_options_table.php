@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('parent_id')->nullable(); // Para opciones hijas
             $table->string('nombre');
-            $table->string('direccion');
+            $table->string('direccion')->nullable();
             $table->unsignedBigInteger('role_id');
             $table->timestamps();
 

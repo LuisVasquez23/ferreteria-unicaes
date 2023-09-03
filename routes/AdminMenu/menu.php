@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\Route;
 Route::controller(AdminMenuController::class)->group(function () {
 
     // GET METHOD
-    Route::get('/menu', 'index')->middleware(['auth', 'verified'])->name('dashboard');
+    Route::get('/menu', 'index')->middleware(['auth', 'verified', 'checkRole:MegaAdmin'])->name('menu');
+    Route::get('/menu/create', 'create')->middleware(['auth', 'verified', 'checkRole:MegaAdmin'])->name('menu.create');
 
     // POST METHOD
 

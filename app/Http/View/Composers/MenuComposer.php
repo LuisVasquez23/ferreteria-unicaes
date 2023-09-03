@@ -27,6 +27,7 @@ class MenuComposer
 
             // Obtén las opciones de menú basadas en los roles del usuario
             $menuOptions = MenuOption::whereIn('role_id', $rolesIds)
+                ->whereNull('parent_id')
                 ->get();
 
             // Comparte las opciones de menú con la vista

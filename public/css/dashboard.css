@@ -1,3 +1,8 @@
 .app-header{
     box-shadow: 0px 0px 1px 1px rgba(46, 46, 46, 0.135);
 }
+
+
+.card-header{
+    background-color: rgb(232, 232, 232);
+}

@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <!-- Sidebar navigation-->
-                <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+                <nav class="sidebar-nav scroll-sidebar" data-simplebar="" id="boundary-element">
                     <ul id="sidebarnav">
                         <li class="nav-small-cap">
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
@@ -46,20 +46,42 @@
                             <span class="hide-menu">Menu</span>
                         </li>
 
-                        <!-- Inicio del menu -->
                         @foreach ($menuOptions as $option)
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="{{ $option->direccion }}" aria-expanded="false">
-                                    <span>
-                                        <i class="ti ti-folder-plus"></i>
-                                    </span>
-                                    <span class="hide-menu">{{ $option->nombre }}</span>
-                                </a>
-                                @if ($option->children->count() > 0)
-                                    <ul class="ml-3">
+                            @if ($option->children->count() <= 0)
+                                <li class="{{ 'sidebar-item' }}">
+                                    <a class="sidebar-link" href="{{ $option->direccion }}">
+                                        <span>
+                                            <i class="ti ti-folder"></i>
+                                        </span>
+                                        <span class="hide-menu">{{ $option->nombre }}</span>
+                                    </a>
+                                </li>
+                            @endif
+
+                            @if ($option->children->count() >= 1)
+                                <li class="sidebar-item dropdown custom-dropdown"
+                                    style="position: relative;display: block">
+                                    <a class="sidebar-link dropdown-toggle" data-bs-toggle="dropdown"
+                                        aria-expanded="false" href="javascript:void(0)">
+                                        <span>
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                class="icon icon-tabler icon-tabler-folder-filled" width="24"
+                                                height="24" viewBox="0 0 24 24" stroke-width="2"
+                                                stroke="currentColor" fill="none" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                <path
+                                                    d="M9 3a1 1 0 0 1 .608 .206l.1 .087l2.706 2.707h6.586a3 3 0 0 1 2.995 2.824l.005 .176v8a3 3 0 0 1 -2.824 2.995l-.176 .005h-14a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-11a3 3 0 0 1 2.824 -2.995l.176 -.005h4z"
+                                                    stroke-width="0" fill="currentColor"></path>
+                                            </svg>
+                                        </span>
+                                        <span class="hide-menu">{{ $option->nombre }}</span>
+                                    </a>
+
+                                    <ul class="ml-3 dropdown-menu w-100">
                                         @foreach ($option->children as $child)
                                             <li class="sidebar-item">
-                                                <a class="sidebar-link" href="{{ $child->direccion }}"
+                                                <a class="sidebar-link dropdown-item" href="{{ $child->direccion }}"
                                                     aria-expanded="false">
                                                     <span>
                                                         <i class="ti ti-folder"></i>
@@ -69,10 +91,10 @@
                                             </li>
                                         @endforeach
                                     </ul>
-                                @endif
-                            </li>
+
+                                </li>
+                            @endif
                         @endforeach
-                        <!-- Fin del menu -->
 
                     </ul>
                 </nav>
@@ -135,6 +157,24 @@
     <script src="{{ asset('libs/apexcharts/dist/apexcharts.min.js') }}"></script>
     <script src="{{ asset('libs/simplebar/dist/simplebar.js') }}"></script>
     <script src="{{ asset('js/dashboard.js') }}"></script>
+    <script src="{{ asset('libs/jquery/dist/jquery.min.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('.custom-dropdown').on('show.bs.dropdown', function() {
+                // Calcula la altura del menú desplegable
+                var dropdownHeight = $(this).find('.dropdown-menu').outerHeight();
+
+                // Ajusta el margen superior del contenido debajo del menú
+                $(this).next().css('margin-top', dropdownHeight + 'px');
+            });
+
+            $('.custom-dropdown').on('hide.bs.dropdown', function() {
+                // Restaura el margen superior del contenido
+                $(this).next().css('margin-top', '0');
+            });
+        });
+    </script>
+
 </body>
 
 </html>
