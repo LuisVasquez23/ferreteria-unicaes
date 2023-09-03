@@ -33,7 +33,7 @@ class AdminCategoriasController extends Controller
         ]);
 
         // Obtener el nombre del usuario autenticado como "creado_por"
-        $creadoPor = Auth::user()->name;
+        $creadoPor = Auth::user()->nombres;
 
         // Crear una nueva instancia de Categoria con los datos del formulario
         $categoria = new Categoria([
@@ -84,7 +84,7 @@ class AdminCategoriasController extends Controller
         $categoria->descripcion = $request->input('descripcion');
 
         // Obtener el nombre del usuario autenticado y asignarlo al campo "actualizado_por"
-        $categoria->actualizado_por = Auth::user()->name;
+        $categoria->actualizado_por = Auth::user()->nombres;
 
         // Guardar los cambios en la base de datos
         $categoria->save();
