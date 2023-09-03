@@ -126,13 +126,8 @@
                 </nav>
             </header>
             <!--  Header End -->
-            <div class="container-fluid">
-                <div class="card">
-                    <div class="card-body">
-                        @yield('contenido')
-                    </div>
-                </div>
-
+            <div style="padding:20px;padding-top: 80px;">
+                @yield('contenido')
             </div>
         </div>
     </div>
