@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Definir la clave foránea para la relación entre opciones y opciones hijas
-            $table->foreign('parent_id')->references('id')->on('menu_options');
+            $table->foreign('parent_id')->references('id')->on('menu_options')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('role_id')->references('role_id')->on('roles')->onDelete('cascade')->onUpdate('cascade');
         });
     }

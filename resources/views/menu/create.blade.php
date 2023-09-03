@@ -20,7 +20,7 @@
                 </div>
 
                 <div class="form-group col-md-4">
-                    <label for="direccion">URL: *</label>
+                    <label for="direccion">URL: </label>
                     <input type="text" class="form-control" name="direccion" id="direccion" required>
                     <!-- No se muestra mensaje de error para 'direccion' -->
                     @if ($errors->has('direccion'))

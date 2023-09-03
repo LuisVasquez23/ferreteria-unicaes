@@ -33,13 +33,11 @@ class AdminMenuController extends Controller
         // Define las reglas de validación
         $rules = [
             'nombreOpcion' => 'required',
-            'direccion' => 'required',
             'role_id' => 'required', 'not_in:""',
         ];
 
         $messages = [
             'nombreOpcion.required' => 'El campo "Nombre" es obligatorio.',
-            'direccion.required' => 'El campo "Direccion" es obligatorio.',
             'role_id.required' => 'Debes seleccionar un Rol en la lista desplegable.',
         ];
 
@@ -57,7 +55,7 @@ class AdminMenuController extends Controller
         // Si la validación pasa, guarda los datos y realiza otras acciones según sea necesario
         $menu = new MenuOption();
         $menu->nombre = $request->input('nombreOpcion');
-        $menu->direccion = $request->input('direccion');
+        $menu->direccion = $request->input('direccion') ?? "#";
         $menu->parent_id = $request->input('parent_id');
         $menu->role_id = $request->input('role_id');
         $menu->save();
