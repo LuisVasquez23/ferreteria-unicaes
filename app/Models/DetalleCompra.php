@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -33,6 +34,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class DetalleCompra extends Model
 {
+
+	use HasFactory;
+
 	protected $table = 'detalle_compras';
 	protected $primaryKey = 'detalle_compra_id';
 

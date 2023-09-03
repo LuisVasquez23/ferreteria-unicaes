@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -29,6 +30,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Catalogo extends Model
 {
+	use HasFactory;
+
 	protected $table = 'catalogos';
 	protected $primaryKey = 'id_catalogo';
 
