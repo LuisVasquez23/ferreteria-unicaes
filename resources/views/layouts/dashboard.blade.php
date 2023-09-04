@@ -204,11 +204,11 @@
     </script>
 
     <script>
-        const AlertMessage = (mensaje) => {
+        const AlertMessage = (mensaje, tipo) => {
             Swal.fire({
-                title: 'Éxito',
+                title: tipo === 'success' ? 'Éxito' : 'Error',
                 text: mensaje,
-                icon: 'success',
+                icon: tipo,
                 toast: true,
                 position: 'top-end', // Puedes ajustar la posición según tus preferencias
                 showConfirmButton: false,
@@ -218,11 +218,11 @@
 
         // Aquí escuchamos la respuesta JSON del controlador
         @if (session('success'))
-            AlertMessage('{{ session('success') }}');
+            AlertMessage('{{ session('success') }}', 'success');
         @endif
 
         @if (session('error'))
-            AlertMessage('{{ session('error') }}');
+            AlertMessage('{{ session('error') }}', 'error');
         @endif
     </script>
 

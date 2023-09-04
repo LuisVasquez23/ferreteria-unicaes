@@ -6,6 +6,9 @@
     <h5 class="card-header">Administración de categorías</h5>
     <div class="card-body">
         <a href="{{ route('categorias.create') }}" class="btn btn-success mb-3">Agregar</a>
+        <div class="mb-3">
+            <input type="text" id="search" class="form-control" placeholder="Buscar categoría">
+        </div>
         <div class="table-responsive">
             <table class="table text-nowrap mb-0 align-middle table-striped table-bordered">
                 <thead class="text-dark fs-4">
@@ -20,19 +23,7 @@
                             <b>Creado Por</b>
                         </th>
                         <th class="border-bottom-0">
-                            <b>Fecha Creación</b>
-                        </th>
-                        <th class="border-bottom-0">
                             <b>Actualizado Por</b>
-                        </th>
-                        <th class="border-bottom-0">
-                            <b>Fecha Actualización</b>
-                        </th>
-                        <th class="border-bottom-0">
-                            <b>Bloqueado Por</b>
-                        </th>
-                        <th class="border-bottom-0">
-                            <b>Fecha Bloqueo</b>
                         </th>
                         <th>
                             <b>Acciones</b>
@@ -52,19 +43,7 @@
                             <h6 class="fw-semibold mb-0">{{ $categoria->creado_por }}</h6>
                         </td>
                         <td class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">{{ $categoria->fecha_creacion }}</h6>
-                        </td>
-                        <td class="border-bottom-0">
                             <h6 class="fw-semibold mb-0">{{ $categoria->actualizado_por }}</h6>
-                        </td>
-                        <td class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">{{ $categoria->fecha_actualizacion }}</h6>
-                        </td>
-                        <td class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">{{ $categoria->bloqueado_por }}</h6>
-                        </td>
-                        <td class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">{{ $categoria->fecha_bloqueo }}</h6>
                         </td>
                         <td class="d-flex gap-1 justify-content-center">
                             <a href="{{ route('categorias.edit', $categoria->categoria_id) }}"
@@ -92,7 +71,80 @@
 @endsection
 
 @section('AfterScript')
+
 <script>
+       // Función para realizar la búsqueda AJAX
+       function searchCategories() {
+        console.log('searchCategories() called'); // Agrega esta línea para verificar la llamada
+
+        const query = document.getElementById('search').value;
+
+        $.ajax({
+            url: "{{ route('categorias.search') }}",
+            type: "GET",
+            data: { query: query },
+            success: function (data) {
+                // Actualiza la tabla con los resultados de la búsqueda
+                updateTable(data);
+            },
+            error: function () {
+                console.log('Error al realizar la búsqueda.');
+            }
+        });
+    }
+
+    // Función para actualizar la tabla con los resultados de la búsqueda
+    function updateTable(data) {
+        const tableBody = document.querySelector('tbody');
+        tableBody.innerHTML = '';
+
+        data.forEach(function (categoria) {
+            const row = `
+                <tr>
+                    <td>${categoria.categoria}</td>
+                    <td>${categoria.descripcion}</td>
+                    <td>${categoria.creado_por}</td>
+                    <td>${categoria.actualizado_por}</td>
+                    <td>
+                        <a href="{{ route('categorias.edit', '') }}/${categoria.categoria_id}" class="btn btn-primary">
+                            <i class="ti ti-pencil"></i>
+                        </a>
+                        <form action="{{ route('categorias.destroy', '') }}/${categoria.categoria_id}" method="POST"
+                            id="delete-form-${categoria.categoria_id}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="button" class="btn btn-danger"
+                                onclick="confirmDelete(${categoria.categoria_id})">
+                                <i class="ti ti-trash-x"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            `;
+
+            tableBody.innerHTML += row;
+        });
+    }
+
+    // Manejar eventos de cambio en el campo de búsqueda
+    document.getElementById('search').addEventListener('input', function () {
+        searchCategories();
+    });
+
+    // Restaurar la tabla original cuando se borra el campo de búsqueda
+    document.getElementById('search').addEventListener('change', function () {
+        if (this.value === '') {
+            location.reload();
+        }
+    });
+
+    // Restaurar la tabla original cuando se borra el campo de búsqueda (en dispositivos móviles)
+    document.getElementById('search').addEventListener('search', function () {
+        if (this.value === '') {
+            location.reload();
+        }
+    });
+
     function confirmDelete(id) {
         Swal.fire({
             title: '¿Estás seguro?',

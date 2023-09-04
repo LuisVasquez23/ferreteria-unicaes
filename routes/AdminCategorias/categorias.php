@@ -11,6 +11,7 @@ Route::controller(AdminCategoriasController::class)->group(function () {
     Route::get('/categorias', 'index')->middleware(['auth', 'verified' ])->name('categorias');
     Route::get('/categorias/create', 'create')->middleware(['auth', 'verified'])->name('categorias.create');
     Route::get('/categorias/edit/{id}', 'edit')->middleware(['auth', 'verified' ])->name('categorias.edit');
+    Route::get('/categorias/search', 'CategoriaController@search')->middleware(['auth'])->name('categorias.search');
 
     // POST METHOD
     Route::post('/categorias/create', 'store')->middleware(['auth', 'verified' ])->name('categorias.store');
