@@ -18,24 +18,3 @@ select[name="miTabla_length"] {
    margin-bottom: 10px;
 }
 
-/* Cambiar el fondo y el color del texto de los botones de números de página */
-.dataTables_wrapper .dataTables_paginate .paginate_button {
-    background-color: #20a1fd; /* Cambiar el color de fondo */
-    color: #ffffff; /* Cambiar el color del texto */
-    border: 1px solid #20a1fd; /* Cambiar el color del borde (opcional) */
-    padding: 5px 10px; /* Ajustar el espacio interno de los botones */
-}
-
-/* Estilos para el botón de página actual */
-.dataTables_wrapper .dataTables_paginate .paginate_button.current {
-    background-color: #20a1fd; /* Cambiar el color de fondo del botón de la página actual */
-    color: #ffffff; /* Cambiar el color del texto del botón de la página actual */
-    border: 1px solid #20a1fd; /* Cambiar el color del borde del botón de la página actual (opcional) */
-}
-
-/* Cambiar el color de fondo de los botones al hacer hover */
-.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-    background-color: #ffffff; /* Cambiar el color de fondo al hacer hover */
-    color: #20a1fd; /* Cambiar el color del texto al hacer hover */
-    border: 1px solid #20a1fd; /* Cambiar el color del borde al hacer hover (opcional) */
-}

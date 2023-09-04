@@ -3,7 +3,7 @@
 @section('contenido')
 
     <div class="card mt-3">
-        <h5 class="card-header">Administracion del </h5>
+        <h5 class="card-header">Administracion del menu</h5>
         <div class="card-body">
             <a href="{{ route('menu.create') }}" class="btn btn-success mb-3">Agregar</a>
             <div class="table-responsive">
