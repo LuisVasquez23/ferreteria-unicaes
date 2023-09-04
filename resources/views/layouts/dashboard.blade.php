@@ -12,6 +12,17 @@
     <!-- Sweat alert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.27/dist/sweetalert2.all.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.27/dist/sweetalert2.min.css" rel="stylesheet">
+
+    <!-- Jquery -->
+    <script src="
+                                                https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
+                                                "></script>
+
+    <!-- DataTable -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
 </head>
 
 <body>
@@ -125,8 +136,8 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2"
                                     data-bs-toggle="dropdown" aria-expanded="false">
-                                    <img src="{{ asset('images/profile/user-1.jpg') }}" alt="" width="35"
-                                        height="35" class="rounded-circle">
+                                    <img src="{{ asset('images/profile/user-1.jpg') }}" alt=""
+                                        width="35" height="35" class="rounded-circle">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
                                     aria-labelledby="drop2">
@@ -155,12 +166,24 @@
         </div>
     </div>
 
-    <script src="{{ asset('libs/jquery/dist/jquery.min.js') }}"></script>
+
+
     <script src="{{ asset('libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('js/sidebarmenu.js') }}"></script>
     <script src="{{ asset('js/app.min.js') }}"></script>
     <script src="{{ asset('libs/simplebar/dist/simplebar.js') }}"></script>
-    <script src="{{ asset('js/dashboard.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#miTabla').DataTable({
+                "paging": true,
+                "ordering": true,
+                "searching": false,
+                "info": true
+            });
+
+        });
+    </script>
+
     <script>
         $(document).ready(function() {
             $('.custom-dropdown').on('show.bs.dropdown', function() {
