@@ -13,7 +13,7 @@ class AdminProvedoresController extends Controller
     public function index()
     {
         // Obtener el rol de "proveedor"
-        $proveedorRole = Role::where('role', 'cliente')->first();
+        $proveedorRole = Role::where('role', 'provedor')->first();
 
         // Si el rol existe, obtener todos los usuarios con ese rol
         if ($proveedorRole) {
