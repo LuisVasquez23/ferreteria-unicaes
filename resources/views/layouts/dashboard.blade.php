@@ -22,9 +22,6 @@
     <!-- DATA-TABLES CDN -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.3/datatables.min.css" />
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.3/datatables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-
-
 
 </head>
 
@@ -180,10 +177,9 @@
             $('#miTabla').DataTable({
                 "paging": true,
                 "ordering": true,
-                "searching": false,
+                "searching": true, // Habilita la función de búsqueda
                 "info": true
             });
-
         });
     </script>
 
@@ -225,7 +221,27 @@
         @if (session('error'))
             AlertMessage('{{ session('error') }}', 'error');
         @endif
+
+        function confirmDelete(id) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Esta acción no se puede deshacer.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Si el usuario confirma, envía el formulario de eliminación correspondiente
+                    document.getElementById('delete-form-' + id).submit();
+                }
+            });
+        }
     </script>
+
+
 
     @yield('AfterScript')
 
