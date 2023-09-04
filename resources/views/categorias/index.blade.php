@@ -6,11 +6,9 @@
     <h5 class="card-header">Administración de categorías</h5>
     <div class="card-body">
         <a href="{{ route('categorias.create') }}" class="btn btn-success mb-3">Agregar</a>
-        <div class="mb-3">
-            <input type="text" id="search" class="form-control" placeholder="Buscar categoría">
-        </div>
+
         <div class="table-responsive">
-            <table class="table text-nowrap mb-0 align-middle table-striped table-bordered">
+            <table id="categorias-table" class="table text-nowrap mb-0 align-middle table-striped table-bordered">
                 <thead class="text-dark fs-4">
                     <tr>
                         <th class="border-bottom-0">
@@ -71,97 +69,70 @@
 @endsection
 
 @section('AfterScript')
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script>
-       // Función para realizar la búsqueda AJAX
-       function searchCategories() {
-        console.log('searchCategories() called'); // Agrega esta línea para verificar la llamada
-
-        const query = document.getElementById('search').value;
-
-        $.ajax({
-            url: "{{ route('categorias.search') }}",
-            type: "GET",
-            data: { query: query },
-            success: function (data) {
-                // Actualiza la tabla con los resultados de la búsqueda
-                updateTable(data);
-            },
-            error: function () {
-                console.log('Error al realizar la búsqueda.');
-            }
-        });
-    }
-
-    // Función para actualizar la tabla con los resultados de la búsqueda
-    function updateTable(data) {
-        const tableBody = document.querySelector('tbody');
-        tableBody.innerHTML = '';
-
-        data.forEach(function (categoria) {
-            const row = `
-                <tr>
-                    <td>${categoria.categoria}</td>
-                    <td>${categoria.descripcion}</td>
-                    <td>${categoria.creado_por}</td>
-                    <td>${categoria.actualizado_por}</td>
-                    <td>
-                        <a href="{{ route('categorias.edit', '') }}/${categoria.categoria_id}" class="btn btn-primary">
-                            <i class="ti ti-pencil"></i>
-                        </a>
-                        <form action="{{ route('categorias.destroy', '') }}/${categoria.categoria_id}" method="POST"
-                            id="delete-form-${categoria.categoria_id}">
-                            @csrf
-                            @method('DELETE')
-                            <button type="button" class="btn btn-danger"
-                                onclick="confirmDelete(${categoria.categoria_id})">
-                                <i class="ti ti-trash-x"></i>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            `;
-
-            tableBody.innerHTML += row;
-        });
-    }
-
-    // Manejar eventos de cambio en el campo de búsqueda
-    document.getElementById('search').addEventListener('input', function () {
-        searchCategories();
+$(document).ready(function () {
+    // Inicializa DataTables en tu tabla
+    const table = $('#categorias-table').DataTable({
+        language: {
+            lengthMenu: "Mostrar _MENU_ entradas por página", // Personaliza el texto del desplegable
+        },
     });
 
-    // Restaurar la tabla original cuando se borra el campo de búsqueda
-    document.getElementById('search').addEventListener('change', function () {
-        if (this.value === '') {
-            location.reload();
+    // Aplica estilos personalizados al lengthMenu
+    $('.dataTables_length').css({
+        'margin-right': '20px', // Espacio entre el lengthMenu y el cuadro de búsqueda
+    });
+
+    // Personaliza el cuadro de búsqueda
+    $('.dataTables_filter input[type="search"]').addClass('custom-search-input');
+});
+
+// Llama a performSearch cuando el usuario escriba en el campo de búsqueda
+$('#search').on('input', function () {
+    performSearch();
+});
+
+function confirmDelete(id) {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: 'Esta acción no se puede deshacer.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Si el usuario confirma, envía el formulario de eliminación correspondiente
+            document.getElementById('delete-form-' + id).submit();
         }
     });
-
-    // Restaurar la tabla original cuando se borra el campo de búsqueda (en dispositivos móviles)
-    document.getElementById('search').addEventListener('search', function () {
-        if (this.value === '') {
-            location.reload();
-        }
-    });
-
-    function confirmDelete(id) {
-        Swal.fire({
-            title: '¿Estás seguro?',
-            text: 'Esta acción no se puede deshacer.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Si el usuario confirma, envía el formulario de eliminación correspondiente
-                document.getElementById('delete-form-' + id).submit();
-            }
-        });
-    }
+}
 </script>
+<style>
+/* Estilos personalizados para el lengthMenu */
+.dataTables_length {
+    margin-top: 20px;
+    margin-right: 5px; /* Espacio entre el lengthMenu y el cuadro de búsqueda */
+}
 
+/* Estilos para el cuadro de búsqueda */
+.custom-search-input {
+    width: 100%; /* Ancho del cuadro de búsqueda al 100% */
+    padding: 10px; /* Espacio interno */
+    border: 2px solid #ccc; /* Borde personalizado */
+    border-radius: 5px; /* Bordes redondeados */
+    background-color: #f5f5f5; /* Color de fondo */
+    font-size: 16px; /* Tamaño de fuente */
+}
+
+.custom-search-input:focus {
+    outline: none; /* Quita el contorno en enfoque */
+    border-color: #007bff; /* Cambia el color del borde en enfoque */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Agrega sombra en enfoque */
+}
+</style>
 @endsection

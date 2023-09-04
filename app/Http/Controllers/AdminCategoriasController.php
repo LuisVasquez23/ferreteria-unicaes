@@ -153,18 +153,13 @@ class AdminCategoriasController extends Controller
             return redirect()->route('categorias')->with('error', 'Ocurrió un error al eliminar la categoría.');
         }
     }
-    public function search(Request $request)
+
+   public function search(Request $request)
 {
-    $query = $request->input('query');
 
-    // Realiza la búsqueda en la base de datos
-    $categorias = Categoria::where('categoria', 'LIKE', "%$query%")
-        ->orWhere('descripcion', 'LIKE', "%$query%")
-        ->get();
-
-    // Devuelve los resultados de búsqueda en formato JSON
-    return response()->json($categorias);
 }
+
+
 
 
 }
