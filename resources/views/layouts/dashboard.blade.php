@@ -12,14 +12,21 @@
     <!-- Sweat alert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.27/dist/sweetalert2.all.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.27/dist/sweetalert2.min.css" rel="stylesheet">
-   
 
-    
-    <!-- Font Awesome CDN -->
+      <!-- Font Awesome CDN -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
    integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
    crossorigin="anonymous" referrerpolicy="no-referrer" /> 
-   
+
+    <!-- Jquery -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+
+    <!-- DataTable -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- DATA-TABLES CDN -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.3/datatables.min.css" />
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.3/datatables.min.js"></script>
 
 </head>
 
@@ -32,7 +39,7 @@
             <!-- Sidebar scroll-->
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
-                    <a href="./index.html" class="text-nowrap logo-img">
+                    <a href="{{ route('dashboard') }}" class="text-nowrap logo-img">
                         <img src="{{ asset('images/logos/dark-logo.svg') }}" width="180" alt="" />
                     </a>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
@@ -134,8 +141,8 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2"
                                     data-bs-toggle="dropdown" aria-expanded="false">
-                                    <img src="{{ asset('images/profile/user-1.jpg') }}" alt="" width="35"
-                                        height="35" class="rounded-circle">
+                                    <img src="{{ asset('images/profile/user-1.jpg') }}" alt=""
+                                        width="35" height="35" class="rounded-circle">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
                                     aria-labelledby="drop2">
@@ -164,15 +171,14 @@
         </div>
     </div>
 
-    <script src="{{ asset('libs/jquery/dist/jquery.min.js') }}"></script>
+
+
     <script src="{{ asset('libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('js/sidebarmenu.js') }}"></script>
     <script src="{{ asset('js/app.min.js') }}"></script>
     <script src="{{ asset('libs/simplebar/dist/simplebar.js') }}"></script>
     <script src="{{ asset('js/dashboard.js') }}"></script>
     <script src="{{ asset('js/helpers.js') }}"></script>
-
-
     <script>
         $(document).ready(function() {
             $('.custom-dropdown').on('show.bs.dropdown', function() {
@@ -191,11 +197,11 @@
     </script>
 
     <script>
-        const SuccessMessage = (mensaje) => {
+        const AlertMessage = (mensaje) => {
             Swal.fire({
-                title: 'Éxito',
+                title: tipo === 'success' ? 'Éxito' : 'Error',
                 text: mensaje,
-                icon: 'success',
+                icon: tipo,
                 toast: true,
                 position: 'top-end', // Puedes ajustar la posición según tus preferencias
                 showConfirmButton: false,
@@ -205,14 +211,15 @@
 
         // Aquí escuchamos la respuesta JSON del controlador
         @if (session('success'))
-            SuccessMessage('{{ session('success') }}');
+            AlertMessage('{{ session('success') }}');
         @endif
 
         @if (session('error'))
-            ErrorMessage('{{ session('error') }}');
+            AlertMessage('{{ session('error') }}');
         @endif
- 
     </script>
+
+
 
     @yield('AfterScript')
 
