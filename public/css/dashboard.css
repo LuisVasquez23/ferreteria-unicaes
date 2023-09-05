@@ -6,3 +6,15 @@
 .card-header{
     background-color: rgb(232, 232, 232);
 }
+
+.no-footer , table.dataTable thead th{
+    border-bottom: transparent !important;
+}
+
+select[name="miTabla_length"] {
+   border-radius: 5px;
+   height: 1.9rem;
+   font-size: 0.8rem;
+   margin-bottom: 10px;
+}
+

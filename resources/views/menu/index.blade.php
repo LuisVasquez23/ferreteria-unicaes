@@ -3,11 +3,11 @@
 @section('contenido')
 
     <div class="card mt-3">
-        <h5 class="card-header">Administracion del menú</h5>
+        <h5 class="card-header">Administracion del menu</h5>
         <div class="card-body">
             <a href="{{ route('menu.create') }}" class="btn btn-success mb-3">Agregar</a>
             <div class="table-responsive">
-                <table class="table text-nowrap mb-0 align-middle table-striped table-bordered">
+                <table class="table text-nowrap mb-0 align-middle table-striped table-bordered" id="miTabla">
                     <thead class="text-dark fs-4">
                         <tr>
                             <th class="border-bottom-0">
@@ -17,13 +17,13 @@
                                 <b>Nombre</b>
                             </th>
                             <th class="border-bottom-0">
-                                <b>Direccion</b>
+                                <b>Dirección</b>
                             </th>
                             <th class="border-bottom-0">
                                 <b>Rol</b>
                             </th>
                             <th class="border-bottom-0">
-                                <b>Opcion padre</b>
+                                <b>Opción padre</b>
                             </th>
                             <th>
                                 <b>Acciones</b>

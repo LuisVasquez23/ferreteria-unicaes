@@ -16,23 +16,26 @@ class CheckRole
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle($request, Closure $next, $role)
+    public function handle($request, Closure $next, ...$rolesP)
     {
         if (Auth::check()) {
             // Obtén el usuario autenticado
             $user = Auth::user();
 
             // Obtén el ID del usuario
-            $userId = Auth::user()->usuario_id;
+            $userId = $user->usuario_id;
+
             // Obtén todos los roles del usuario a través de la relación
             $todosRoles = DetalleRole::where('usuario_id', $userId)->with('role')->get();
 
             // Pluck para obtener solo el campo 'role' de la relación
             $roles = $todosRoles->pluck('role.role')->toArray();
 
-            // Verifica si el rol proporcionado está en los roles del usuario
-            if (in_array($role, $roles)) {
-                return $next($request);
+            // Verifica si el usuario tiene al menos uno de los roles permitidos
+            foreach ($rolesP as $role) {
+                if (in_array($role, $roles)) {
+                    return $next($request);
+                }
             }
         }
 
