@@ -17,12 +17,7 @@
                             <th class="border-bottom-0">
                                 <b>Descripción</b>
                             </th>
-                            <th class="border-bottom-0">
-                                <b>Creado Por</b>
-                            </th>
-                            <th class="border-bottom-0">
-                                <b>Actualizado Por</b>
-                            </th>
+
                             <th>
                                 <b>Acciones</b>
                             </th>
@@ -37,21 +32,16 @@
                                 <td class="border-bottom-0">
                                     <h6 class="fw-semibold mb-0">{{ $categoria->descripcion }}</h6>
                                 </td>
-                                <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $categoria->creado_por }}</h6>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $categoria->actualizado_por }}</h6>
-                                </td>
                                 <td class="d-flex gap-1 justify-content-center">
                                     <a href="{{ route('categorias.edit', $categoria->categoria_id) }}"
                                         class="btn btn-primary">
                                         <i class="ti ti-pencil"></i>
                                     </a>
-                                    <form action="{{ route('categorias.destroy', $categoria->categoria_id) }}"
+                                    <form action="{{ route('categorias.bloquear', $categoria->categoria_id) }}"
                                         method="POST" id="delete-form-{{ $categoria->categoria_id }}">
                                         @csrf
-                                        @method('DELETE')
+                                        @method('PUT') <!-- Agrega esta línea para indicar que es una solicitud PUT -->
+
                                         <button type="button" class="btn btn-danger"
                                             onclick="confirmDelete({{ $categoria->categoria_id }})">
                                             <i class="ti ti-trash-x"></i>

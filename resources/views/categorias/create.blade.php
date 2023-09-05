@@ -20,9 +20,13 @@
             </div>
 
             <div class="form-group col-md-8">
-                <label for="descripcion">Descripción: </label>
-                <textarea class="form-control" name="descripcion" id="descripcion"></textarea>
-                <!-- No se muestra mensaje de error para 'descripcion' -->
+                <label for="descripcion">Descripción:</label>
+                <textarea class="form-control {{ $errors->has('descripcion') ? 'is-invalid' : '' }}" name="descripcion" id="descripcion"></textarea>
+                @if ($errors->has('descripcion'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('descripcion') }}
+                    </div>
+                @endif
             </div>
 
             <div class="form-group col-md-12 mt-3">

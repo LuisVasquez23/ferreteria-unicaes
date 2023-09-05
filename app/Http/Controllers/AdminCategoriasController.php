@@ -15,8 +15,8 @@ class AdminCategoriasController extends Controller
     public function index()
     {
         try {
-            // Obtener todas las categorías desde el modelo Categoria
-            $categorias = Categoria::all();
+            // Obtener todas las categorías que no están bloqueadas
+        $categorias = Categoria::whereNull('bloqueado_por')->get();
 
             // Renderizar la vista 'categorias.index' y pasar las categorías a la vista
             return view('categorias.index', compact('categorias'));
@@ -41,24 +41,20 @@ class AdminCategoriasController extends Controller
     public function store(Request $request)
     {
         try {
-            // Validar los datos del formulario
+            // Definir mensajes de validación personalizados
+            $messages = [
+                'categoria.required' => 'El campo categoría es obligatorio.',
+                'categoria.unique' => 'La categoría ya existe en la base de datos.',
+                'descripcion.required' => 'El campo descripción es obligatorio.',
+            ];
+
+            // Validar los datos del formulario con mensajes personalizados
             $request->validate([
-                'categoria' => 'required|string|max:255',
-                'descripcion' => 'nullable|string',
-            ]);
+                'categoria' => 'required|string|max:255|unique:categorias',
+                'descripcion' => 'required|string',
+            ], $messages);
 
-            // Obtener el nombre del usuario autenticado como "creado_por"
-            $creadoPor = Auth::user()->nombres;
-
-            // Crear una nueva instancia de Categoria con los datos del formulario
-            $categoria = new Categoria([
-                'categoria' => $request->input('categoria'),
-                'descripcion' => $request->input('descripcion'),
-                'creado_por' => $creadoPor, // Establecer el nombre del usuario como "creado_por"
-            ]);
-
-            // Guardar la categoría en la base de datos
-            $categoria->save();
+            // Resto del código...
 
             // Redireccionar a la página de índice de categorías o a donde desees después de guardar
             return redirect()->route('categorias')->with('success', 'Categoría creada exitosamente.');
@@ -70,6 +66,7 @@ class AdminCategoriasController extends Controller
             return redirect()->back()->with('error', 'Ocurrió un error al crear la categoría.');
         }
     }
+
 
     public function edit($id)
     {
@@ -94,11 +91,18 @@ class AdminCategoriasController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            // Validar los datos del formulario
+            // Definir mensajes de validación personalizados
+            $messages = [
+                'categoria.required' => 'El campo categoría es obligatorio.',
+                'categoria.unique' => 'La categoría ya existe en la base de datos.',
+                'descripcion.required' => 'El campo descripción es obligatorio.',
+            ];
+
+            // Validar los datos del formulario con mensajes personalizados
             $request->validate([
-                'categoria' => 'required|string|max:255',
-                'descripcion' => 'nullable|string',
-            ]);
+                'categoria' => 'required|string|max:255|unique:categorias',
+                'descripcion' => 'required|string',
+            ], $messages);
 
             // Obtener la categoría que se va a actualizar
             $categoria = Categoria::find($id);
@@ -111,7 +115,7 @@ class AdminCategoriasController extends Controller
             // Actualizar los campos de la categoría con los datos del formulario
             $categoria->categoria = $request->input('categoria');
             $categoria->descripcion = $request->input('descripcion');
-
+            $categoria->fecha_actualizacion = now();
             // Obtener el nombre del usuario autenticado y asignarlo al campo "actualizado_por"
             $categoria->actualizado_por = Auth::user()->nombres;
 
@@ -129,7 +133,7 @@ class AdminCategoriasController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function bloquear($id)
     {
         try {
             // Obtener la categoría que se va a eliminar
@@ -141,7 +145,16 @@ class AdminCategoriasController extends Controller
             }
 
             // Eliminar la categoría de la base de datos
-            $categoria->delete();
+            //$categoria->delete();
+
+            // Cambiamos estado a bloqueado
+
+             $categoria->fecha_bloqueo = now();
+             // Obtener el nombre del usuario autenticado y asignarlo al campo "actualizado_por"
+             $categoria->bloqueado_por = Auth::user()->nombres;
+
+             // Guardar los cambios en la base de datos
+             $categoria->save();
 
             // Redireccionar a la página de índice de categorías o a donde desees después de eliminar
             return redirect()->route('categorias')->with('success', 'Categoría eliminada exitosamente.');
@@ -154,10 +167,7 @@ class AdminCategoriasController extends Controller
         }
     }
 
-   public function search(Request $request)
-{
 
-}
 
 
 
