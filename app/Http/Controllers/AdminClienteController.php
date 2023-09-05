@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DetalleRole;
 use App\Models\Role;
 use App\Models\Usuario;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -144,6 +145,8 @@ class AdminClienteController extends Controller
 
     public function edit($id)
     {
+        try {
+
         $usuario = Usuario::find($id);
 
         // Verifica si el registro existe
@@ -152,36 +155,97 @@ class AdminClienteController extends Controller
         }
 
         return view('cliente.edit', compact('usuario'));
+
+
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('clientes')->with('error', 'Error al cargar la página para editar el cliente');
+        }
     }
 
 
     
 
-    // public function update(Request $request, $id)
-    // {
-    //     // Validación similar a la del método 'store'
+    public function update(Request $request, $id)
+    {
 
-    //     $menuOption = MenuOption::find($id);
+    try{
 
-    //     if (!$menuOption) {
-    //         return redirect()->back()->with('error', 'Ha ocurrido un error. No se pudo realizar la operación.');
-    //     }
+        $cliente = Usuario::find($id);
 
-    //     // Actualiza los datos del registro con los nuevos valores del formulario
-    //     $menuOption->nombre = $request->input('nombreOpcion');
-    //     $menuOption->direccion = $request->input('direccion');
-    //     $menuOption->parent_id = $request->input('parent_id');
-    //     $menuOption->role_id = $request->input('role_id');
-    //     $menuOption->save();
+        if (!$cliente) {
+            return redirect()->back()->with('error', 'Ha ocurrido un error. No se pudo realizar la operación.');
+        }
 
-    //     // Redirige a una página de éxito o donde desees después de actualizar
-    //     return redirect()->route('menu')->with('success', 'El registro se ha actualizado con éxito.');
-    // }
+
+          // Definimos las reglas de validación
+          $rules = [
+
+            'nombre_opcion' => 'required',
+            'apellido_opcion' => 'required',
+
+            'telefono_opcion' => 'required|regex:/^\d{4}-\d{4}$/|unique:usuarios,telefono,'.$id.',usuario_id',
+
+            'departamento' => 'required',
+            'municipio' => 'required',
+
+            'direccion_opcion' => 'nullable',
+
+            'email_opcion' => 'nullable|unique:usuarios,email,'.$id.',usuario_id',
+        ];
+
+        $messages = [
+
+            'nombre_opcion.required' => 'Debes registrar al menos un nombre',
+            'apellido_opcion.required' => 'Debes registrar al menos un apellido',
+
+
+            'telefono_opcion.required' => 'El campo "Teléfono" es obligatorio.',
+            'telefono_opcion.unique' => 'Este teléfono ya está registrado en la base de datos, intenta de nuevo.',
+            'telefono_opcion.regex' => 'El campo "Teléfono" debe tener el formato correcto (por ejemplo, 7889-1256).',
+
+
+            'departamento.required' => 'Debes seleccionar un departamento.', 
+            'municipio.required' => 'Debes seleccionar un municipio.',
+
+            'email_opcion.unique' => 'El email ya está registrado en la base de datos, intenta de nuevo'
+
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->fails()) {
+            return redirect()
+                ->route('cliente.update') 
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $cliente->dui = $request->input('dui_opcion');
+        $cliente->nombres = $request->input('nombre_opcion');
+        $cliente->apellidos = $request->input('apellido_opcion');
+        $cliente->telefono = $request->input('telefono_opcion');
+        $cliente->departamento = $request->input('departamento');
+        $cliente->municipio = $request->input('municipio');
+        $cliente->direccion = $request->input('direccion_opcion');
+        $cliente->email = $request->input('email_opcion');
+        
+        $cliente->save();
+
+        return redirect()->route('clientes')->with('success', 'El registro se ha actualizado con éxito.');
+        
+
+    } catch (\Throwable $th) {
+        return redirect()->route('clientes')->with('error', 'Sucedio un error al actualizar el cliente');
+    }
+}
 
 
 
     public function destroy($id)
     {
+        try {
+
         $usuario = Usuario::find($id);
 
         if (!$usuario) {
@@ -190,7 +254,21 @@ class AdminClienteController extends Controller
 
         $usuario->delete();
 
+       
         return redirect()->route('clientes')->with('success', 'El registro se ha eliminado con éxito.');
+
+    } catch (QueryException $e) {
+        // Manejo de excepciones SQL
+        Log::error($e->getMessage());
+        return redirect()->route('clientes')->with('error', 'Error de base de datos al eliminar el cliente');
+    } catch (\Exception $e) {
+        // Manejo de otras excepciones
+        Log::error($e->getMessage());
+        return redirect()->route('clientes')->with('error', 'Error al eliminar el cliente');
     }
+   }
+
+
+
 
 }

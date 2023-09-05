@@ -2,15 +2,6 @@
 @section('title', 'Administrar clientes')
 @section('contenido')
 
-
-
-@if (session('error'))
-        <div class="alert alert-danger mt-3">
-            <i class="fas fa-exclamation-circle"></i>
-            {{ session('error') }}
-        </div>
-    @endif
-
     <div class="card mt-3">
         <h5 class="card-header">Administración de clientes</h5>
         <div class="card-body">
@@ -50,7 +41,7 @@
                                     <h6 class="fw-semibold mb-0">{{ $usuario->nombres }} , {{ $usuario->apellidos }}</h6>
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $usuario->telefono }}</h6>
+                                    <h6 class="fw-semibold mb-0">+503 {{ $usuario->telefono }}</h6>
                                 </td>
                                 <td class="border-bottom-0">
                                     <h6 class="fw-semibold mb-0">{{ $usuario->municipio }} , {{ $usuario->departamento }}</h6>

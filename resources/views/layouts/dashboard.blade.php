@@ -170,6 +170,7 @@
     <script src="{{ asset('js/app.min.js') }}"></script>
     <script src="{{ asset('libs/simplebar/dist/simplebar.js') }}"></script>
     <script src="{{ asset('js/dashboard.js') }}"></script>
+    <script src="{{ asset('js/helpers.js') }}"></script>
 
 
     <script>
@@ -190,7 +191,7 @@
     </script>
 
     <script>
-        const AlertMessage = (mensaje) => {
+        const SuccessMessage = (mensaje) => {
             Swal.fire({
                 title: 'Éxito',
                 text: mensaje,
@@ -204,12 +205,13 @@
 
         // Aquí escuchamos la respuesta JSON del controlador
         @if (session('success'))
-            AlertMessage('{{ session('success') }}');
+            SuccessMessage('{{ session('success') }}');
         @endif
 
         @if (session('error'))
-            AlertMessage('{{ session('error') }}');
+            ErrorMessage('{{ session('error') }}');
         @endif
+ 
     </script>
 
     @yield('AfterScript')
