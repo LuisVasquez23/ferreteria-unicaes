@@ -42,8 +42,7 @@ require __DIR__ . '/auth.php';
 
 require __DIR__ . '/AdminMenu/menu.php';
 require __DIR__ . '/AdminRoles/roles.php';
-
-
-require __DIR__ . '/AdminProvedores/provedores.php';
-
+require __DIR__ . '/AdminCliente/cliente.php';
 require __DIR__ . '/AdminCategorias/categorias.php';
+require __DIR__ . '/AdminPerfiles/perfiles.php';
+require __DIR__ . '/AdminProvedores/provedores.php';
