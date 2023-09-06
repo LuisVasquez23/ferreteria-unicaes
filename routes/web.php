@@ -43,3 +43,7 @@ require __DIR__ . '/auth.php';
 require __DIR__ . '/AdminMenu/menu.php';
 require __DIR__ . '/AdminRoles/roles.php';
 require __DIR__ . '/AdminCategorias/categorias.php';
+
+
+
+require __DIR__ . '/AdminPeriodos/periodos.php';
