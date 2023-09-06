@@ -23,6 +23,11 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.3/datatables.min.css" />
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.3/datatables.min.js"></script>
 
+     <!-- Font Awesome CDN -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+   integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+   crossorigin="anonymous" referrerpolicy="no-referrer" /> 
+
 </head>
 
 <body>
@@ -142,10 +147,10 @@
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
                                     aria-labelledby="drop2">
                                     <div class="message-body" style="position: relative">
-                                        <a href="javascript:void(0)"
+                                        <a href="{{route('perfiles')}}"
                                             class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">My Profile</p>
+                                            <p class="mb-0 fs-3">Mi Perfil</p>
                                         </a>
                                         <form action="{{ route('logout') }}" method="POST">
                                             @csrf
@@ -172,6 +177,7 @@
     <script src="{{ asset('js/sidebarmenu.js') }}"></script>
     <script src="{{ asset('js/app.min.js') }}"></script>
     <script src="{{ asset('libs/simplebar/dist/simplebar.js') }}"></script>
+    <script src="{{ asset('js/helpers.js') }}"></script>
     <script>
         $(document).ready(function() {
             $('#miTabla').DataTable({
@@ -239,6 +245,45 @@
                 }
             });
         }
+
+
+            function confirmBlock(id) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Esta acción bloqueará el registro.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, bloquear',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('block-form-' + id).submit();
+                }
+            });
+        }
+
+
+        function confirmUnblock(id) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Esta acción desbloqueará el registro.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, desbloquear',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('unblock-form-' + id).submit();
+                }
+            });
+        }
+
+    
+
     </script>
 
 
