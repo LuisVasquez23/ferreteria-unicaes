@@ -21,4 +21,6 @@ Route::controller(AdminCategoriasController::class)->group(function () {
 
     // DELETE METHOD
     Route::put('/categorias/bloquear/{id}', 'bloquear')->middleware(['auth', 'verified'])->name('categorias.bloquear');
+    Route::put('/categorias/unblock/{id}', 'unblock')->middleware(['auth', 'verified'])->name('categorias.unblock');
+
 });

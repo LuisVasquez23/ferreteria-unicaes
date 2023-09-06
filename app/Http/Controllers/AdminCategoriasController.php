@@ -7,21 +7,26 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
+
 
 
 
 class AdminCategoriasController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
-            // Obtener todas las categorías que no están bloqueadas
-        $categorias = Categoria::whereNull('bloqueado_por')->get();
+            $filtro = $request->input('filtro', 'no-bloqueados');
 
-            // Renderizar la vista 'categorias.index' y pasar las categorías a la vista
-            return view('categorias.index', compact('categorias'));
+            if ($filtro === 'bloqueados') {
+                $categorias = Categoria::whereNotNull('bloqueado_por')->get();
+            } else {
+                $categorias = Categoria::whereNull('bloqueado_por')->get();
+            }
+
+            return view('categorias.index', compact('categorias', 'filtro'));
         } catch (\Exception $e) {
-            // Manejar la excepción de alguna manera
             return back()->withError('Error al obtener las categorías: ' . $e->getMessage());
         }
     }
@@ -164,6 +169,34 @@ class AdminCategoriasController extends Controller
         } catch (\Exception $e) {
             // Manejar otras excepciones generales
             return redirect()->route('categorias')->with('error', 'Ocurrió un error al eliminar la categoría.');
+        }
+    }
+
+    public function unblock($id)
+    {
+        try {
+            // Buscar la categoría por su ID
+            $categoria = Categoria::find($id);
+
+            // Verificar si la categoría está bloqueada
+            if (!$categoria->bloqueado_por) {
+                return redirect()->route('categorias')->with('error', 'La categoría no está bloqueada.');
+            }
+
+            // Desbloquear la categoría
+            $categoria->bloqueado_por = null;
+            $categoria->fecha_actualizacion = now();
+            $categoria->actualizado_por = Auth::user()->nombres;
+            $categoria->fecha_bloqueo = null;
+
+            // Guardar los cambios
+            $categoria->save();
+
+            return redirect()->route('categorias')->with('success', 'La categoría ha sido desbloqueada con éxito.');
+
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('categorias')->with('error', 'Error al desbloquear la categoría.');
         }
     }
 
