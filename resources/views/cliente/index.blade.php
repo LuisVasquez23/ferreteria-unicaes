@@ -10,8 +10,18 @@
                 Registrar Cliente
             
             </a>
+
+            <div class="col-md-4 mx-auto text-center">
+                <label class="mb-2" for="filtro-bloqueo">Filtrar por Estado:</label>
+                <select id="filtro-bloqueo" class="form-select">
+                    <option>Seleccionar...</option>
+                    <option value="no-bloqueados">No Bloqueados</option>
+                    <option value="bloqueados">Bloqueados</option>
+                </select>
+            </div>
+
             <div class="table-responsive">
-                <table class="table text-nowrap mb-0 align-middle table-striped table-bordered">
+                <table id="miTabla" class="table text-nowrap mb-0 align-middle table-striped table-bordered">
                     <thead class="text-dark fs-4">
                         <tr>
                             <th class="border-bottom-0">
@@ -32,33 +42,61 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($usuarios as $usuario)
+                        @foreach ($clientes as $cliente)
                             <tr>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $usuario->dui }}</h6>
+                                    <h6 class="fw-semibold mb-0">{{ $cliente->dui }}</h6>
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $usuario->nombres }} , {{ $usuario->apellidos }}</h6>
+                                    <h6 class="fw-semibold mb-0">{{ $cliente->nombres }} , {{ $cliente->apellidos }}</h6>
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">+503 {{ $usuario->telefono }}</h6>
+                                    <h6 class="fw-semibold mb-0">+503 {{ $cliente->telefono }}</h6>
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $usuario->municipio }} , {{ $usuario->departamento }}</h6>
+                                    <h6 class="fw-semibold mb-0">{{ $cliente->municipio }} , {{ $cliente->departamento }}</h6>
                                 </td>
                                 <td class="d-flex gap-1 justify-content-center">
-                                    <a href="{{ route('cliente.edit', $usuario->usuario_id) }}" class="btn btn-primary">
+                                    
+                                    @if ($filtro !== 'bloqueados')
+
+                                    <a href="{{ route('cliente.edit', $cliente->usuario_id) }}" class="btn btn-primary">
                                         <i class="ti ti-pencil"></i>
                                     </a>
-                                    <form action="{{ route('cliente.destroy', $usuario->usuario_id) }}" method="POST"
-                                        id="delete-form-{{ $usuario->usuario_id }}">
+                                    
+                                    @endif
+
+                                    @if ($filtro !== 'bloqueados')
+
+                                    <form action="{{ route('cliente.destroy', $cliente->usuario_id) }}" method="POST"
+                                        id="block-form-{{ $cliente->usuario_id }}">
                                         @csrf
                                         @method('DELETE')
+                                        <input type="hidden" name="action" value="update">
                                         <button type="button" class="btn btn-danger"
-                                            onclick="confirmDelete({{ $usuario->usuario_id }})">
-                                            <i class="ti ti-trash-x"></i>
+                                            onclick="confirmBlock({{ $cliente->usuario_id }})">
+                                            <i class="fa-solid fa-lock"></i>
                                         </button>
                                     </form>
+
+                                    @endif
+
+
+                                    @if ($filtro === 'bloqueados')
+
+                                    <form action="{{ route('cliente.unblock', $cliente->usuario_id) }}" method="POST"
+                                        id="unblock-form-{{$cliente->usuario_id}}">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="button" class="btn btn-warning"
+                                        onclick="confirmUnblock({{ $cliente->usuario_id }})">
+                                            <i class="fa-solid fa-unlock"></i>
+                                        </button>
+                                    </form>
+
+                                    @endif
+
+
                                 </td>
                             </tr>
                         @endforeach
@@ -70,26 +108,19 @@
 
 @endsection
 
+
 @section('AfterScript')
-    <script>
-        function confirmDelete(id) {
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: 'Esta acción no se puede deshacer.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Si el usuario confirma, envía el formulario de eliminación correspondiente
-                    document.getElementById('delete-form-' + id).submit();
-                }
-            });
-        }
-    </script>
+
+<script>
+    $(document).ready(function() {
+        $("#filtro-bloqueo").on("change", function() {
+            var filtro = $(this).val();
+            var url = "{{ route('clientes') }}?filtro=" + filtro;
+            window.location.href = url;
+        });
+    });
+</script>
+
 
 @endsection
     

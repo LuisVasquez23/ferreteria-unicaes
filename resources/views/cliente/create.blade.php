@@ -101,7 +101,7 @@
         <div class="form-group col-md-6 mt-2">
             <label for="email_opcion">Email: *</label>
             <input type="text" class="form-control {{ $errors->has('email_opcion') ? 'is-invalid' : '' }}"
-                name="email_opcion" id="email_opcion">
+                name="email_opcion" id="email_opcion" required>
             @if ($errors->has('email_opcion'))
                 <div class="invalid-feedback">
                     {{ $errors->first('email_opcion') }}
@@ -123,6 +123,8 @@
 @section('AfterScript')
 
 <script>
+
+
     
 //validar DUI
 $(document).ready(function() {
@@ -147,6 +149,9 @@ $(document).ready(function() {
         $(this).val(telefono);
     });
 });
+
+
+
 
 
 const $departamento = document.getElementById('departamento');

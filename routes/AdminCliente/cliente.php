@@ -17,6 +17,8 @@ Route::controller(AdminClienteController::class)->group(function () {
 
     // PUT METHOD
     Route::put('/clientes/update/{id}', 'update')->middleware(['auth', 'verified', 'checkRole:Admin'])->name('cliente.update');
+    Route::put('/clientes/unblock/{id}', 'unblock')->middleware(['auth', 'verified', 'checkRole:Admin'])->name('cliente.unblock');
+
 
     // DELETE METHOD
     Route::delete('/clientes/destroy/{id}', 'destroy')->middleware(['auth', 'verified', 'checkRole:Admin'])->name('cliente.destroy');
