@@ -9,7 +9,7 @@ Route::controller(AdminEmpleadosController::class)->group(function () {
 
     //aca falta ponerle que chequee el rol en cada uno
     //ejemplo:    ['auth', 'verified', 'checkRole:MegaAdmin'])->name('categorias');
-    Route::get('/empleados', 'index')->middleware(['auth', 'verified' ])->name('empleados');
+    Route::get('/empleados', 'index')->middleware(['auth', 'verified' ])->name('empleados.index');
     Route::get('/empleados/create', 'create')->middleware(['auth', 'verified'])->name('empleados.create');
     Route::get('/empleados/edit/{id}', 'edit')->middleware(['auth', 'verified' ])->name('empleados.edit');
 
