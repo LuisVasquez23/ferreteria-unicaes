@@ -46,3 +46,4 @@ require __DIR__ . '/AdminCliente/cliente.php';
 require __DIR__ . '/AdminCategorias/categorias.php';
 require __DIR__ . '/AdminPerfiles/perfiles.php';
 require __DIR__ . '/AdminProveedores/proveedores.php';
+require __DIR__ . '/AdminEmpleados/empleados.php';
