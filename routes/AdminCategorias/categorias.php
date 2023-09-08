@@ -11,6 +11,7 @@ Route::controller(AdminCategoriasController::class)->group(function () {
     Route::get('/categorias', 'index')->middleware(['auth', 'verified' ])->name('categorias');
     Route::get('/categorias/create', 'create')->middleware(['auth', 'verified'])->name('categorias.create');
     Route::get('/categorias/edit/{id}', 'edit')->middleware(['auth', 'verified' ])->name('categorias.edit');
+    Route::get('/categorias/search', 'serch')->middleware(['auth', 'verified' ])->name('categorias.search');
 
     // POST METHOD
     Route::post('/categorias/create', 'store')->middleware(['auth', 'verified' ])->name('categorias.store');
@@ -19,5 +20,7 @@ Route::controller(AdminCategoriasController::class)->group(function () {
     Route::put('/categorias/update/{id}', 'update')->middleware(['auth', 'verified'])->name('categorias.update');
 
     // DELETE METHOD
-    Route::delete('/categorias/destroy/{id}', 'destroy')->middleware(['auth', 'verified'])->name('categorias.destroy');
+    Route::put('/categorias/bloquear/{id}', 'bloquear')->middleware(['auth', 'verified'])->name('categorias.bloquear');
+    Route::put('/categorias/unblock/{id}', 'unblock')->middleware(['auth', 'verified'])->name('categorias.unblock');
+
 });
