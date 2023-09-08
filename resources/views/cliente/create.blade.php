@@ -71,7 +71,7 @@
                 @endif
             </div>
         </div>
-        
+
         <div class="col-md-4 mt-2">
             <!-- Municipio -->
             <div class="form-group">
@@ -87,7 +87,7 @@
                 @endif
             </div>
         </div>
-        
+
 
 
 
@@ -127,7 +127,7 @@
 <script>
 
 
-    
+
 //validar DUI
 $(document).ready(function() {
     $('#dui_opcion').on('input', function() {
@@ -144,7 +144,7 @@ $(document).ready(function() {
 $(document).ready(function() {
     $('#telefono_opcion').on('input', function() {
         let telefono = $(this).val();
-        telefono = telefono.replace(/\D/g, ''); 
+        telefono = telefono.replace(/\D/g, '');
         if (telefono.length >= 4) {
             telefono = telefono.substr(0, 4) + '-' + telefono.substr(4, 4);
         }
@@ -194,7 +194,7 @@ const $departamento = document.getElementById('departamento');
             });
 
         })
-        
+
     </script>
 @endsection
 

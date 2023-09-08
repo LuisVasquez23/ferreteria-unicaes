@@ -20,5 +20,7 @@ Route::controller(AdminCategoriasController::class)->group(function () {
     Route::put('/categorias/update/{id}', 'update')->middleware(['auth', 'verified'])->name('categorias.update');
 
     // DELETE METHOD
-    Route::delete('/categorias/destroy/{id}', 'destroy')->middleware(['auth', 'verified'])->name('categorias.destroy');
+    Route::put('/categorias/bloquear/{id}', 'bloquear')->middleware(['auth', 'verified'])->name('categorias.bloquear');
+    Route::put('/categorias/unblock/{id}', 'unblock')->middleware(['auth', 'verified'])->name('categorias.unblock');
+
 });
