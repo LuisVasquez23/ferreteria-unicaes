@@ -25,6 +25,7 @@
         .catch(err => {
             let mensaje = err.statusText || 'Error de la petición a la API';
             console.log(mensaje);
+            Swal.close();
         });
 }
 
