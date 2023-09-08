@@ -7,7 +7,7 @@
     <div class="card-body">
         <a href="{{ route('periodos.create') }}" class="btn btn-success mb-3">Agregar</a>
         <div class="table-responsive">
-            <table class="table text-nowrap mb-0 align-middle table-striped table-bordered">
+            <table class="table text-nowrap mb-0 align-middle table-striped table-bordered" id="miTabla">
                 <thead class="text-dark fs-4">
                     <tr>
                         <th class="border-bottom-0">
@@ -19,21 +19,7 @@
                         <th class="border-bottom-0">
                             <b>Creado Por</b>
                         </th>
-                        <th class="border-bottom-0">
-                            <b>Fecha Creación</b>
-                        </th>
-                        <th class="border-bottom-0">
-                            <b>Actualizado Por</b>
-                        </th>
-                        <th class="border-bottom-0">
-                            <b>Fecha Actualización</b>
-                        </th>
-                        <th class="border-bottom-0">
-                            <b>Bloqueado Por</b>
-                        </th>
-                        <th class="border-bottom-0">
-                            <b>Fecha Bloqueo</b>
-                        </th>
+                       
                         <th>
                             <b>Acciones</b>
                         </th>
@@ -55,27 +41,8 @@
                         <td class="border-bottom-0">
                             <h6 class="fw-semibold mb-0">{{ $periodo->creado_por }}</h6>
                         </td>
-                        <td class="border-bottom-0">
-                            @if ($periodo->fecha_creacion)
-                                <h6 class="fw-semibold mb-0">{{ $periodo->fecha_creacion }}</h6>
-                            @endif
-                        </td>
-                        <td class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">{{ $periodo->actualizado_por }}</h6>
-                        </td>
-                        <td class="border-bottom-0">
-                            @if ($periodo->fecha_actualizacion)
-                                <h6 class="fw-semibold mb-0">{{$periodo->fecha_actualizacion }}</h6>
-                            @endif
-                        </td>
-                        <td class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">{{ $periodo->bloqueado_por }}</h6>
-                        </td>
-                        <td class="border-bottom-0">
-                            @if ($periodo->fecha_bloqueo)
-                                <h6 class="fw-semibold mb-0">{{ date('d/m/Y', strtotime($periodo->fecha_bloqueo)) }}</h6>
-                            @endif
-                        </td>
+                       
+                       
                         <td class="d-flex gap-1 justify-content-center">
                             <a href="{{ route('periodos.edit', $periodo->periodo_id) }}" class="btn btn-primary">
                                 <i class="ti ti-pencil"></i>
