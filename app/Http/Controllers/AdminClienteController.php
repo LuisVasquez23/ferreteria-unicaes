@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
+
 class AdminClienteController extends Controller
 {
     //
@@ -79,7 +80,7 @@ class AdminClienteController extends Controller
             'apellido_opcion' => 'required',
             'telefono_opcion' => 'required|regex:/^\d{4}-\d{4}$/|unique:usuarios,telefono',
             'direccion_opcion' => 'nullable',
-            'email_opcion' => 'required|unique:usuarios,email',
+            'email_opcion' => 'required|email|unique:usuarios,email',
         ];
 
         $messages = [
@@ -92,7 +93,8 @@ class AdminClienteController extends Controller
             'telefono_opcion.unique' => 'Este teléfono ya está registrado en la base de datos, intenta de nuevo.',
             'telefono_opcion.regex' => 'El campo "Teléfono" debe tener el formato correcto (por ejemplo, 7889-1256).',
             'email_opcion.required' => 'El email es requerido',
-            'email_opcion.unique' => 'El email ya está registrado en la base de datos, intenta de nuevo'
+            'email_opcion.unique' => 'El email ya está registrado en la base de datos, intenta de nuevo',
+            'email_opcion.email' => 'El campo "Email" debe ser una dirección de correo electrónico válida.',
 
         ];
 
@@ -224,7 +226,7 @@ class AdminClienteController extends Controller
 
             'direccion_opcion' => 'nullable',
 
-            'email_opcion' => 'nullable|unique:usuarios,email,'.$id.',usuario_id',
+            'email_opcion' => 'required|email|unique:usuarios,email,'.$id.',usuario_id',
         ];
 
         $messages = [
@@ -237,7 +239,9 @@ class AdminClienteController extends Controller
             'telefono_opcion.unique' => 'Este teléfono ya está registrado en la base de datos, intenta de nuevo.',
             'telefono_opcion.regex' => 'El campo "Teléfono" debe tener el formato correcto (por ejemplo, 7889-1256).',
 
-            'email_opcion.unique' => 'El email ya está registrado en la base de datos, intenta de nuevo'
+            'email_opcion.unique' => 'El email ya está registrado en la base de datos, intenta de nuevo',
+            'email_opcion.required' => 'El email es requerido',
+            'email_opcion.email' => 'El campo "Email" debe ser una dirección de correo electrónico válida.',
 
         ];
 
@@ -285,7 +289,7 @@ if ($municipioSeleccionado === 'Seleccionar ...') {
     } catch (ValidationException $e) {
         return redirect()->back()->withErrors($e->errors())->withInput();
     } catch (\Throwable $th) {
-        return redirect()->route('clientes')->with('error', 'Sucedio un error al actualizar el cliente');
+        return redirect()->route('clientes')->with('error', 'Sucedio un error al actualizar el cliente, revisa que todos los campos sean correctos');
     }
 }
 

@@ -101,7 +101,9 @@
         <div class="form-group col-md-6 mt-2">
             <label for="email_opcion">Email: *</label>
             <input type="text" class="form-control {{ $errors->has('email_opcion') ? 'is-invalid' : '' }}"
-                name="email_opcion" id="email_opcion" required>
+                name="email_opcion" id="email_opcion" required
+                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}"
+                >
             @if ($errors->has('email_opcion'))
                 <div class="invalid-feedback">
                     {{ $errors->first('email_opcion') }}
