@@ -13,7 +13,8 @@ Route::controller(AdminPeriodosController::class)->group(function (){
     Route::put('/periodos/update/{id}', 'update')->middleware(['auth', 'verified'])->name('periodos.update');
 
 
-    Route::delete('/periodos/destroy/{id}', 'destroy')->middleware(['auth', 'verified'])->name('periodos.destroy');
+    Route::put('/periodos/bloquear/{id}', 'bloquear')->middleware(['auth', 'verified'])->name('periodos.bloquear');
+    Route::put('/periodos/unblock/{id}', 'unblock')->middleware(['auth', 'verified'])->name('periodos.unblock');
 });
 
 
