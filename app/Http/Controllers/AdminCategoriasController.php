@@ -59,7 +59,17 @@ class AdminCategoriasController extends Controller
                 'descripcion' => 'required|string',
             ], $messages);
 
-            // Resto del código...
+            $categoria = new Categoria();
+            // crea los campos de la categoría con los datos del formulario
+            $categoria->categoria = $request->input('categoria');
+            $categoria->descripcion = $request->input('descripcion');
+            $categoria->fecha_actualizacion = now();
+            // Obtener el nombre del usuario autenticado y asignarlo al campo "creado_por"
+            $categoria->creado_por = Auth::user()->nombres;
+
+            // Guardar los cambios en la base de datos
+            $categoria->save();
+
 
             // Redireccionar a la página de índice de categorías o a donde desees después de guardar
             return redirect()->route('categorias')->with('success', 'Categoría creada exitosamente.');
@@ -96,39 +106,46 @@ class AdminCategoriasController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            // Definir mensajes de validación personalizados
-            $messages = [
-                'categoria.required' => 'El campo categoría es obligatorio.',
-                'categoria.unique' => 'La categoría ya existe en la base de datos.',
-                'descripcion.required' => 'El campo descripción es obligatorio.',
-            ];
-
-            // Validar los datos del formulario con mensajes personalizados
-            $request->validate([
-                'categoria' => 'required|string|max:255|unique:categorias',
-                'descripcion' => 'required|string',
-            ], $messages);
-
-            // Obtener la categoría que se va a actualizar
-            $categoria = Categoria::find($id);
-
-            // Verificar si la categoría existe
-            if (!$categoria) {
-                return redirect()->route('categorias')->with('error', 'Categoría no encontrada.');
-            }
-
-            // Actualizar los campos de la categoría con los datos del formulario
-            $categoria->categoria = $request->input('categoria');
-            $categoria->descripcion = $request->input('descripcion');
-            $categoria->fecha_actualizacion = now();
-            // Obtener el nombre del usuario autenticado y asignarlo al campo "actualizado_por"
-            $categoria->actualizado_por = Auth::user()->nombres;
-
-            // Guardar los cambios en la base de datos
-            $categoria->save();
-
-            // Redireccionar a la página de índice de categorías o a donde desees después de actualizar
-            return redirect()->route('categorias')->with('success', 'Categoría actualizada exitosamente.');
+              // Obtener la categoría que se va a actualizar
+              $categoria = Categoria::find($id);
+    
+              // Verificar si la categoría existe
+              if (!$categoria) {
+                  return redirect()->route('categorias')->with('error', 'Categoría no encontrada.');
+              }
+              // Definir mensajes de validación personalizados
+              $messages = [
+                  'categoria.required' => 'El campo categoría es obligatorio.',
+                  'categoria.unique' => 'La categoría ya existe en la base de datos.',
+                  'descripcion.required' => 'El campo descripción es obligatorio.',
+              ];
+              // Validar los datos del formulario
+              $request->validate([
+                  'categoria' => 'required|string|max:255',
+                  'descripcion' => 'required|string',
+              ],$messages);
+      
+              // Verificar si el nombre de la categoría se ha modificado y si es diferente del nombre actual
+              if ($request->input('categoria') !== $categoria->categoria) {
+                  // Si el nombre se ha modificado, validar que no exista otra categoría con el mismo nombre
+                  $request->validate([
+                      'categoria' => 'unique:categorias',
+                  ],$messages);
+              }
+      
+              // Actualizar los campos de la categoría con los datos del formulario
+              $categoria->categoria = $request->input('categoria');
+              $categoria->descripcion = $request->input('descripcion');
+              $categoria->fecha_actualizacion = now();
+              // Obtener el nombre del usuario autenticado y asignarlo al campo "actualizado_por"
+              $categoria->actualizado_por = Auth::user()->nombres;
+      
+              // Guardar los cambios en la base de datos
+              $categoria->save();
+      
+              // Redireccionar a la página de índice de categorías o a donde desees después de actualizar
+              return redirect()->route('categorias')->with('success', 'Categoría actualizada exitosamente.');
+  
         } catch (ValidationException $e) {
             // Manejar excepciones de validación (por ejemplo, campos requeridos)
             return redirect()->back()->withErrors($e->errors())->withInput();

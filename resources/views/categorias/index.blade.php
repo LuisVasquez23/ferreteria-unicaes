@@ -53,7 +53,7 @@
 
                                             <button type="button" class="btn btn-danger"
                                                 onclick="confirmBlock({{ $categoria->categoria_id }})">
-                                                <i class="fa-solid fa-unlock"></i>
+                                                <i class="fa-solid fa-unlock"></i>Bloquear
                                             </button>
                                         </form>
                                     @endif
@@ -65,7 +65,7 @@
 
                                         <button type="button" class="btn btn-danger"
                                             onclick="confirmUnblock({{ $categoria->categoria_id }})">
-                                            <i class="fa-solid fa-unlock"></i>
+                                            <i class="fa-solid fa-unlock"></i>Desbloquear
                                         </button>
                                     </form>
                                     @endif

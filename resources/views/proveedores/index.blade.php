@@ -41,6 +41,7 @@
                 <tbody>
                     @foreach ($proveedores as $proveedor)
                     <tr>
+                        
                         <td class="border-bottom-0">
                             <h6 class="fw-semibold mb-0">{{ $proveedor->dui }}</h6>
                         </td>
@@ -57,18 +58,34 @@
                             <h6 class="fw-semibold mb-0">{{ $proveedor->municipio }} , {{ $proveedor->departamento }}, {{$proveedor->direccion }}</h6>
                         </td>
                         <td class="d-flex gap-1 justify-content-center">
+                          
+                            @if ($filtro !== 'bloqueados')
                             <a href="{{ route('proveedores.edit', $proveedor->usuario_id) }}" class="btn btn-primary">
                                 <i class="ti ti-pencil"></i>
                             </a>
-                            <form action="{{ route('proveedores.bloquear', $proveedor->usuario_id) }}" method="POST"
-                                id="block-form-{{ $proveedor->usuario_id }}">
-                                @csrf
-                                @method('PUT') <!-- Agrega esta línea para indicar que es una solicitud PUT -->
-                                <button type="button" class="btn btn-danger"
-                                    onclick="confirmBlock({{ $proveedor->usuario_id }})">
-                                    <i class="fa-solid fa-lock"></i>
-                                </button>
-                            </form>
+                                <!-- Formulario para bloquear -->
+                                <form action="{{ route('proveedores.bloquear', $proveedor->usuario_id) }}" method="POST"
+                                    id="block-form-{{ $proveedor->usuario_id }}">
+                                    @csrf
+                                    @method('PUT') <!-- Agrega esta línea para indicar que es una solicitud PUT -->
+                                    <button type="button" class="btn btn-danger"
+                                        onclick="confirmBlock({{ $proveedor->usuario_id }})">
+                                        <i class="fa-solid fa-lock"></i> Bloquear
+                                    </button>
+                                </form>
+                            @endif
+                            @if ($filtro === 'bloqueados')
+                                <!-- Formulario para desbloquear -->
+                                <form action="{{ route('proveedores.unblock', $proveedor->usuario_id) }}" method="POST"
+                                    id="unblock-form-{{ $proveedor->usuario_id }}">
+                                    @csrf
+                                    @method('PUT') <!-- Agrega esta línea para indicar que es una solicitud PUT -->
+                                    <button type="button" class="btn btn-danger"
+                                        onclick="confirmUnblock({{ $proveedor->usuario_id }})">
+                                        <i class="fa-solid fa-unlock"></i> Desbloquear
+                                    </button>
+                                </form>
+                            @endif
                         </td>
                     </tr>
                     @endforeach
