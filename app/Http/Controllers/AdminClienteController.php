@@ -59,7 +59,7 @@ class AdminClienteController extends Controller
             return view('cliente.create');
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->route('clientes')->with('error', 'Error al cargar la página de insercion de clientes');
+            return redirect()->route('clientes')->with('error', 'Error al cargar la página de creacion de clientes');
         }
     }
 
@@ -86,14 +86,14 @@ class AdminClienteController extends Controller
         $messages = [
 
             'dui_opcion.required' => 'El campo "Dui" es obligatorio.',
-            'dui_opcion.unique' => 'El DUI ingresado ya está registrado en la base de datos, intenta de nuevo.',
+            'dui_opcion.unique' => 'El DUI ingresado ya está registrado, intentelo de nuevo.',
             'nombre_opcion.required' => 'Debes registrar al menos un nombre',
             'apellido_opcion.required' => 'Debes registrar al menos un apellido',
             'telefono_opcion.required' => 'El campo "Teléfono" es obligatorio.',
-            'telefono_opcion.unique' => 'Este teléfono ya está registrado en la base de datos, intenta de nuevo.',
+            'telefono_opcion.unique' => 'Este teléfono ya está registrado, intentelo de nuevo.',
             'telefono_opcion.regex' => 'El campo "Teléfono" debe tener el formato correcto (por ejemplo, 7889-1256).',
             'email_opcion.required' => 'El email es requerido',
-            'email_opcion.unique' => 'El email ya está registrado en la base de datos, intenta de nuevo',
+            'email_opcion.unique' => 'El email ya está registrado, intentelo de nuevo',
             'email_opcion.email' => 'El campo "Email" debe ser una dirección de correo electrónico válida.',
 
         ];
