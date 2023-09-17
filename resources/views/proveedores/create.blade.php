@@ -40,13 +40,12 @@
                     </div>
                 @endif
             </div>
-
             <div class="col-md-4 mt-2">
                 <!-- Departamento -->
                 <div class="form-group">
                     <label for="departamento">Departamento *</label>
-                    <select name="departamento" id="departamento" class="form-control" required>
-                        <option value=""></option>
+                    <select name="departamento" id="departamento" class="form-control {{ $errors->has('departamento') ? 'is-invalid' : '' }}" required>
+                        <option value="">Seleccionar ...</option>
                         <!-- Opciones de departamentos aquí -->
                     </select>
                     @if ($errors->has('departamento'))
@@ -61,7 +60,7 @@
                 <!-- Municipio -->
                 <div class="form-group">
                     <label for="municipio">Municipio *</label>
-                    <select name="municipio" id="municipio" class="form-control" required>
+                    <select name="municipio" id="municipio" class="form-control {{ $errors->has('municipio') ? 'is-invalid' : '' }}" required>
                         <option value="">Seleccionar ...</option>
                         <!-- Opciones de municipios aquí -->
                     </select>
