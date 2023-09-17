@@ -5,7 +5,10 @@
 <div class="card mt-3">
     <h5 class="card-header">Administración de Proveedores</h5>
     <div class="card-body">
-        <a href="{{ route('proveedores.create') }}" class="btn btn-success mb-3">Agregar</a>
+        <a href="{{ route('proveedores.create') }}" class="btn btn-success mb-3">
+        <i class="fas fa-plus"></i>    
+
+        Agregar</a>
         <div class="col-md-4 mx-auto text-center">
             <label class="mb-2" for="filtro-bloqueo">Filtrar por Estado:</label>
             <select id="filtro-bloqueo" class="form-select">
@@ -70,7 +73,7 @@
                                     @method('PUT') <!-- Agrega esta línea para indicar que es una solicitud PUT -->
                                     <button type="button" class="btn btn-danger"
                                         onclick="confirmBlock({{ $proveedor->usuario_id }})">
-                                        <i class="fa-solid fa-lock"></i> Bloquear
+                                        <i class="fa-solid fa-lock"></i> 
                                     </button>
                                 </form>
                             @endif
@@ -80,9 +83,9 @@
                                     id="unblock-form-{{ $proveedor->usuario_id }}">
                                     @csrf
                                     @method('PUT') <!-- Agrega esta línea para indicar que es una solicitud PUT -->
-                                    <button type="button" class="btn btn-danger"
+                                    <button type="button" class="btn btn-warning"
                                         onclick="confirmUnblock({{ $proveedor->usuario_id }})">
-                                        <i class="fa-solid fa-unlock"></i> Desbloquear
+                                        <i class="fa-solid fa-unlock"></i> 
                                     </button>
                                 </form>
                             @endif
