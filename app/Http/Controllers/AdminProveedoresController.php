@@ -12,6 +12,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 use App\Models\DetalleRole;
+use Illuminate\Validation\Rule;
 
 
 
@@ -50,7 +51,7 @@ class AdminProveedoresController extends Controller
         }catch(\Exception $e){
 
             Log::error($e->getMessage());
-            return redirect()->route('proveedores')->with('error', 'Error al cargar la página de provedores');
+            return redirect()->route('proveedores.index')->with('error', 'Error al cargar la página de provedores');
         }
     }
     // Método para mostrar el formulario de creación de un proveedor
@@ -75,6 +76,8 @@ class AdminProveedoresController extends Controller
                 'telefono_opcion' => 'required|regex:/^\d{4}-\d{4}$/|unique:usuarios,telefono',
                 'direccion_opcion' => 'nullable',
                 'email_opcion' => 'required|unique:usuarios,email',
+                'departamento' => 'required|not_in:Seleccionar ...', // Validación para el campo "departamento"
+                 'municipio' => 'required|not_in:Seleccionar ...'// Validación para el campo "municipio"
             ];
 
             $messages = [
@@ -85,7 +88,11 @@ class AdminProveedoresController extends Controller
                 'telefono_opcion.unique' => 'Este teléfono ya está registrado en la base de datos, intenta de nuevo.',
                 'telefono_opcion.regex' => 'El campo "Teléfono" debe tener el formato correcto (por ejemplo, 7889-1256).',
                 'email_opcion.required' => 'El email es requerido.',
-                'email_opcion.unique' => 'El email ya está registrado en la base de datos, intenta de nuevo.'
+                'email_opcion.unique' => 'El email ya está registrado en la base de datos, intenta de nuevo.',
+                'departamento.required' => 'Debes seleccionar un departamento.',
+                'departamento.not_in' => 'Debes seleccionar un departamento.',
+                'municipio.required' => 'Debes seleccionar un municipio.',
+                'municipio.not_in' => 'Debes seleccionar un municipio.'
             ];
 
             $validator = Validator::make($request->all(), $rules, $messages);
@@ -97,15 +104,7 @@ class AdminProveedoresController extends Controller
                     ->withInput();
             }
 
-            // Verificar si se seleccionó "Seleccionar..." en el campo "departamento"
-            if ($request->input('departamento') === 'Seleccionar ...') {
-                return redirect()->route('proveedores.create')->with('error', 'Departamento no seleccionado');
-            }
-
-            // Verificar si se seleccionó "Seleccionar..." en el campo "municipio"
-            if ($request->input('municipio') === 'Seleccionar ...') {
-                return redirect()->route('proveedores.create')->with('error', 'Municipio no seleccionado');
-            }
+          
 
             $proveedor = new Usuario();
 
@@ -128,7 +127,7 @@ class AdminProveedoresController extends Controller
             $rolProveedor = Role::where('role', 'Proveedor')->first();
 
             if (!$rolProveedor) {
-                return redirect()->route('proveedores')->with('error', 'El rol "Proveedor" no se encontró.');
+                return redirect()->route('proveedores.index')->with('error', 'El rol "Proveedor" no se encontró.');
             }
 
             $detalleRol = new DetalleRole();
@@ -151,30 +150,115 @@ class AdminProveedoresController extends Controller
 
 
 
-    // Método para mostrar el formulario de edición de un proveedor
     public function edit($id)
     {
+        // Obtener el proveedor que se va a editar por su ID
+        $proveedor = Usuario::find($id);
+    
+        // Verificar si el proveedor existe
+        if (!$proveedor) {
+            return redirect()->route('proveedores.index')->with('error', 'Proveedor no encontrado.');
+        }
+    
         // Aquí puedes mostrar el formulario de edición de un proveedor específico
-        // El parámetro $id contiene el ID del proveedor que se va a editar
-        return view('proveedores.edit', compact('id'));
+        // Pasar el objeto $proveedor a la vista
+        return view('proveedores.edit', compact('proveedor'));
     }
 
     // Método para actualizar un proveedor existente
+
+
     public function update(Request $request, $id)
     {
-        // Aquí deberías agregar la lógica para actualizar el proveedor en la base de datos
-        // Puedes usar $request para obtener los datos del formulario
-        // El parámetro $id contiene el ID del proveedor que se va a actualizar
-        // Después de actualizar, puedes redirigir a la lista de proveedores o mostrar un mensaje de éxito
+        try {
+            $proveedor = Usuario::find($id);
+    
+            if (!$proveedor) {
+                return redirect()->back()->with('error', 'Ha ocurrido un error. No se pudo realizar la operación.');
+            }
+    
+            // Validar teléfono
+            $existingPhone = Usuario::where('telefono', $request->input('telefono_opcion'))
+                ->where('usuario_id', '<>', $id)
+                ->first();
+    
+            if ($existingPhone) {
+                return redirect()->route('proveedores')->with('error', 'El teléfono ya está registrado en la base de datos.');
+            }
+    
+            // Validar email
+            $existingEmail = Usuario::where('email', $request->input('email_opcion'))
+                ->where('usuario_id', '<>', $id)
+                ->first();
+    
+            if ($existingEmail) {
+                return redirect()->route('proveedores')->with('error', 'El correo electrónico ya está registrado en la base de datos.');
+            }
+    
+            // Definir las reglas de validación
+            $rules = [
+                'nit_opcion' => 'required|unique:usuarios,dui,' . $id . ',usuario_id',
+                'nombre_opcion' => 'required',
+                'telefono_opcion' => 'required|regex:/^\d{4}-\d{4}$/|unique:usuarios,telefono,' . $id . ',usuario_id',
+                'direccion_opcion' => 'nullable',
+                'email_opcion' => 'required|email|unique:usuarios,email,' . $id . ',usuario_id',
+                'departamento' => 'required|not_in:Seleccionar ...',
+                'municipio' => 'required|not_in:Seleccionar ...',
+            ];
+    
+            $messages = [
+                'nit_opcion.required' => 'El campo "NIT" es obligatorio.',
+                'nit_opcion.unique' => 'El NIT ingresado ya está registrado en la base de datos, intenta de nuevo.',
+                'nombre_opcion.required' => 'Debes registrar al menos un nombre.',
+                'telefono_opcion.required' => 'El campo "Teléfono" es obligatorio.',
+                'telefono_opcion.unique' => 'Este teléfono ya está registrado en la base de datos, intenta de nuevo.',
+                'telefono_opcion.regex' => 'El campo "Teléfono" debe tener el formato correcto (por ejemplo, 7889-1256).',
+                'email_opcion.required' => 'El email es requerido.',
+                'email_opcion.unique' => 'El email ya está registrado en la base de datos, intenta de nuevo.',
+                'email_opcion.email' => 'El campo "Email" debe ser una dirección de correo electrónico válida.',
+                'departamento.required' => 'Debes seleccionar un departamento.',
+                'departamento.not_in' => 'Debes seleccionar un departamento.',
+                'municipio.required' => 'Debes seleccionar un municipio.',
+                'municipio.not_in' => 'Debes seleccionar un municipio.',
+            ];
+    
+            $validator = Validator::make($request->all(), $rules, $messages);
+    
+            if ($validator->fails()) {
+                return redirect()
+                    ->route('proveedores.edit', $id) // Redirige al formulario de edición
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+    
+            $proveedor->dui = $request->input('nit_opcion');
+            $proveedor->nombres = $request->input('nombre_opcion');
+            $proveedor->telefono = $request->input('telefono_opcion');
+            $proveedor->departamento = $request->input('departamento');
+            $proveedor->municipio = $request->input('municipio');
+            $proveedor->direccion = $request->input('direccion_opcion');
+            $proveedor->email = $request->input('email_opcion');
+            $proveedor->creado_por = Auth::user()->nombres;
+            $proveedor->fecha_creacion = now();
+    
+            $proveedor->save();
+    
+            return redirect()->route('proveedores.index')->with('success', 'Proveedor actualizado exitosamente');
+        } catch (ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Throwable $th) {
+            return redirect()->route('proveedores.index')->with('error', 'Sucedio un error al actualizar el proveedor, revisa que todos los campos sean correctos');
+        }
     }
+    
+    
+    
 
     // Método para eliminar un proveedor
     public function bloquear($id)
     {
         try {
-            $action = request()->input('action');
 
-            if ($action === 'update') {
                 $proveedor = Usuario::find($id);
 
                 if (!$proveedor) {
@@ -186,16 +270,16 @@ class AdminProveedoresController extends Controller
 
                 $proveedor->save();
 
-                return redirect()->route('proveedores')->with('success', 'El proveedor se ha bloqueado con éxito.');
-            }
+                return redirect()->route('proveedores.index')->with('success', 'El proveedor se ha bloqueado con éxito.');
+            
         } catch (QueryException $e) {
             // Manejo de excepciones SQL
             Log::error($e->getMessage());
-            return redirect()->route('proveedores')->with('error', 'Error de base de datos al bloquear el proveedor');
+            return redirect()->route('proveedores.index')->with('error', 'Error de base de datos al bloquear el proveedor');
         } catch (\Exception $e) {
             // Manejo de otras excepciones
             Log::error($e->getMessage());
-            return redirect()->route('proveedores')->with('error', 'Error al bloquear el proveedor');
+            return redirect()->route('proveedores.index')->with('error', 'Error al bloquear el proveedor');
         }
     }
 
@@ -206,7 +290,7 @@ class AdminProveedoresController extends Controller
 
             // Verificar si el proveedor está bloqueado
             if (!$proveedor->bloqueado_por) {
-                return redirect()->route('proveedores')->with('error', 'El proveedor no está bloqueado.');
+                return redirect()->route('proveedores.index')->with('error', 'El proveedor no está bloqueado.');
             }
 
             // Desbloquear al proveedor
@@ -218,11 +302,11 @@ class AdminProveedoresController extends Controller
             // Guardar los cambios
             $proveedor->save();
 
-            return redirect()->route('proveedores')->with('success', 'El proveedor ha sido desbloqueado con éxito.');
+            return redirect()->route('proveedores.index')->with('success', 'El proveedor ha sido desbloqueado con éxito.');
 
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->route('proveedores')->with('error', 'Error al desbloquear el proveedor.');
+            return redirect()->route('proveedores.index')->with('error', 'Error al desbloquear el proveedor.');
         }
     }
 
