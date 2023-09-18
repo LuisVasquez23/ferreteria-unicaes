@@ -39,7 +39,7 @@ class AdminPerfilController extends Controller
             ->first();     
  
          if ($existingPhone) {
-            return redirect()->route('perfiles')->with('error', 'El teléfono ya está registrado en la base de datos.');         
+            return redirect()->route('perfiles')->with('error', 'El teléfono ya está registrado.');         
         }
 
         //validar email
@@ -48,7 +48,7 @@ class AdminPerfilController extends Controller
             ->first();
 
         if ($existingEmail) {
-            return redirect()->route('perfiles')->with('error', 'El correo electrónico ya está registrado en la base de datos.');         
+            return redirect()->route('perfiles')->with('error', 'El correo electrónico ya está registrado.');         
         }
 
           // Definimos las reglas de validación
@@ -60,7 +60,7 @@ class AdminPerfilController extends Controller
             'telefono_opcion' => 'required|regex:/^\d{4}-\d{4}$/|unique:usuarios,telefono,'.$id.',usuario_id',
 
 
-            'email_opcion' => 'nullable|unique:usuarios,email,'.$id.',usuario_id',
+            'email_opcion' => 'required|email|unique:usuarios,email,'.$id.',usuario_id',
         ];
 
         $messages = [
@@ -70,10 +70,13 @@ class AdminPerfilController extends Controller
 
 
             'telefono_opcion.required' => 'El campo "Teléfono" es obligatorio.',
-            'telefono_opcion.unique' => 'Este teléfono ya está registrado en la base de datos, intenta de nuevo.',
+            'telefono_opcion.unique' => 'Este teléfono ya está registrado.',
             'telefono_opcion.regex' => 'El campo "Teléfono" debe tener el formato correcto (por ejemplo, 7889-1256).',
 
-            'email_opcion.unique' => 'El email ya está registrado en la base de datos, intenta de nuevo'
+            'email_opcion.required' => 'El campo "email" es obligatorio.',
+            'email_opcion.unique' => 'El email ya está registrado, intenta de nuevo',
+            'email_opcion.email' => 'Ingresa una dirección de email correcta.',
+
 
         ];
 
@@ -86,35 +89,29 @@ class AdminPerfilController extends Controller
                 ->withInput();
         }
 
-        if (Hash::check($request->input('contraseña_antigua'), $usuario->password)) {
-
-
+        if ($request->filled('contraseña_nueva')) {
             if ($request->input('contraseña_nueva') === $request->input('comprobar_contraseña')) {
-
-                $usuario->update([
-                    'password' => bcrypt($request->input('contraseña_nueva'))
-                ]);
-
-                return redirect()->route('perfiles')->with('success', 'Contraseña actualizada con éxito.');
+                if (Hash::check($request->input('contraseña_antigua'), $usuario->password)) {
+                    $usuario->password = bcrypt($request->input('contraseña_nueva'));
+                } else {
+                    return redirect()->route('perfiles')->with('error', 'La contraseña actual es incorrecta.');
+                }
             } else {
-                // La contraseña nueva y la confirmación no coinciden
                 return redirect()->route('perfiles')->with('error', 'La nueva contraseña y la confirmación no coinciden.');
             }
-        } else {
-            // La contraseña actual no coincide
-            return redirect()->route('perfiles')->with('error', 'La contraseña actual es incorrecta.');
         }
-
-     
+        
+        
+        // Si no se proporcionó una nueva contraseña, actualizar otros datos
         $usuario->nombres = $request->input('nombre_opcion');
         $usuario->apellidos = $request->input('apellido_opcion');
         $usuario->email = $request->input('email_opcion');
         $usuario->telefono = $request->input('telefono_opcion');
-
         
         $usuario->save();
-
-        return redirect()->route('dashboard')->with('success', 'Informaciòn actualizada exitosamente');
+        
+        return redirect()->route('dashboard')->with('success', 'Información actualizada exitosamente');
+        
         
     } catch (ValidationException $e) {
         return redirect()->back()->withErrors($e->errors())->withInput();

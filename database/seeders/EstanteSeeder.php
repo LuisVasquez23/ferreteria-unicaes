@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
+use App\Models\Estante;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class RoleSeeder extends Seeder
+class EstanteSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Role::factory(5)->create();
+        Estante::factory(7)->create();
     }
 }

@@ -48,7 +48,7 @@
                         <div class="form-group col-md-6 mt-2">
                             <label for="email_opcion">Email: </label>
                             <input type="text" class="form-control {{ $errors->has('email_opcion') ? 'is-invalid' : '' }}"
-                                name="email_opcion" id="email_opcion" value="{{$usuario->email}}">
+                                name="email_opcion" id="email_opcion" value="{{$usuario->email}}" required>
                             @if ($errors->has('email_opcion'))
                                 <div class="invalid-feedback">
                                     {{ $errors->first('email_opcion') }}
@@ -63,7 +63,7 @@
 
                         <div class="form-group col-md-4">
                             <label for="contraseña_antigua">Contraseña actual: </label>
-                            <input type="text" class="form-control {{ $errors->has('contraseña_antigua') ? 'is-invalid' : '' }}"
+                            <input type="password" class="form-control {{ $errors->has('contraseña_antigua') ? 'is-invalid' : '' }}"
                                 name="contraseña_antigua" id="contraseña_antigua" required>
                             @if ($errors->has('contraseña_antigua'))
                                 <div class="invalid-feedback">
@@ -74,7 +74,7 @@
 
                         <div class="form-group col-md-4">
                             <label for="contraseña_nueva">Contraseña nueva: </label>
-                            <input type="text" class="form-control {{ $errors->has('contraseña_nueva') ? 'is-invalid' : '' }}"
+                            <input type="password" class="form-control {{ $errors->has('contraseña_nueva') ? 'is-invalid' : '' }}"
                                 name="contraseña_nueva" id="contraseña_nueva">
                             @if ($errors->has('contraseña_nueva'))
                                 <div class="invalid-feedback">
@@ -85,7 +85,7 @@
 
                         <div class="form-group col-md-4">
                             <label for="comprobar_contraseña">Confirmar contraseña: </label>
-                            <input type="text" class="form-control {{ $errors->has('comprobar_contraseña') ? 'is-invalid' : '' }}"
+                            <input type="password" class="form-control {{ $errors->has('comprobar_contraseña') ? 'is-invalid' : '' }}"
                                 name="comprobar_contraseña" id="comprobar_contraseña">
                             @if ($errors->has('comprobar_contraseña'))
                                 <div class="invalid-feedback">
