@@ -204,7 +204,7 @@ class AdminClienteController extends Controller
             ->first();     
  
          if ($existingPhone) {
-            return redirect()->route('clientes')->with('error', 'El teléfono ya está registrado en la base de datos.');         
+            return redirect()->route('clientes')->with('error', 'El teléfono ya está registrado.');         
         }
 
         //validar email
@@ -213,7 +213,7 @@ class AdminClienteController extends Controller
             ->first();
 
         if ($existingEmail) {
-            return redirect()->route('clientes')->with('error', 'El correo electrónico ya está registrado en la base de datos.');         
+            return redirect()->route('clientes')->with('error', 'El correo electrónico ya está registrado.');         
         }
 
           // Definimos las reglas de validación
@@ -236,10 +236,10 @@ class AdminClienteController extends Controller
 
 
             'telefono_opcion.required' => 'El campo "Teléfono" es obligatorio.',
-            'telefono_opcion.unique' => 'Este teléfono ya está registrado en la base de datos, intenta de nuevo.',
+            'telefono_opcion.unique' => 'Este teléfono ya está registrado, intenta de nuevo.',
             'telefono_opcion.regex' => 'El campo "Teléfono" debe tener el formato correcto (por ejemplo, 7889-1256).',
 
-            'email_opcion.unique' => 'El email ya está registrado en la base de datos, intenta de nuevo',
+            'email_opcion.unique' => 'El email ya está registrado, intenta de nuevo',
             'email_opcion.required' => 'El email es requerido',
             'email_opcion.email' => 'El campo "Email" debe ser una dirección de correo electrónico válida.',
 

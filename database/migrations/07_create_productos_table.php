@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('cantidad');
             $table->unsignedBigInteger('proveedor_id');
             $table->unsignedBigInteger('categoria_id');
+            $table->unsignedBigInteger('estante_id');
             $table->unsignedBigInteger('periodo_id');
 
             // Campos de auditoria
@@ -35,6 +36,8 @@ return new class extends Migration
             // Llaves foraneas
             $table->foreign('proveedor_id')->references('usuario_id')->on('usuarios')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('categoria_id')->references('categoria_id')->on('categorias')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('estante_id')->references('estante_id')->on('estantes')->onDelete('cascade')->onUpdate('cascade');
+
             $table->foreign('periodo_id')->references('periodo_id')->on('periodos')->onDelete('cascade')->onUpdate('cascade');
         });
     }

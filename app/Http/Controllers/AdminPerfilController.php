@@ -89,10 +89,10 @@ class AdminPerfilController extends Controller
                 ->withInput();
         }
 
-        if ($request->filled('contraseña_nueva')) {
-            if ($request->input('contraseña_nueva') === $request->input('comprobar_contraseña')) {
-                if (Hash::check($request->input('contraseña_antigua'), $usuario->password)) {
-                    $usuario->password = bcrypt($request->input('contraseña_nueva'));
+        if ($request->filled('contrasenia_nueva')) {
+            if ($request->input('contrasenia_nueva') === $request->input('comprobar_contrasenia')) {
+                if (Hash::check($request->input('contrasenia_antigua'), $usuario->password)) {
+                    $usuario->password = bcrypt($request->input('contrasenia_nueva'));
                 } else {
                     return redirect()->route('perfiles')->with('error', 'La contraseña actual es incorrecta.');
                 }

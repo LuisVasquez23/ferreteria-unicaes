@@ -42,6 +42,7 @@ class Estante extends Model
 
 	protected $fillable = [
 		'estante',
+		'ubicacion',
 		'descripcion',
 		'creado_por',
 		'fecha_creacion',

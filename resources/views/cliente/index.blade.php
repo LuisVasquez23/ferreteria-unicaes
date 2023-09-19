@@ -36,6 +36,15 @@
                             <th class="border-bottom-0">
                                 <b>Locación</b>
                             </th>
+
+                            @if ($filtro === 'bloqueados')
+
+                                <th class="border-bottom-0">
+                                    <b>Bloqueado por</b>
+                                </th>
+
+                            @endif
+
                             <th>
                                 <b>Acciones</b>
                             </th>
@@ -56,6 +65,16 @@
                                 <td class="border-bottom-0">
                                     <h6 class="fw-semibold mb-0">{{ $cliente->municipio }} , {{ $cliente->departamento }}</h6>
                                 </td>
+
+                                
+                                @if ($filtro === 'bloqueados')
+
+                                <td class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0">{{$cliente->bloqueado_por}}</h6>
+                                </td>
+
+                                @endif
+
                                 <td class="d-flex gap-1 justify-content-center">
                                     
                                     @if ($filtro !== 'bloqueados')

@@ -20,7 +20,8 @@ class EstanteFactory extends Factory
         return [
 
         'estante' => $this->faker->unique()->randomElement($estantes),
-        'descripcion' => $this->faker->text,
+        'ubicacion' => '',
+        'descripcion' => '',
         'creado_por' => null,
         'fecha_creacion' => null,
         'actualizado_por' => null,
