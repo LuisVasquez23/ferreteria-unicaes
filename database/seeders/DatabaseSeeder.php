@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\MenuOption;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,8 +14,39 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+
         $this->call(RoleSeeder::class);
+
+        //Idea para dejarle las 3 opciones pre-cargadas al MegaAdmin
+
+        // $option = new MenuOption();
+
+        // $option->nombre = "Menu";
+        // $option->direccion = "/menu";
+
+        // $option->save();
+
+
+        // $option2 = new MenuOption();
+
+        // $option2->nombre = "Roles";
+        // $option2->direccion = "/roles";
+
+        // $option2->save();
+
+
+        // $option3 = new MenuOption();
+
+        // $option3->nombre = "Detalle rol";
+        // $option3->direccion = "/detalles_roles";
+
+        // $option3->save();
+
+
+        
         $this->call(UsuariosSeeder::class);
         $this->call(EstanteSeeder::class);
+
+
     }
 }

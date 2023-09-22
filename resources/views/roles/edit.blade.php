@@ -13,7 +13,7 @@
                 <div class="form-group col-md-6">
                     <label for="nombreOpcion">Nombre: </label>
                     <input type="text" class="form-control {{ $errors->has('nombreOpcion') ? 'is-invalid' : '' }}"
-                        name="nombreOpcion" id="nombreOpcion" value="{{$rol->role}}" required>
+                        name="nombreOpcion" id="nombreOpcion" value="{{$rol->role}}" readonly>
                     @if ($errors->has('nombreOpcion'))
                         <div class="invalid-feedback">
                             {{ $errors->first('nombreOpcion') }}
@@ -45,6 +45,16 @@
 
 @endsection
 
+@section('AfterScript')
 
+<style>
+    .form-control[readonly] {
+        background-color: #f7f7f7; 
+        color: #555; 
+        cursor: not-allowed;
+    }
+</style>
+
+@endsection
 
 

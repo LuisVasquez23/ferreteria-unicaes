@@ -59,13 +59,25 @@
 
                                 @endif
                                 <td class="d-flex gap-1 justify-content-center">
+
+                                   
+
                                     @if ($filtro !== 'bloqueados')
+
+                                        @if ($role->role !== 'MegaAdmin')
+
                                         <a href="{{ route('rol.edit', $role->role_id) }}" class="btn btn-primary">
                                             <i class="ti ti-pencil"></i>
                                         </a>
+
+                                        @endif
+
                                     @endif
 
                                     @if ($filtro !== 'bloqueados')
+
+                                        @if ($role->role !== 'MegaAdmin')
+
                                         <form action="{{ route('rol.destroy', $role->role_id) }}" method="POST"
                                             id="block-form-{{ $role->role_id }}">
                                             @csrf
@@ -76,6 +88,9 @@
                                                 <i class="fa-solid fa-lock"></i>
                                             </button>
                                         </form>
+
+                                        @endif
+
                                     @endif
 
 

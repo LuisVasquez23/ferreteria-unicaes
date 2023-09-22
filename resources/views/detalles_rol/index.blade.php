@@ -70,16 +70,30 @@
                             @endif
                             
                             <td class="d-flex gap-1 justify-content-center">
+
+
+                                @if($rol->role->role == 'MegaAdmin')
+
+                                <p class="mt-2">Nada por hacer</p>
+
+                                @endif
+
                                 
                                 @if ($filtro !== 'bloqueados')
+
+                                @if ($rol->role->role !== 'MegaAdmin')
 
                                 <a href="{{ route('detalle_rol.edit', $rol->detalle_id) }}" class="btn btn-primary">
                                     <i class="ti ti-pencil"></i>
                                 </a>
+
+                                @endif
                                 
                                 @endif
 
                                 @if ($filtro !== 'bloqueados')
+
+                                @if ($rol->role->role !== 'MegaAdmin')
 
                                 <form action="{{ route('detalle_rol.destroy', $rol->detalle_id) }}" method="POST"
                                     id="block-form-{{ $rol->detalle_id }}">
@@ -91,6 +105,8 @@
                                         <i class="fa-solid fa-lock"></i>
                                     </button>
                                 </form>
+
+                                @endif
 
                                 @endif
 

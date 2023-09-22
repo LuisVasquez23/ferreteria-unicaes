@@ -47,10 +47,18 @@ class AdminDetalleRolController extends Controller
     {
         try {
 
-            $roles = Role::pluck('role', 'role_id');
-            $usuarios = Usuario::pluck('email', 'usuario_id');
-            // $usuarios = Usuario::pluck(DB::raw("CONCAT(nombres, ' ', apellidos)"), 'usuario_id');
+            // listo los roles de la db
 
+            $rolesFromDB = Role::pluck('role', 'role_id');
+
+            //filtro para que no pueda ingresar otro MegaAdmin
+            $roles = $rolesFromDB->reject(function ($role, $roleId) {
+                return $role === 'MegaAdmin';
+            });
+
+
+
+            $usuarios = Usuario::pluck('email', 'usuario_id');
             return view('detalles_rol.create', compact('roles', 'usuarios'));
             
         } catch (\Exception $e) {
@@ -88,15 +96,6 @@ class AdminDetalleRolController extends Controller
             }
 
 
-              // Validar si el usuario ya está asociado a un rol en detalle_roles
-        $existingDetail = DetalleRole::where('usuario_id', $request->input('usuario_input'))->first();
-
-        if ($existingDetail) {
-            return redirect()->route('detalle_rol.create')->with('error', 'El usuario ya está asociado a un rol.');
-        }
-    
-    
-    
             $detalle = new DetalleRole();
     
             $detalle->role_id = $request->input('rol_input');
@@ -123,7 +122,15 @@ class AdminDetalleRolController extends Controller
     
         $detalle = DetalleRole::find($id);
 
-        $roles = Role::pluck('role', 'role_id');
+        // listo los roles de la db
+
+        $rolesFromDB = Role::pluck('role', 'role_id');
+
+        //filtro para que no pueda ingresar otro MegaAdmin
+        $roles = $rolesFromDB->reject(function ($role, $roleId) {
+            return $role === 'MegaAdmin';
+        });
+        
         $usuarios = Usuario::pluck('email', 'usuario_id');
     
         // Verifica si el registro existe
@@ -152,14 +159,6 @@ class AdminDetalleRolController extends Controller
 
                 return redirect()->route('detalles_roles')->with('error', 'Detalle no encontrado');
             }
-
-            // Validar si el usuario ya está asociado a un rol en detalle_roles
-            $existingDetail = DetalleRole::where('usuario_id', $request->input('usuario_input'))->first();
-
-            if ($existingDetail) {
-                return redirect()->route('detalle_rol.update')->with('error', 'El usuario ya está asociado a un rol.');
-            }
-    
 
             $detalle->role_id = $request->input('rol_input');
             $detalle->usuario_id = $request->input('usuario_input');

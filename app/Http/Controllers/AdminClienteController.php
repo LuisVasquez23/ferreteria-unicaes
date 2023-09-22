@@ -143,7 +143,7 @@ class AdminClienteController extends Controller
         $rolCliente = Role::where('role', 'Cliente')->first();
 
         if (!$rolCliente) {
-            return redirect()->route('clientes')->with('error', 'El rol "cliente" no se encontró.');
+            return redirect()->route('clientes')->with('error', 'El rol de cliente no se encontró.');
         }
 
 
