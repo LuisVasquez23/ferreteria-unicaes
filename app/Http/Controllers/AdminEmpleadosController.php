@@ -174,7 +174,7 @@ class AdminEmpleadosController extends Controller
     
             } catch (\Exception $e) {
                 Log::error($e->getMessage());
-                return redirect()->route('empleados.index')->with('error', 'Error al cargar la página para editar el cliente');
+                return redirect()->route('empleados.index')->with('error', 'Error al cargar la página para editar el empleado');
             }
     }
 
@@ -275,12 +275,12 @@ class AdminEmpleadosController extends Controller
             
             $empleado->save();
     
-            return redirect()->route('empleados.index')->with('success', 'Cliente actualizado exitosamente');
+            return redirect()->route('empleados.index')->with('success', 'Empleado actualizado exitosamente');
             
         } catch (ValidationException $e) {
             return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Throwable $th) {
-            return redirect()->route('empleados.index')->with('error', 'Sucedio un error al actualizar el cliente, revisa que todos los campos sean correctos');
+            return redirect()->route('empleados.index')->with('error', 'Sucedio un error al actualizar el empleado, revisa que todos los campos sean correctos');
         }
     }
 
@@ -309,11 +309,11 @@ class AdminEmpleadosController extends Controller
         } catch (QueryException $e) {
             // Manejo de excepciones SQL
             Log::error($e->getMessage());
-            return redirect()->route('empleados.index')->with('error', 'Error de base de datos al eliminar el cliente');
+            return redirect()->route('empleados.index')->with('error', 'Error al eliminar el empleado');
         } catch (\Exception $e) {
             // Manejo de otras excepciones
             Log::error($e->getMessage());
-            return redirect()->route('empleados.index')->with('error', 'Error al eliminar el cliente');
+            return redirect()->route('empleados.index')->with('error', 'Error al eliminar el empleado');
         }
         
     }
@@ -326,7 +326,7 @@ class AdminEmpleadosController extends Controller
     
             // Verificar si el cliente está bloqueado
             if (!$empleado->bloqueado_por) {
-                return redirect()->route('empleados.index')->with('error', 'El cliente no está bloqueado.');
+                return redirect()->route('empleados.index')->with('error', 'El empleado no está bloqueado.');
             }
     
             // Desbloquear al cliente
@@ -339,11 +339,11 @@ class AdminEmpleadosController extends Controller
             //Guardo los cambios
             $empleado->save();
     
-            return redirect()->route('empleados.index')->with('success', 'El cliente ha sido desbloqueado con éxito.');
+            return redirect()->route('empleados.index')->with('success', 'El empleado ha sido desbloqueado con éxito.');
     
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->route('empleados.index')->with('error', 'Error al desbloquear el cliente.');
+            return redirect()->route('empleados.index')->with('error', 'Error al desbloquear el empleado.');
         }
     }
 
