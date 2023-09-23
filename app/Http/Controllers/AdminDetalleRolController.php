@@ -58,7 +58,8 @@ class AdminDetalleRolController extends Controller
 
 
 
-            $usuarios = Usuario::pluck('email', 'usuario_id');
+            $usuarios = Usuario::pluck(DB::raw("CONCAT(nombres, ' ', apellidos) AS nombre_completo"), 'usuario_id');
+
             return view('detalles_rol.create', compact('roles', 'usuarios'));
             
         } catch (\Exception $e) {
@@ -131,7 +132,8 @@ class AdminDetalleRolController extends Controller
             return $role === 'MegaAdmin';
         });
         
-        $usuarios = Usuario::pluck('email', 'usuario_id');
+        $usuarios = Usuario::pluck(DB::raw("CONCAT(nombres, ' ', apellidos) AS nombre_completo"), 'usuario_id');
+
     
         // Verifica si el registro existe
         if (!$detalle) {

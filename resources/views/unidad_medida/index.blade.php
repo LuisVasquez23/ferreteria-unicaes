@@ -1,14 +1,14 @@
 @extends('layouts/dashboard')
-@section('title', 'Administrar detalle de roles')
+@section('title', 'Administrar unidades')
 @section('contenido')
 
 
 <div class="card mt-3">
-    <h5 class="card-header">Administración de detalle para los roles</h5>
+    <h5 class="card-header">Administración de unidades</h5>
     <div class="card-body">
-        <a href="{{ route('detalle_rol.create') }}" class="btn btn-success mb-3">
+        <a href="{{ route('unidad.create') }}" class="btn btn-success mb-3">
             <i class="fas fa-plus"></i>
-            Registrar detalle para rol
+            Registrar unidad de medida
         
         </a>
 
@@ -26,13 +26,10 @@
                 <thead class="text-dark fs-4">
                     <tr>
                         <th class="border-bottom-0">
-                            <b>Rol</b>
+                            <b>Nombre</b>
                         </th>
                         <th class="border-bottom-0">
-                            <b>Usuario</b>
-                        </th>
-                        <th class="border-bottom-0">
-                            <b>Email</b>
+                            <b>Descripción</b>
                         </th>
                         @if ($filtro === 'bloqueados')
 
@@ -48,77 +45,57 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($detalles_roles as $rol)
+                    @foreach ($medidas as $medida)
                         <tr>
                             <td class="border-bottom-0">
-                                <h6 class="fw-semibold mb-0">{{ $rol->role->role }}</h6>
+                                <h6 class="fw-semibold mb-0">{{ $medida->nombre }}</h6>
                             </td>
                             <td class="border-bottom-0">
-                                <h6 class="fw-semibold mb-0">{{ $rol->usuario->nombres }} {{ $rol->usuario->apellidos }}</h6>
+                                <h6 class="fw-semibold mb-0">{{ $medida->descripcion }}</h6>
                             </td>
 
-                            <td class="border-bottom-0">
-                                <h6 class="fw-semibold mb-0">{{ $rol->usuario->email }}</h6>
-                            </td>
-
-                           @if ($filtro === 'bloqueados')
+                            @if ($filtro === 'bloqueados')
 
                             <td class="border-bottom-0">
-                                <h6 class="fw-semibold mb-0">{{$rol->bloqueado_por}}</h6>
+                                <h6 class="fw-semibold mb-0">{{$medida->bloqueado_por}}</h6>
                             </td>
 
                             @endif
                             
                             <td class="d-flex gap-1 justify-content-center">
-
-
-                                @if($rol->role->role == 'MegaAdmin')
-
-                                <p class="mt-2">Nada por hacer</p>
-
-                                @endif
-
                                 
                                 @if ($filtro !== 'bloqueados')
 
-                                @if ($rol->role->role !== 'MegaAdmin')
-
-                                <a href="{{ route('detalle_rol.edit', $rol->detalle_id) }}" class="btn btn-primary">
+                                <a href="{{ route('unidad.edit', $medida->unidad_medida_id) }}" class="btn btn-primary">
                                     <i class="ti ti-pencil"></i>
                                 </a>
-
-                                @endif
                                 
                                 @endif
 
                                 @if ($filtro !== 'bloqueados')
 
-                                @if ($rol->role->role !== 'MegaAdmin')
-
-                                <form action="{{ route('detalle_rol.destroy', $rol->detalle_id) }}" method="POST"
-                                    id="block-form-{{ $rol->detalle_id }}">
+                                <form action="{{ route('unidad.destroy', $medida->unidad_medida_id) }}" method="POST"
+                                    id="block-form-{{ $medida->unidad_medida_id }}">
                                     @csrf
                                     @method('DELETE')
                                     <input type="hidden" name="action" value="update">
                                     <button type="button" class="btn btn-danger"
-                                        onclick="confirmBlock({{ $rol->detalle_id }})">
+                                        onclick="confirmBlock({{ $medida->unidad_medida_id }})">
                                         <i class="fa-solid fa-lock"></i>
                                     </button>
                                 </form>
 
                                 @endif
 
-                                @endif
-
 
                                 @if ($filtro === 'bloqueados')
 
-                                <form action="{{ route('detalle_rol.unblock', $rol->detalle_id) }}" method="POST"
-                                    id="unblock-form-{{$rol->detalle_id}}">
+                                <form action="{{ route('unidad.unblock', $medida->unidad_medida_id) }}" method="POST"
+                                    id="unblock-form-{{$medida->unidad_medida_id}}">
                                     @csrf
                                     @method('PUT')
                                     <button type="button" class="btn btn-warning"
-                                    onclick="confirmUnblock({{ $rol->detalle_id }})">
+                                    onclick="confirmUnblock({{ $medida->unidad_medida_id }})">
                                         <i class="fa-solid fa-unlock"></i>
                                     </button>
                                 </form>
@@ -144,7 +121,7 @@
     $(document).ready(function() {
         $("#filtro-bloqueo").on("change", function() {
             var filtro = $(this).val();
-            var url = "{{ route('detalles_roles') }}?filtro=" + filtro;
+            var url = "{{ route('unidades') }}?filtro=" + filtro;
             window.location.href = url;
         });
     });

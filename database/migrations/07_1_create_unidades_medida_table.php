@@ -12,7 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('unidades_medida', function (Blueprint $table) {
-            $table->id();
+            $table->id('unidad_medida_id');
+            $table->string('nombre')->unique();
+            $table->text('descripcion')->nullable();
+
+
+             // Campos de auditoria
+             $table->string('creado_por')->nullable();
+             $table->dateTime('fecha_creacion')->nullable();
+             $table->string('actualizado_por')->nullable();
+             $table->dateTime('fecha_actualizacion')->nullable();
+             $table->string('bloqueado_por')->nullable();
+             $table->dateTime('fecha_bloqueo')->nullable();
+             
             $table->timestamps();
         });
     }

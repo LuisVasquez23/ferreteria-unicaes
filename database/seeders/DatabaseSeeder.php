@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\MenuOption;
+use App\Models\Unidad_Medida;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -47,5 +48,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call(UsuariosSeeder::class);
         $this->call(EstanteSeeder::class);
+        $this->call(Unidad_MedidaSeeder::class);
     }
 }

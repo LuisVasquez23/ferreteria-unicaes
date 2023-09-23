@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Model;
  * 
  * @property Categoria $categoria
  * @property Estante $estante
+ * @property Unidad_Medida $unidades_medida
  * @property Periodo $periodo
  * @property Usuario $usuario
  * @property Collection|DetalleCompra[] $detalle_compras
@@ -55,6 +56,7 @@ class Producto extends Model
 		'proveedor_id' => 'int',
 		'categoria_id' => 'int',
 		'estante_id' => 'int',
+		'unidad_medida_id' => 'int',
 		'periodo_id' => 'int',
 		'fecha_creacion' => 'datetime',
 		'fecha_actualizacion' => 'datetime',
@@ -69,6 +71,7 @@ class Producto extends Model
 		'proveedor_id',
 		'categoria_id',
 		'estante_id',
+		'unidad_medida_id',
 		'periodo_id',
 		'creado_por',
 		'fecha_creacion',

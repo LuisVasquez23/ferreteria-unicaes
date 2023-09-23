@@ -27,11 +27,11 @@
                 <div class="col-md-6">
 
                     <div class="form-group">
-                        <label for="usuario_input">Correo del usuario: *</label>
+                        <label for="usuario_input">Nombre del usuario: *</label>
                         <select name="usuario_input" id="usuario_input" class="form-control">
-                            @foreach($usuarios as $usuarioId => $usuarioEmail)
+                            @foreach($usuarios as $usuarioId => $nombre_completo)
                                 <option value="{{ $usuarioId }}">
-                                    {{ $usuarioEmail }}
+                                    {{ $nombre_completo }}
                                 </option>
                             @endforeach
                         </select>
