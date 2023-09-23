@@ -1,4 +1,4 @@
-# Usa una imagen base de PHP 8.1
+# Utiliza una imagen base de PHP
 FROM php:8.1-fpm
 
 # Establece el directorio de trabajo en la raíz de Laravel
@@ -21,14 +21,16 @@ RUN apt-get update && \
 COPY .env.example .env
 RUN php artisan key:generate
 
-# Instala el servidor de MySQL
-RUN apt-get install -y mariadb-server
+# Configura la base de datos MySQL (puede variar según tu entorno)
+ENV DB_CONNECTION=mysql
+ENV DB_HOST=mysql
+ENV DB_PORT=3306
+ENV DB_DATABASE=ferreteria-unicaes
+ENV DB_USERNAME=root
+ENV DB_PASSWORD=
 
-# Configura la base de datos MySQL
-ENV MYSQL_ROOT_PASSWORD=root_password
-
-# Expone el puerto 3306 para MySQL
-EXPOSE 3306
+# Expone el puerto 9000 para PHP-FPM (ajusta según sea necesario)
+EXPOSE 9000
 
 # Define el comando para ejecutar PHP-FPM
 CMD ["php-fpm"]
