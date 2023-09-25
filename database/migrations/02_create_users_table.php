@@ -16,7 +16,7 @@ return new class extends Migration
             // Campos generales de la tabla
             $table->id('usuario_id');
             $table->string('dui', 10)->unique()->nullable();
-            $table->string('nit', 14)->unique()->nullable();
+            $table->string('nit', 17)->unique()->nullable();
             $table->string('nombres', 50)->nullable();
             $table->string('apellidos', 50)->nullable();
             $table->string('telefono', 9)->nullable();

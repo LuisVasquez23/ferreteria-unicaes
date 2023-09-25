@@ -27,7 +27,11 @@
                             <th class="border-bottom-0">
                                 <b>Descripción</b>
                             </th>
-
+                            @if ($filtro === 'bloqueados')
+                                <th class="border-bottom-0">
+                                    <b>Bloqueado por</b>
+                                </th>
+                            @endif
                             <th>
                                 <b>Acciones</b>
                             </th>
@@ -37,11 +41,16 @@
                         @foreach ($categorias as $categoria)
                             <tr>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $categoria->categoria }}</h6>
+                                    <h6>{{ $categoria->categoria }}</h6>
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $categoria->descripcion }}</h6>
+                                    <h6>{{ $categoria->descripcion }}</h6>
                                 </td>
+                                @if ($filtro === 'bloqueados')
+                                    <td class="border-bottom-0">
+                                    <h6>{{ $categoria->bloqueado_por }}</h6>
+                                    </ts>
+                                @endif
                                 <td class="d-flex gap-1 justify-content-center">
 
                                     @if ($filtro !== 'bloqueados')

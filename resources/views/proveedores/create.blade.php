@@ -103,27 +103,31 @@
 
 <script>
     // Validar NIT
-    /*$(document).ready(function() {
-        $('#nit_opcion').on('input', function() {
-            let nit = $(this).val();
-            nit = nit.replace(/\D/g, '');
-            if (nit.length >= 4) {
-                nit = nit.substr(0, 4) + '-' + nit.substr(4, 6) + '-' + nit.substr(10, 3) + '-' + nit.substr(13, 1);
-            }
-            $(this).val(nit);
-        });
-    });*/
-    //validar DUI
     $(document).ready(function() {
-        $('#nit_opcion').on('input', function() {
-            let dui = $(this).val();
-            dui = dui.replace(/\D/g, '');
-            if (dui.length >= 8) {
-                dui = dui.substr(0, 8) + '-' + dui.substr(8, 1);
-            }
-            $(this).val(dui);
-        });
+    $('#nit_opcion').on('input', function() {
+        let value = $(this).val().replace(/\D/g, '');
+
+        if (value.length <= 8) {
+            // Formato DUI (########)
+            value = value.substr(0, 8);
+        } else if (value.length === 9) {
+            // Formato DUI con guion (########-#)
+            value = value.substr(0, 8) + '-' + value.substr(8, 1);
+        } else if (value.length > 9 && value.length <= 14) {
+            // Formato NIT (####-######-###-#)
+            value = value.substr(0, 4) + '-' + value.substr(4, 6) + '-' + value.substr(10, 3) + '-' + value.substr(13, 1);
+        } else if (value.length > 14) {
+            // Limitar la longitud a 14 dígitos
+            value = value.substr(0, 4) + '-' + value.substr(4, 6) + '-' + value.substr(10, 3) + '-' + value.substr(13, 1);
+        }
+
+        $(this).val(value);
     });
+});
+
+
+
+   
     // Validar número de teléfono
     $(document).ready(function() {
         $('#telefono_opcion').on('input', function() {

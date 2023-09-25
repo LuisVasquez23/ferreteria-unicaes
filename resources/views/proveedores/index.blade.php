@@ -36,9 +36,16 @@
                             <th class="border-bottom-0">
                                 <b>Locación</b>
                             </th>
+                            @if ($filtro === 'bloqueados')
+                            <th class="border-bottom-0">
+                                <b>Bloqueado por</b>
+                            </th>
+                            @endif
+
                             <th>
                                 <b>Acciones</b>
                             </th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -46,21 +53,26 @@
                             <tr>
 
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $proveedor->dui }}</h6>
+                                    <h6>{{ $proveedor->nit }}</h6>
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $proveedor->nombres }} </h6>
+                                    <h6>{{ $proveedor->nombres }} </h6>
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $proveedor->email }}</h6>
+                                    <h6>{{ $proveedor->email }}</h6>
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $proveedor->telefono }}</h6>
+                                    <h6>+503 {{ $proveedor->telefono }}</h6>
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $proveedor->municipio }} ,
+                                    <h6>{{ $proveedor->municipio }} ,
                                         {{ $proveedor->departamento }}, {{ $proveedor->direccion }}</h6>
                                 </td>
+                                @if ($filtro === 'bloqueados')
+                                    <td class="border-bottom-0">
+                                    <h6>{{ $proveedor->bloqueado_por }}</h6>
+                                    </ts>
+                                @endif
                                 <td class="d-flex gap-1 justify-content-center">
 
                                     @if ($filtro !== 'bloqueados')

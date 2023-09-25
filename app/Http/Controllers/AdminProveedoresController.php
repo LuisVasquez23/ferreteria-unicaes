@@ -71,7 +71,7 @@ class AdminProveedoresController extends Controller
         try {
             // Define las reglas de validación
             $rules = [
-                'nit_opcion' => 'required|unique:usuarios,dui',
+                'nit_opcion' => 'required|unique:usuarios,nit',
                 'nombre_opcion' => 'required',
                 'telefono_opcion' => 'required|regex:/^\d{4}-\d{4}$/|unique:usuarios,telefono',
                 'direccion_opcion' => 'nullable',
@@ -108,7 +108,7 @@ class AdminProveedoresController extends Controller
 
             $proveedor = new Usuario();
 
-            $proveedor->dui = $request->input('nit_opcion');
+            $proveedor->nit = $request->input('nit_opcion');
             $proveedor->nombres = $request->input('nombre_opcion');
             $proveedor->telefono = $request->input('telefono_opcion');
             $proveedor->departamento = $request->input('departamento');
@@ -139,7 +139,6 @@ class AdminProveedoresController extends Controller
 
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            dd($e); // Esto imprimirá la excepción y detendrá la ejecución del script.
 
             return redirect()->route('proveedores.index')->with('error', 'Sucedio un error al ingresar el proveedor');
         }
@@ -197,7 +196,7 @@ class AdminProveedoresController extends Controller
     
             // Definir las reglas de validación
             $rules = [
-                'nit_opcion' => 'required|unique:usuarios,dui,' . $id . ',usuario_id',
+                'nit_opcion' => 'required|unique:usuarios,nit,' . $id . ',usuario_id',
                 'nombre_opcion' => 'required',
                 'telefono_opcion' => 'required|regex:/^\d{4}-\d{4}$/|unique:usuarios,telefono,' . $id . ',usuario_id',
                 'direccion_opcion' => 'nullable',
@@ -231,7 +230,7 @@ class AdminProveedoresController extends Controller
                     ->withInput();
             }
     
-            $proveedor->dui = $request->input('nit_opcion');
+            $proveedor->nit = $request->input('nit_opcion');
             $proveedor->nombres = $request->input('nombre_opcion');
             $proveedor->telefono = $request->input('telefono_opcion');
             $proveedor->departamento = $request->input('departamento');
