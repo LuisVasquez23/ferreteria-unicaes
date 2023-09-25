@@ -7,8 +7,7 @@
         <div class="card-body">
             <a href="{{ route('empleados.create') }}" class="btn btn-success mb-3">
                 <i class="fas fa-plus"></i>
-                Registrar empleado
-            
+                Agregar
             </a>
 
             <div class="col-md-4 mx-auto text-center">
@@ -48,52 +47,48 @@
                                     <h6 class="fw-semibold mb-0">{{ $empleado->dui }}</h6>
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $empleado->nombres }}  {{ $empleado->apellidos }}</h6>
+                                    <h6 class="fw-semibold mb-0">{{ $empleado->nombres }} {{ $empleado->apellidos }}</h6>
                                 </td>
                                 <td class="border-bottom-0">
                                     <h6 class="fw-semibold mb-0">+503 {{ $empleado->telefono }}</h6>
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $empleado->municipio }} , {{ $empleado->departamento }}</h6>
+                                    <h6 class="fw-semibold mb-0">{{ $empleado->municipio }} , {{ $empleado->departamento }}
+                                    </h6>
                                 </td>
                                 <td class="d-flex gap-1 justify-content-center">
-                                    
-                                    @if ($filtro !== 'bloqueados')
 
-                                    <a href="{{ route('empleados.edit', $empleado->usuario_id) }}" class="btn btn-primary">
-                                        <i class="ti ti-pencil"></i>
-                                    </a>
-                                    
+                                    @if ($filtro !== 'bloqueados')
+                                        <a href="{{ route('empleados.edit', $empleado->usuario_id) }}"
+                                            class="btn btn-primary">
+                                            <i class="ti ti-pencil"></i>
+                                        </a>
                                     @endif
 
                                     @if ($filtro !== 'bloqueados')
-
-                                    <form action="{{ route('empleados.destroy', $empleado->usuario_id) }}" method="POST"
-                                        id="block-form-{{ $empleado->usuario_id }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <input type="hidden" name="action" value="update">
-                                        <button type="button" class="btn btn-danger"
-                                            onclick="confirmBlock({{ $empleado->usuario_id }})">
-                                            <i class="fa-solid fa-lock"></i>
-                                        </button>
-                                    </form>
-
+                                        <form action="{{ route('empleados.destroy', $empleado->usuario_id) }}"
+                                            method="POST" id="block-form-{{ $empleado->usuario_id }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="hidden" name="action" value="update">
+                                            <button type="button" class="btn btn-danger"
+                                                onclick="confirmBlock({{ $empleado->usuario_id }})">
+                                                <i class="fa-solid fa-lock"></i>
+                                            </button>
+                                        </form>
                                     @endif
 
 
                                     @if ($filtro === 'bloqueados')
-
-                                    <form action="{{ route('empleados.unblock', $empleado->usuario_id) }}" method="POST"
-                                        id="unblock-form-{{$empleado->usuario_id}}">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="button" class="btn btn-warning"
-                                        onclick="confirmUnblock({{ $empleado->usuario_id }})">
-                                            <i class="fa-solid fa-unlock"></i>
-                                        </button>
-                                    </form>
-
+                                        <form action="{{ route('empleados.unblock', $empleado->usuario_id) }}"
+                                            method="POST" id="unblock-form-{{ $empleado->usuario_id }}">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="button" class="btn btn-warning"
+                                                onclick="confirmUnblock({{ $empleado->usuario_id }})">
+                                                <i class="fa-solid fa-unlock"></i>
+                                            </button>
+                                        </form>
                                     @endif
 
 
@@ -111,17 +106,15 @@
 
 @section('AfterScript')
 
-<script>
-    $(document).ready(function() {
-        $("#filtro-bloqueo").on("change", function() {
-            var filtro = $(this).val();
-            var url = "{{ route('empleados.index') }}?filtro=" + filtro;
-            window.location.href = url;
+    <script>
+        $(document).ready(function() {
+            $("#filtro-bloqueo").on("change", function() {
+                var filtro = $(this).val();
+                var url = "{{ route('empleados.index') }}?filtro=" + filtro;
+                window.location.href = url;
+            });
         });
-    });
-</script>
+    </script>
 
 
 @endsection
-    
-

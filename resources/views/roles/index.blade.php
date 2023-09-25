@@ -6,7 +6,8 @@
         <h5 class="card-header">Administracion de roles</h5>
         <div class="card-body">
             <a href="{{ route('rol.create') }}" class="btn btn-success mb-3">
-                <i class="fas fa-plus"></i> Agregar rol
+                <i class="fas fa-plus"></i>
+                Agregar
             </a>
 
             <div class="col-md-4 mx-auto text-center">
@@ -29,12 +30,10 @@
                                 <b>Descripción</b>
                             </th>
                             @if ($filtro === 'bloqueados')
-
                                 <th class="border-bottom-0">
                                     <b>Bloqueado por</b>
                                 </th>
-
-                             @endif
+                            @endif
 
                             <th>
                                 <b>Acciones</b>
@@ -50,47 +49,37 @@
                                 <td>
                                     <h6 class="fw-semibold mb-0">{{ $role->descripcion }}</h6>
                                 </td>
-                                
+
                                 @if ($filtro === 'bloqueados')
-
-                                <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{$role->bloqueado_por}}</h6>
-                                </td>
-
+                                    <td class="border-bottom-0">
+                                        <h6 class="fw-semibold mb-0">{{ $role->bloqueado_por }}</h6>
+                                    </td>
                                 @endif
                                 <td class="d-flex gap-1 justify-content-center">
 
-                                   
+
 
                                     @if ($filtro !== 'bloqueados')
-
                                         @if ($role->role !== 'MegaAdmin')
-
-                                        <a href="{{ route('rol.edit', $role->role_id) }}" class="btn btn-primary">
-                                            <i class="ti ti-pencil"></i>
-                                        </a>
-
+                                            <a href="{{ route('rol.edit', $role->role_id) }}" class="btn btn-primary">
+                                                <i class="ti ti-pencil"></i>
+                                            </a>
                                         @endif
-
                                     @endif
 
                                     @if ($filtro !== 'bloqueados')
-
                                         @if ($role->role !== 'MegaAdmin')
-
-                                        <form action="{{ route('rol.destroy', $role->role_id) }}" method="POST"
-                                            id="block-form-{{ $role->role_id }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <input type="hidden" name="action" value="update">
-                                            <button type="button" class="btn btn-danger"
-                                                onclick="confirmBlock({{ $role->role_id }})">
-                                                <i class="fa-solid fa-lock"></i>
-                                            </button>
-                                        </form>
-
+                                            <form action="{{ route('rol.destroy', $role->role_id) }}" method="POST"
+                                                id="block-form-{{ $role->role_id }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <input type="hidden" name="action" value="update">
+                                                <button type="button" class="btn btn-danger"
+                                                    onclick="confirmBlock({{ $role->role_id }})">
+                                                    <i class="fa-solid fa-lock"></i>
+                                                </button>
+                                            </form>
                                         @endif
-
                                     @endif
 
 
@@ -119,15 +108,15 @@
 
 @section('AfterScript')
 
-<script>
-    $(document).ready(function() {
-        $("#filtro-bloqueo").on("change", function() {
-            var filtro = $(this).val();
-            var url = "{{ route('roles') }}?filtro=" + filtro;
-            window.location.href = url;
+    <script>
+        $(document).ready(function() {
+            $("#filtro-bloqueo").on("change", function() {
+                var filtro = $(this).val();
+                var url = "{{ route('roles') }}?filtro=" + filtro;
+                window.location.href = url;
+            });
         });
-    });
-</script>
+    </script>
 
 
 @endsection

@@ -7,8 +7,7 @@
         <div class="card-body">
             <a href="{{ route('cliente.create') }}" class="btn btn-success mb-3">
                 <i class="fas fa-plus"></i>
-                Registrar Cliente
-            
+                Agregar
             </a>
 
             <div class="col-md-4 mx-auto text-center">
@@ -38,11 +37,9 @@
                             </th>
 
                             @if ($filtro === 'bloqueados')
-
                                 <th class="border-bottom-0">
                                     <b>Bloqueado por</b>
                                 </th>
-
                             @endif
 
                             <th>
@@ -54,65 +51,58 @@
                         @foreach ($clientes as $cliente)
                             <tr>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $cliente->dui }}</h6>
+                                    <h6>{{ $cliente->dui }}</h6>
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $cliente->nombres }} , {{ $cliente->apellidos }}</h6>
+                                    <h6>{{ $cliente->nombres }} , {{ $cliente->apellidos }}</h6>
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">+503 {{ $cliente->telefono }}</h6>
+                                    <h6>+503 {{ $cliente->telefono }}</h6>
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $cliente->municipio }} , {{ $cliente->departamento }}</h6>
+                                    <h6>{{ $cliente->municipio }} , {{ $cliente->departamento }}
+                                    </h6>
                                 </td>
 
-                                
+
                                 @if ($filtro === 'bloqueados')
-
-                                <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{$cliente->bloqueado_por}}</h6>
-                                </td>
-
+                                    <td class="border-bottom-0">
+                                        <h6>{{ $cliente->bloqueado_por }}</h6>
+                                    </td>
                                 @endif
 
                                 <td class="d-flex gap-1 justify-content-center">
-                                    
-                                    @if ($filtro !== 'bloqueados')
 
-                                    <a href="{{ route('cliente.edit', $cliente->usuario_id) }}" class="btn btn-primary">
-                                        <i class="ti ti-pencil"></i>
-                                    </a>
-                                    
+                                    @if ($filtro !== 'bloqueados')
+                                        <a href="{{ route('cliente.edit', $cliente->usuario_id) }}" class="btn btn-primary">
+                                            <i class="ti ti-pencil"></i>
+                                        </a>
                                     @endif
 
                                     @if ($filtro !== 'bloqueados')
-
-                                    <form action="{{ route('cliente.destroy', $cliente->usuario_id) }}" method="POST"
-                                        id="block-form-{{ $cliente->usuario_id }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <input type="hidden" name="action" value="update">
-                                        <button type="button" class="btn btn-danger"
-                                            onclick="confirmBlock({{ $cliente->usuario_id }})">
-                                            <i class="fa-solid fa-lock"></i>
-                                        </button>
-                                    </form>
-
+                                        <form action="{{ route('cliente.destroy', $cliente->usuario_id) }}" method="POST"
+                                            id="block-form-{{ $cliente->usuario_id }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="hidden" name="action" value="update">
+                                            <button type="button" class="btn btn-danger"
+                                                onclick="confirmBlock({{ $cliente->usuario_id }})">
+                                                <i class="fa-solid fa-lock"></i>
+                                            </button>
+                                        </form>
                                     @endif
 
 
                                     @if ($filtro === 'bloqueados')
-
-                                    <form action="{{ route('cliente.unblock', $cliente->usuario_id) }}" method="POST"
-                                        id="unblock-form-{{$cliente->usuario_id}}">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="button" class="btn btn-warning"
-                                        onclick="confirmUnblock({{ $cliente->usuario_id }})">
-                                            <i class="fa-solid fa-unlock"></i>
-                                        </button>
-                                    </form>
-
+                                        <form action="{{ route('cliente.unblock', $cliente->usuario_id) }}" method="POST"
+                                            id="unblock-form-{{ $cliente->usuario_id }}">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="button" class="btn btn-warning"
+                                                onclick="confirmUnblock({{ $cliente->usuario_id }})">
+                                                <i class="fa-solid fa-unlock"></i>
+                                            </button>
+                                        </form>
                                     @endif
 
 
@@ -130,17 +120,15 @@
 
 @section('AfterScript')
 
-<script>
-    $(document).ready(function() {
-        $("#filtro-bloqueo").on("change", function() {
-            var filtro = $(this).val();
-            var url = "{{ route('clientes') }}?filtro=" + filtro;
-            window.location.href = url;
+    <script>
+        $(document).ready(function() {
+            $("#filtro-bloqueo").on("change", function() {
+                var filtro = $(this).val();
+                var url = "{{ route('clientes') }}?filtro=" + filtro;
+                window.location.href = url;
+            });
         });
-    });
-</script>
+    </script>
 
 
 @endsection
-    
-

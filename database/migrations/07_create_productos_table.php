@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('productos', function (Blueprint $table) {
 
             // Campos generales de la tabla
-            $table->id('producto_id');
+            $table->id('producto_id')->zerofill();
             $table->string('nombre');
             $table->longText('descripcion');
             $table->float('precio');
