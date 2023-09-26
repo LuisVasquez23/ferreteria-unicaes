@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $cantidad
  * @property int $proveedor_id
  * @property int $categoria_id
+ * @property int $estante_id
  * @property int $periodo_id
  * @property string|null $creado_por
  * @property Carbon|null $fecha_creacion
@@ -32,6 +33,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon|null $updated_at
  * 
  * @property Categoria $categoria
+ * @property Estante $estante
+ * @property Unidad_Medida $unidades_medida
  * @property Periodo $periodo
  * @property Usuario $usuario
  * @property Collection|DetalleCompra[] $detalle_compras
@@ -52,6 +55,8 @@ class Producto extends Model
 		'cantidad' => 'int',
 		'proveedor_id' => 'int',
 		'categoria_id' => 'int',
+		'estante_id' => 'int',
+		'unidad_medida_id' => 'int',
 		'periodo_id' => 'int',
 		'fecha_creacion' => 'datetime',
 		'fecha_actualizacion' => 'datetime',
@@ -65,6 +70,8 @@ class Producto extends Model
 		'cantidad',
 		'proveedor_id',
 		'categoria_id',
+		'estante_id',
+		'unidad_medida_id',
 		'periodo_id',
 		'creado_por',
 		'fecha_creacion',
@@ -77,6 +84,11 @@ class Producto extends Model
 	public function categoria()
 	{
 		return $this->belongsTo(Categoria::class);
+	}
+
+	public function estante()
+	{
+		return $this->belongsTo(Estante::class);
 	}
 
 	public function periodo()

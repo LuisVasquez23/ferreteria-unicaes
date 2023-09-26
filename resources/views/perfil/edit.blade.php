@@ -48,7 +48,7 @@
                         <div class="form-group col-md-6 mt-2">
                             <label for="email_opcion">Email: </label>
                             <input type="text" class="form-control {{ $errors->has('email_opcion') ? 'is-invalid' : '' }}"
-                                name="email_opcion" id="email_opcion" value="{{$usuario->email}}">
+                                name="email_opcion" id="email_opcion" value="{{$usuario->email}}" required>
                             @if ($errors->has('email_opcion'))
                                 <div class="invalid-feedback">
                                     {{ $errors->first('email_opcion') }}
@@ -62,34 +62,34 @@
                         
 
                         <div class="form-group col-md-4">
-                            <label for="contraseña_antigua">Contraseña actual: </label>
-                            <input type="text" class="form-control {{ $errors->has('contraseña_antigua') ? 'is-invalid' : '' }}"
-                                name="contraseña_antigua" id="contraseña_antigua" required>
-                            @if ($errors->has('contraseña_antigua'))
+                            <label for="contrasenia_antigua">Contraseña actual: </label>
+                            <input type="password" class="form-control {{ $errors->has('contrasenia_antigua') ? 'is-invalid' : '' }}"
+                                name="contrasenia_antigua" id="contrasenia_antigua" required>
+                            @if ($errors->has('contrasenia_antigua'))
                                 <div class="invalid-feedback">
-                                    {{ $errors->first('contraseña_antigua') }}
+                                    {{ $errors->first('contrasenia_antigua') }}
                                 </div>
                             @endif
                         </div>
 
                         <div class="form-group col-md-4">
-                            <label for="contraseña_nueva">Contraseña nueva: </label>
-                            <input type="text" class="form-control {{ $errors->has('contraseña_nueva') ? 'is-invalid' : '' }}"
-                                name="contraseña_nueva" id="contraseña_nueva">
-                            @if ($errors->has('contraseña_nueva'))
+                            <label for="contrasenia_nueva">Contraseña nueva: </label>
+                            <input type="password" class="form-control {{ $errors->has('contrasenia_nueva') ? 'is-invalid' : '' }}"
+                                name="contrasenia_nueva" id="contrasenia_nueva">
+                            @if ($errors->has('contrasenia_nueva'))
                                 <div class="invalid-feedback">
-                                    {{ $errors->first('contraseña_nueva') }}
+                                    {{ $errors->first('contrasenia_nueva') }}
                                 </div>
                             @endif
                         </div>
 
                         <div class="form-group col-md-4">
-                            <label for="comprobar_contraseña">Confirmar contraseña: </label>
-                            <input type="text" class="form-control {{ $errors->has('comprobar_contraseña') ? 'is-invalid' : '' }}"
-                                name="comprobar_contraseña" id="comprobar_contraseña">
-                            @if ($errors->has('comprobar_contraseña'))
+                            <label for="comprobar_contrasenia">Confirmar contraseña: </label>
+                            <input type="password" class="form-control {{ $errors->has('comprobar_contrasenia') ? 'is-invalid' : '' }}"
+                                name="comprobar_contrasenia" id="comprobar_contrasenia">
+                            @if ($errors->has('comprobar_contrasenia'))
                                 <div class="invalid-feedback">
-                                    {{ $errors->first('comprobar_contraseña') }}
+                                    {{ $errors->first('comprobar_contrasenia') }}
                                 </div>
                             @endif
                         </div>

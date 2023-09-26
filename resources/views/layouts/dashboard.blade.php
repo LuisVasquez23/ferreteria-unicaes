@@ -23,10 +23,10 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.3/datatables.min.css" />
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.3/datatables.min.js"></script>
 
-     <!-- Font Awesome CDN -->
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
-   integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
-   crossorigin="anonymous" referrerpolicy="no-referrer" /> 
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+        integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 </head>
 
@@ -147,7 +147,7 @@
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
                                     aria-labelledby="drop2">
                                     <div class="message-body" style="position: relative">
-                                        <a href="{{route('perfiles')}}"
+                                        <a href="{{ route('perfiles') }}"
                                             class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
                                             <p class="mb-0 fs-3">Mi Perfil</p>
@@ -184,7 +184,9 @@
                 "paging": true,
                 "ordering": true,
                 "searching": true, // Habilita la función de búsqueda
-                "info": true
+                "info": true,
+                "lengthMenu": [5, 10, 25, 50, 100], // Define las opciones de longitud de página
+                "pageLength": 5 // Establece la cantidad de registros por página en 5
             });
         });
     </script>
@@ -247,7 +249,7 @@
         }
 
 
-            function confirmBlock(id) {
+        function confirmBlock(id) {
             Swal.fire({
                 title: '¿Estás seguro?',
                 text: 'Esta acción bloqueará el registro.',
@@ -281,9 +283,6 @@
                 }
             });
         }
-
-    
-
     </script>
 
 

@@ -1,11 +1,12 @@
 @extends('layouts/dashboard')
-@section('title', 'Administrar clientes')
+@section('title', 'Administrar unidades')
 @section('contenido')
 
+
     <div class="card mt-3">
-        <h5 class="card-header">Administración de clientes</h5>
+        <h5 class="card-header">Administración de unidades</h5>
         <div class="card-body">
-            <a href="{{ route('cliente.create') }}" class="btn btn-success mb-3">
+            <a href="{{ route('unidad.create') }}" class="btn btn-success mb-3">
                 <i class="fas fa-plus"></i>
                 Agregar
             </a>
@@ -24,18 +25,11 @@
                     <thead class="text-dark fs-4">
                         <tr>
                             <th class="border-bottom-0">
-                                <b>DUI</b>
-                            </th>
-                            <th class="border-bottom-0">
                                 <b>Nombre</b>
                             </th>
                             <th class="border-bottom-0">
-                                <b>Teléfono</b>
+                                <b>Descripción</b>
                             </th>
-                            <th class="border-bottom-0">
-                                <b>Locación</b>
-                            </th>
-
                             @if ($filtro === 'bloqueados')
                                 <th class="border-bottom-0">
                                     <b>Bloqueado por</b>
@@ -48,45 +42,38 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($clientes as $cliente)
+                        @foreach ($medidas as $medida)
                             <tr>
                                 <td class="border-bottom-0">
-                                    <h6>{{ $cliente->dui }}</h6>
+                                    <h6 class="fw-semibold mb-0">{{ $medida->nombre }}</h6>
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6>{{ $cliente->nombres }} , {{ $cliente->apellidos }}</h6>
+                                    <h6 class="fw-semibold mb-0">{{ $medida->descripcion }}</h6>
                                 </td>
-                                <td class="border-bottom-0">
-                                    <h6>+503 {{ $cliente->telefono }}</h6>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <h6>{{ $cliente->municipio }} , {{ $cliente->departamento }}
-                                    </h6>
-                                </td>
-
 
                                 @if ($filtro === 'bloqueados')
                                     <td class="border-bottom-0">
-                                        <h6>{{ $cliente->bloqueado_por }}</h6>
+                                        <h6 class="fw-semibold mb-0">{{ $medida->bloqueado_por }}</h6>
                                     </td>
                                 @endif
 
                                 <td class="d-flex gap-1 justify-content-center">
 
                                     @if ($filtro !== 'bloqueados')
-                                        <a href="{{ route('cliente.edit', $cliente->usuario_id) }}" class="btn btn-primary">
+                                        <a href="{{ route('unidad.edit', $medida->unidad_medida_id) }}"
+                                            class="btn btn-primary">
                                             <i class="ti ti-pencil"></i>
                                         </a>
                                     @endif
 
                                     @if ($filtro !== 'bloqueados')
-                                        <form action="{{ route('cliente.destroy', $cliente->usuario_id) }}" method="POST"
-                                            id="block-form-{{ $cliente->usuario_id }}">
+                                        <form action="{{ route('unidad.destroy', $medida->unidad_medida_id) }}"
+                                            method="POST" id="block-form-{{ $medida->unidad_medida_id }}">
                                             @csrf
                                             @method('DELETE')
                                             <input type="hidden" name="action" value="update">
                                             <button type="button" class="btn btn-danger"
-                                                onclick="confirmBlock({{ $cliente->usuario_id }})">
+                                                onclick="confirmBlock({{ $medida->unidad_medida_id }})">
                                                 <i class="fa-solid fa-lock"></i>
                                             </button>
                                         </form>
@@ -94,12 +81,12 @@
 
 
                                     @if ($filtro === 'bloqueados')
-                                        <form action="{{ route('cliente.unblock', $cliente->usuario_id) }}" method="POST"
-                                            id="unblock-form-{{ $cliente->usuario_id }}">
+                                        <form action="{{ route('unidad.unblock', $medida->unidad_medida_id) }}"
+                                            method="POST" id="unblock-form-{{ $medida->unidad_medida_id }}">
                                             @csrf
                                             @method('PUT')
                                             <button type="button" class="btn btn-warning"
-                                                onclick="confirmUnblock({{ $cliente->usuario_id }})">
+                                                onclick="confirmUnblock({{ $medida->unidad_medida_id }})">
                                                 <i class="fa-solid fa-unlock"></i>
                                             </button>
                                         </form>
@@ -124,7 +111,7 @@
         $(document).ready(function() {
             $("#filtro-bloqueo").on("change", function() {
                 var filtro = $(this).val();
-                var url = "{{ route('clientes') }}?filtro=" + filtro;
+                var url = "{{ route('unidades') }}?filtro=" + filtro;
                 window.location.href = url;
             });
         });

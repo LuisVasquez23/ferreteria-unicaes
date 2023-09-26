@@ -48,3 +48,6 @@ require __DIR__ . '/AdminPerfiles/perfiles.php';
 require __DIR__ . '/AdminProveedores/proveedores.php';
 require __DIR__ . '/AdminEmpleados/empleados.php';
 require __DIR__ . '/AdminPeriodos/periodos.php';
+require __DIR__ . '/AdminEstantes/estante.php';
+require __DIR__ . '/AdminDetalleRol/detalle_rol.php';
+require __DIR__ . '/AdminUnidad_Medida/unidad_medida.php';

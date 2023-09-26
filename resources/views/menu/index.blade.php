@@ -5,7 +5,10 @@
     <div class="card mt-3">
         <h5 class="card-header">Administracion del menu</h5>
         <div class="card-body">
-            <a href="{{ route('menu.create') }}" class="btn btn-success mb-3">Agregar</a>
+            <a href="{{ route('menu.create') }}" class="btn btn-success mb-3">
+                <i class="fas fa-plus"></i>
+                Agregar
+            </a>
             <div class="table-responsive">
                 <table class="table text-nowrap mb-0 align-middle table-striped table-bordered" id="miTabla">
                     <thead class="text-dark fs-4">

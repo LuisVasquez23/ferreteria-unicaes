@@ -12,8 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('estantes', function (Blueprint $table) {
-            $table->id();
+            $table->id('estante_id');
+            $table->string('estante')->unique();
+            $table->string('ubicacion');
+            $table->longText('descripcion')->nullable();
+
+            // Campos de auditoria
+            $table->string('creado_por')->nullable();
+            $table->dateTime('fecha_creacion')->nullable();
+            $table->string('actualizado_por')->nullable();
+            $table->dateTime('fecha_actualizacion')->nullable();
+            $table->string('bloqueado_por')->nullable();
+            $table->dateTime('fecha_bloqueo')->nullable();
+
             $table->timestamps();
+
         });
     }
 
