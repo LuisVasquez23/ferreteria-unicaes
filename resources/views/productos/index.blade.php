@@ -78,35 +78,46 @@
                                     <h6>{{ $producto->cantidad }}</h6>
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6>{{ $producto->categoria->categoria }}</h6>
+                                    <h6>{{ $producto->usuario->nombres}}</h6>
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6>{{ $producto->usuario->}}</h6>
+                                    <h6>{{ $producto->categoria->categoria_id }}</h6>
+                                </td>
+                                
+                                <td class="border-bottom-0">
+                                    <h6>{{ $producto->estante->estante }}</h6>
+                                </td>
+                                <td class="border-bottom-0">
+                                    <h6>{{ $producto->medida->nombre }}</h6>
+                                </td>
+
+                                <td class="border-bottom-0">
+                                    <h6>{{ $producto->periodo->fecha_inicio }} - {{ $producto->periodo->fecha_fin }}</h6>
                                 </td>
 
 
                                 @if ($filtro === 'bloqueados')
                                     <td class="border-bottom-0">
-                                        <h6>{{ $cliente->bloqueado_por }}</h6>
+                                        <h6>{{ $producto->bloqueado_por }}</h6>
                                     </td>
                                 @endif
 
                                 <td class="d-flex gap-1 justify-content-center">
 
                                     @if ($filtro !== 'bloqueados')
-                                        <a href="{{ route('cliente.edit', $cliente->usuario_id) }}" class="btn btn-primary">
+                                        <a href="{{ route('producto.edit', $producto->producto_id) }}" class="btn btn-primary">
                                             <i class="ti ti-pencil"></i>
                                         </a>
                                     @endif
 
                                     @if ($filtro !== 'bloqueados')
-                                        <form action="{{ route('cliente.destroy', $cliente->usuario_id) }}" method="POST"
-                                            id="block-form-{{ $cliente->usuario_id }}">
+                                        <form action="{{ route('producto.destroy', $producto->producto_id) }}" method="POST"
+                                            id="block-form-{{ $producto->producto_id }}">
                                             @csrf
                                             @method('DELETE')
                                             <input type="hidden" name="action" value="update">
                                             <button type="button" class="btn btn-danger"
-                                                onclick="confirmBlock({{ $cliente->usuario_id }})">
+                                                onclick="confirmBlock({{ $producto->producto_id }})">
                                                 <i class="fa-solid fa-lock"></i>
                                             </button>
                                         </form>
@@ -114,12 +125,12 @@
 
 
                                     @if ($filtro === 'bloqueados')
-                                        <form action="{{ route('cliente.unblock', $cliente->usuario_id) }}" method="POST"
-                                            id="unblock-form-{{ $cliente->usuario_id }}">
+                                        <form action="{{ route('producto.unblock', $producto->producto_id) }}" method="POST"
+                                            id="unblock-form-{{ $producto->producto_id }}">
                                             @csrf
                                             @method('PUT')
                                             <button type="button" class="btn btn-warning"
-                                                onclick="confirmUnblock({{ $cliente->usuario_id }})">
+                                                onclick="confirmUnblock({{ $producto->producto_id }})">
                                                 <i class="fa-solid fa-unlock"></i>
                                             </button>
                                         </form>

@@ -91,6 +91,11 @@ class Producto extends Model
 		return $this->belongsTo(Estante::class);
 	}
 
+	public function medida()
+	{
+		return $this->belongsTo(Unidad_Medida::class);
+	}
+
 	public function periodo()
 	{
 		return $this->belongsTo(Periodo::class);
