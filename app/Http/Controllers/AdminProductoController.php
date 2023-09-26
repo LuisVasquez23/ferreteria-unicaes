@@ -2,9 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categoria;
+use App\Models\Estante;
+use App\Models\Periodo;
 use App\Models\Producto;
+use App\Models\Unidad_Medida;
+use App\Models\Usuario;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class AdminProductoController extends Controller
 {
@@ -30,51 +40,289 @@ class AdminProductoController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
-        //
+        try {
+
+             //Proveedores de la db
+            $proveedores = Usuario::whereHas('detalle_roles', function ($query) {
+                $query->where('role_id', 3);
+            })->whereNull('bloqueado_por')->pluck('nombres', 'usuario_id');
+
+            //categorias de la db
+
+            $categorias = Categoria::whereNull('bloqueado_por')->pluck('categoria', 'categoria_id');
+
+            //estantes de la db
+            $estantes = Estante::whereNull('bloqueado_por')->pluck('estante', 'estante_id');
+
+            // //unidades de la db
+
+            $unidades = Unidad_Medida::whereNull('bloqueado_por')->pluck('nombre', 'unidad_medida_id');
+
+
+            // //periodos de la db
+
+            $periodos = Periodo::whereNull('bloqueado_por')->pluck(DB::raw("CONCAT(fecha_inicio, ' - ', fecha_fin)"), 'periodo_id');
+
+
+
+
+            return view('productos.create', compact('proveedores', 'categorias', 'estantes', 'unidades', 'periodos'));
+            
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('productos')->with('error', 'Error al cargar la página de creacion para productos');
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request)
     {
-        //
+        try {
+
+
+            // Define las reglas de validación
+            $rules = [
+
+                'nombre_opcion' => 'required|unique:productos,nombre',
+                'descripcion_opcion' => 'required',
+                'precio_opcion' => 'required|regex:/^\d+(\.\d+)?$/|gt:0',
+                'cantidad_opcion' => 'required|gt:0',
+            ];
+    
+            $messages = [
+    
+                'nombre_opcion.required' => 'El campo "nombre" es obligatorio.',
+                'nombre_opcion.unique' => 'El producto ingresado ya está registrado, intentelo de nuevo.',
+
+                'descripcion_opcion.required' => 'El campo "descripción" es obligatorio.',
+
+                'precio_opcion.required' => 'El campo "precio" es obligatorio.',
+                'precio_opcion.regex' => 'El campo "precio" debe tener un formato válido (Ej: 1 o 1.75).',
+                'precio_opcion.gt' => 'El campo "precio" debe ser mayor a 0.',
+
+                'cantidad_opcion.required' => 'El campo "cantidad" es obligatorio.',
+                'cantidad_opcion.gt' => 'El campo "cantidad" debe ser mayor a 0.',
+            ];
+    
+            $validator = Validator::make($request->all(), $rules, $messages);
+    
+            if ($validator->fails()) {
+                return redirect()
+                    ->route('producto.create') 
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+
+
+            $producto = new Producto();
+    
+            $producto->nombre = $request->input('nombre_opcion');
+            $producto->descripcion = $request->input('descripcion_opcion');
+            $producto->precio = $request->input('precio_opcion');
+            $producto->cantidad = $request->input('cantidad_opcion');
+            $producto->proveedor_id = $request->input('usuario_id');
+            $producto->categoria_id = $request->input('categoria_id');
+            $producto->estante_id = $request->input('estante_id');
+            $producto->unidad_medida_id = $request->input('unidad_medida_id');
+            $producto->periodo_id = $request->input('periodo_id');
+
+
+    
+    
+            $producto->creado_por = Auth::user()->nombres . ' ' . Auth::user()->apellidos;
+            $producto->fecha_creacion = now();
+    
+            $producto->save();
+    
+    
+            return redirect()->route('productos')->with('success', 'El producto se ha agregado con éxito.');
+    
+        } catch (\Throwable $th) {
+            return redirect()->route('productos')->with('error', 'Sucedio un error al ingresar el producto, todos los campos deben ser correctos');
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+
     public function edit(string $id)
     {
-        //
+
+        try {
+
+
+            //Proveedores de la db
+            $proveedores = Usuario::whereHas('detalle_roles', function ($query) {
+                $query->where('role_id', 3);
+            })->whereNull('bloqueado_por')->pluck('nombres', 'usuario_id');
+
+            //categorias de la db
+
+            $categorias = Categoria::whereNull('bloqueado_por')->pluck('categoria', 'categoria_id');
+
+            //estantes de la db
+            $estantes = Estante::whereNull('bloqueado_por')->pluck('estante', 'estante_id');
+
+            // //unidades de la db
+
+            $unidades = Unidad_Medida::whereNull('bloqueado_por')->pluck('nombre', 'unidad_medida_id');
+
+
+            // //periodos de la db
+
+            $periodos = Periodo::whereNull('bloqueado_por')->pluck(DB::raw("CONCAT(fecha_inicio, ' - ', fecha_fin)"), 'periodo_id');
+
+            $producto = Producto::find($id);
+    
+            // Verifica si el registro existe
+            if (!$producto) {
+                return redirect()->back()->with('error', 'Ha ocurrido un error. No se pudo realizar la operación.');
+            }
+    
+            return view('productos.edit', compact('producto', 'proveedores', 'categorias', 'estantes', 'unidades', 'periodos'));
+    
+    
+            } catch (\Exception $e) {
+                Log::error($e->getMessage());
+                return redirect()->route('productos')->with('error', 'Error al cargar la página para editar el producto');
+            }
+        
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+   
     public function update(Request $request, string $id)
     {
-        //
+        try {
+
+        
+            $producto = Producto::find($id);
+
+            if (!$producto) {
+
+                return redirect()->route('productos')->with('error', 'Producto no encontrado');
+            }
+
+
+       //validar nombre del producto
+       $existingName = Producto::where('nombre', $request->input('nombre_opcion'))
+       ->where('producto_id', '<>', $id)
+       ->first();     
+
+        if ($existingName) {
+            return redirect()->route('productos')->with('error', 'El producto ya está registrado, prueba con otro');         
+        }
+
+         
+        $descripcion = $request->input('descripcion_opcion');
+
+        if($descripcion == ''){
+            return redirect()->route('productos')->with('error', 'Debes añadir descripcion del producto');         
+
+        }
+
+        $precio = $request->input('precio_opcion');
+
+        if($precio <= 0){
+            return redirect()->route('productos')->with('error', 'El precio debe ser mayor a 0');         
+
+        }
+
+
+        $cantidad = $request->input('cantidad_opcion');
+
+        if($cantidad <= 0){
+            return redirect()->route('productos')->with('error', 'La cantidad debe ser mayor a 0');         
+
+        }
+   
+            $producto->nombre = $request->input('nombre_opcion');
+            $producto->descripcion = $request->input('descripcion_opcion');
+            $producto->precio = $request->input('precio_opcion');
+            $producto->cantidad = $request->input('cantidad_opcion');
+            $producto->proveedor_id = $request->input('usuario_id');
+            $producto->categoria_id = $request->input('categoria_id');
+            $producto->estante_id = $request->input('estante_id');
+            $producto->unidad_medida_id = $request->input('unidad_medida_id');
+            $producto->periodo_id = $request->input('periodo_id');
+
+            $producto->actualizado_por = Auth::user()->nombres . ' ' . Auth::user()->apellidos;
+
+            $producto->save();
+
+            return redirect()->route('productos')->with('success', 'Producto actualizado con éxito.');
+    
+        } catch (\Throwable $th) {
+            return redirect()->route('productos')->with('error', 'Sucedio un error al actualizar el producto, todos los campos deben ser correctos');
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(string $id)
     {
-        //
+        try {
+
+            $action = request()->input('action');
+    
+            if ($action === 'update') {
+    
+                $producto = Producto::find($id);
+    
+                if (!$producto) {
+                    return redirect()->back()->with('error', 'Ha ocurrido un error. No se pudo realizar la operación.');
+                }
+    
+                $producto->bloqueado_por = Auth::user()->nombres;
+                $producto->fecha_bloqueo = now();
+    
+                $producto->save();
+    
+            return redirect()->route('productos')->with('success', 'El registro se ha bloqueado con éxito.');
+            }
+    
+        } catch (QueryException $e) {
+            // Manejo de excepciones SQL
+            Log::error($e->getMessage());
+            return redirect()->route('productos')->with('error', 'Error de base de datos al eliminar el producto');
+        } catch (\Exception $e) {
+            // Manejo de otras excepciones
+            Log::error($e->getMessage());
+            return redirect()->route('productos')->with('error', 'Error al bloquear el producto');
+        }
     }
+
+
+
+
+    public function unblock($id)
+    {
+        try {
+
+            $producto = Producto::find($id);
+
+            // Verificar si el producto está bloqueado
+            if (!$producto->bloqueado_por) {
+                return redirect()->route('productos')->with('error', 'El producto no está bloqueado.');
+            }
+
+            // Desbloquear al cliente
+            $producto->bloqueado_por = null;
+            $producto->fecha_actualizacion = now();
+            $producto->actualizado_por = Auth::user()->nombres;
+            $producto->fecha_bloqueo = null;
+
+
+            //Guardo los cambios
+            $producto->save();
+
+            return redirect()->route('productos')->with('success', 'El producto ha sido desbloqueado con éxito.');
+
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('productos')->with('error', 'Error al desbloquear el producto.');
+        }
+    }
+
+
 }

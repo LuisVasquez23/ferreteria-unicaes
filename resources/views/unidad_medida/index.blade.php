@@ -45,15 +45,15 @@
                         @foreach ($medidas as $medida)
                             <tr>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $medida->nombre }}</h6>
+                                    <h6 class="mb-0">{{ $medida->nombre }}</h6>
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $medida->descripcion }}</h6>
+                                    <h6 class="mb-0">{{ $medida->descripcion }}</h6>
                                 </td>
 
                                 @if ($filtro === 'bloqueados')
                                     <td class="border-bottom-0">
-                                        <h6 class="fw-semibold mb-0">{{ $medida->bloqueado_por }}</h6>
+                                        <h6 class="mb-0">{{ $medida->bloqueado_por }}</h6>
                                     </td>
                                 @endif
 

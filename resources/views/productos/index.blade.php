@@ -10,7 +10,7 @@
                 Agregar
             </a>
 
-            <div class="col-md-4 mx-auto text-center">
+            <div class="col-md-4 mx-auto text-center mb-3">
                 <label class="mb-2" for="filtro-bloqueo">Filtrar por Estado:</label>
                 <select id="filtro-bloqueo" class="form-select">
                     <option>Seleccionar...</option>
@@ -72,7 +72,7 @@
                                     <h6>{{ $producto->descripcion }}</h6>
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6>{{ $producto->precio }}</h6>
+                                    <h6>$ {{ $producto->precio }}</h6>
                                 </td>
                                 <td class="border-bottom-0">
                                     <h6>{{ $producto->cantidad }}</h6>
@@ -81,7 +81,7 @@
                                     <h6>{{ $producto->usuario->nombres}}</h6>
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6>{{ $producto->categoria->categoria_id }}</h6>
+                                    <h6>{{ $producto->categoria->categoria }}</h6>
                                 </td>
                                 
                                 <td class="border-bottom-0">
@@ -92,7 +92,7 @@
                                 </td>
 
                                 <td class="border-bottom-0">
-                                    <h6>{{ $producto->periodo->fecha_inicio }} - {{ $producto->periodo->fecha_fin }}</h6>
+                                    {{ $producto->periodo->fecha_inicio->format('Y/m/d') }}  -  {{ $producto->periodo->fecha_fin->format('Y/m/d') }}
                                 </td>
 
 

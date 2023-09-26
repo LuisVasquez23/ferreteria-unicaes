@@ -44,18 +44,23 @@
                         @foreach ($roles as $role)
                             <tr>
                                 <td>
-                                    <h6 class="fw-semibold mb-0">{{ $role->role }}</h6>
+                                    <h6 class="mb-0">{{ $role->role }}</h6>
                                 </td>
                                 <td>
-                                    <h6 class="fw-semibold mb-0">{{ $role->descripcion }}</h6>
+                                    <h6 class="mb-0">{{ $role->descripcion }}</h6>
                                 </td>
 
                                 @if ($filtro === 'bloqueados')
                                     <td class="border-bottom-0">
-                                        <h6 class="fw-semibold mb-0">{{ $role->bloqueado_por }}</h6>
+                                        <h6 class="mb-0">{{ $role->bloqueado_por }}</h6>
                                     </td>
                                 @endif
                                 <td class="d-flex gap-1 justify-content-center">
+
+
+                                    @if ($role->role == 'MegaAdmin')
+                                    <p class="mt-2">Nada por hacer</p>
+                                    @endif
 
 
 
