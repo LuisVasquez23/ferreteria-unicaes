@@ -55,6 +55,7 @@ class Compra extends Model
 
 	protected $fillable = [
 		'monto',
+		'numerosfactura',
 		'periodo_id',
 		'cliente_id',
 		'vendedor_id',
@@ -70,6 +71,7 @@ class Compra extends Model
 	{
 		return $this->belongsTo(Usuario::class, 'vendedor_id');
 	}
+	
 
 	public function periodo()
 	{
@@ -78,7 +80,7 @@ class Compra extends Model
 
 	public function detalle_compras()
 	{
-		return $this->hasMany(DetalleCompra::class);
+		return $this->hasMany(DetalleCompra::class, 'compra_id');
 	}
 
 	public function detalle_ventas()

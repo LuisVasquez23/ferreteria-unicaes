@@ -15,7 +15,7 @@ return new class extends Migration
             // Campos generlaes de la tabla
             $table->id('detalle_compra_id');
             $table->integer('cantidad');
-            $table->float('precio');
+            $table->float('precioUnitario');
             $table->unsignedBigInteger('compra_id');
             $table->unsignedBigInteger('producto_id');
 

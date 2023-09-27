@@ -52,7 +52,7 @@ class DetalleCompra extends Model
 
 	protected $fillable = [
 		'cantidad',
-		'precio',
+		'precioUnitario',
 		'compra_id',
 		'producto_id',
 		'creado_por',
@@ -65,11 +65,11 @@ class DetalleCompra extends Model
 
 	public function compra()
 	{
-		return $this->belongsTo(Compra::class);
+		return $this->belongsTo(Compra::class, 'compra_id');
 	}
 
 	public function producto()
 	{
-		return $this->belongsTo(Producto::class);
+		return $this->belongsTo(Producto::class, 'producto_id');
 	}
 }

@@ -18,6 +18,7 @@ return new class extends Migration
 
 
             $table->float('monto');
+            $table->string('numerosfactura');
             $table->unsignedBigInteger('periodo_id');
             $table->unsignedBigInteger('cliente_id');
             $table->unsignedBigInteger('vendedor_id');
