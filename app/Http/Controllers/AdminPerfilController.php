@@ -61,6 +61,17 @@ class AdminPerfilController extends Controller
 
 
             'email_opcion' => 'required|email|unique:usuarios,email,'.$id.',usuario_id',
+
+            'contrasenia_nueva' => [
+                'nullable',
+                'min:8', 
+                function ($attribute, $value, $fail) use ($request, $usuario) {
+                    // Verifica si la contraseña nueva es igual a la contraseña antigua
+                    if (Hash::check($value, $usuario->password)) {
+                        $fail('La contraseña nueva no puede ser igual a la contraseña antigua.');
+                    }
+                },
+            ],
         ];
 
         $messages = [
@@ -76,6 +87,8 @@ class AdminPerfilController extends Controller
             'email_opcion.required' => 'El campo "email" es obligatorio.',
             'email_opcion.unique' => 'El email ya está registrado, intenta de nuevo',
             'email_opcion.email' => 'Ingresa una dirección de email correcta.',
+
+            'contrasenia_nueva.min' => 'La contraseña nueva debe tener al menos 8 caracteres.',
 
 
         ];

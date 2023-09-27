@@ -51,3 +51,4 @@ require __DIR__ . '/AdminPeriodos/periodos.php';
 require __DIR__ . '/AdminEstantes/estante.php';
 require __DIR__ . '/AdminDetalleRol/detalle_rol.php';
 require __DIR__ . '/AdminUnidad_Medida/unidad_medida.php';
+require __DIR__ . '/AdminProductos/productos.php';

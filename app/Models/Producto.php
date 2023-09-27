@@ -83,17 +83,22 @@ class Producto extends Model
 
 	public function categoria()
 	{
-		return $this->belongsTo(Categoria::class);
+		return $this->belongsTo(Categoria::class, 'categoria_id');
 	}
 
 	public function estante()
 	{
-		return $this->belongsTo(Estante::class);
+		return $this->belongsTo(Estante::class, 'estante_id');
+	}
+
+	public function medida()
+	{
+		return $this->belongsTo(Unidad_Medida::class, 'unidad_medida_id');
 	}
 
 	public function periodo()
 	{
-		return $this->belongsTo(Periodo::class);
+		return $this->belongsTo(Periodo::class, 'periodo_id');
 	}
 
 	public function usuario()
