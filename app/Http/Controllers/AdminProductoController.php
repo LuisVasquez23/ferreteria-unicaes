@@ -18,7 +18,7 @@ use Illuminate\Validation\Rule;
 
 class AdminProductoController extends Controller
 {
-    
+
     public function index(Request $request)
     {
         try {
@@ -45,10 +45,11 @@ class AdminProductoController extends Controller
     {
         try {
 
-             //Proveedores de la db
-            $proveedores = Usuario::whereHas('detalle_roles', function ($query) {
-                $query->where('role_id', 3);
-            })->whereNull('bloqueado_por')->pluck('nombres', 'usuario_id');
+            //Proveedores de la db
+            $proveedores = Usuario::whereHas('detalle_roles.role', function ($query) {
+                $query->where('role', 'Proveedor');
+            })->whereNull('bloqueado_por')
+                ->pluck('nombres', 'usuario_id');
 
             //categorias de la db
 
@@ -70,7 +71,6 @@ class AdminProductoController extends Controller
 
 
             return view('productos.create', compact('proveedores', 'categorias', 'estantes', 'unidades', 'periodos'));
-            
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return redirect()->route('productos')->with('error', 'Error al cargar la página de creacion para productos');
@@ -91,9 +91,9 @@ class AdminProductoController extends Controller
                 'precio_opcion' => 'required|regex:/^\d+(\.\d+)?$/|gt:0',
                 'cantidad_opcion' => 'required|gt:0',
             ];
-    
+
             $messages = [
-    
+
                 'nombre_opcion.required' => 'El campo "nombre" es obligatorio.',
                 'nombre_opcion.unique' => 'El producto ingresado ya está registrado, intentelo de nuevo.',
 
@@ -106,19 +106,19 @@ class AdminProductoController extends Controller
                 'cantidad_opcion.required' => 'El campo "cantidad" es obligatorio.',
                 'cantidad_opcion.gt' => 'El campo "cantidad" debe ser mayor a 0.',
             ];
-    
+
             $validator = Validator::make($request->all(), $rules, $messages);
-    
+
             if ($validator->fails()) {
                 return redirect()
-                    ->route('producto.create') 
+                    ->route('producto.create')
                     ->withErrors($validator)
                     ->withInput();
             }
 
 
             $producto = new Producto();
-    
+
             $producto->nombre = $request->input('nombre_opcion');
             $producto->descripcion = $request->input('descripcion_opcion');
             $producto->precio = $request->input('precio_opcion');
@@ -130,16 +130,15 @@ class AdminProductoController extends Controller
             $producto->periodo_id = $request->input('periodo_id');
 
 
-    
-    
+
+
             $producto->creado_por = Auth::user()->nombres . ' ' . Auth::user()->apellidos;
             $producto->fecha_creacion = now();
-    
+
             $producto->save();
-    
-    
+
+
             return redirect()->route('productos')->with('success', 'El producto se ha agregado con éxito.');
-    
         } catch (\Throwable $th) {
             return redirect()->route('productos')->with('error', 'Sucedio un error al ingresar el producto, todos los campos deben ser correctos');
         }
@@ -175,28 +174,25 @@ class AdminProductoController extends Controller
             $periodos = Periodo::whereNull('bloqueado_por')->pluck(DB::raw("CONCAT(fecha_inicio, ' - ', fecha_fin)"), 'periodo_id');
 
             $producto = Producto::find($id);
-    
+
             // Verifica si el registro existe
             if (!$producto) {
                 return redirect()->back()->with('error', 'Ha ocurrido un error. No se pudo realizar la operación.');
             }
-    
+
             return view('productos.edit', compact('producto', 'proveedores', 'categorias', 'estantes', 'unidades', 'periodos'));
-    
-    
-            } catch (\Exception $e) {
-                Log::error($e->getMessage());
-                return redirect()->route('productos')->with('error', 'Error al cargar la página para editar el producto');
-            }
-        
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('productos')->with('error', 'Error al cargar la página para editar el producto');
+        }
     }
 
-   
+
     public function update(Request $request, string $id)
     {
         try {
 
-        
+
             $producto = Producto::find($id);
 
             if (!$producto) {
@@ -205,38 +201,35 @@ class AdminProductoController extends Controller
             }
 
 
-       //validar nombre del producto
-       $existingName = Producto::where('nombre', $request->input('nombre_opcion'))
-       ->where('producto_id', '<>', $id)
-       ->first();     
+            //validar nombre del producto
+            $existingName = Producto::where('nombre', $request->input('nombre_opcion'))
+                ->where('producto_id', '<>', $id)
+                ->first();
 
-        if ($existingName) {
-            return redirect()->route('productos')->with('error', 'El producto ya está registrado, prueba con otro');         
-        }
-
-         
-        $descripcion = $request->input('descripcion_opcion');
-
-        if($descripcion == ''){
-            return redirect()->route('productos')->with('error', 'Debes añadir descripcion del producto');         
-
-        }
-
-        $precio = $request->input('precio_opcion');
-
-        if($precio <= 0){
-            return redirect()->route('productos')->with('error', 'El precio debe ser mayor a 0');         
-
-        }
+            if ($existingName) {
+                return redirect()->route('productos')->with('error', 'El producto ya está registrado, prueba con otro');
+            }
 
 
-        $cantidad = $request->input('cantidad_opcion');
+            $descripcion = $request->input('descripcion_opcion');
 
-        if($cantidad <= 0){
-            return redirect()->route('productos')->with('error', 'La cantidad debe ser mayor a 0');         
+            if ($descripcion == '') {
+                return redirect()->route('productos')->with('error', 'Debes añadir descripcion del producto');
+            }
 
-        }
-   
+            $precio = $request->input('precio_opcion');
+
+            if ($precio <= 0) {
+                return redirect()->route('productos')->with('error', 'El precio debe ser mayor a 0');
+            }
+
+
+            $cantidad = $request->input('cantidad_opcion');
+
+            if ($cantidad <= 0) {
+                return redirect()->route('productos')->with('error', 'La cantidad debe ser mayor a 0');
+            }
+
             $producto->nombre = $request->input('nombre_opcion');
             $producto->descripcion = $request->input('descripcion_opcion');
             $producto->precio = $request->input('precio_opcion');
@@ -252,7 +245,6 @@ class AdminProductoController extends Controller
             $producto->save();
 
             return redirect()->route('productos')->with('success', 'Producto actualizado con éxito.');
-    
         } catch (\Throwable $th) {
             return redirect()->route('productos')->with('error', 'Sucedio un error al actualizar el producto, todos los campos deben ser correctos');
         }
@@ -264,23 +256,22 @@ class AdminProductoController extends Controller
         try {
 
             $action = request()->input('action');
-    
+
             if ($action === 'update') {
-    
+
                 $producto = Producto::find($id);
-    
+
                 if (!$producto) {
                     return redirect()->back()->with('error', 'Ha ocurrido un error. No se pudo realizar la operación.');
                 }
-    
+
                 $producto->bloqueado_por = Auth::user()->nombres;
                 $producto->fecha_bloqueo = now();
-    
+
                 $producto->save();
-    
-            return redirect()->route('productos')->with('success', 'El registro se ha bloqueado con éxito.');
+
+                return redirect()->route('productos')->with('success', 'El registro se ha bloqueado con éxito.');
             }
-    
         } catch (QueryException $e) {
             // Manejo de excepciones SQL
             Log::error($e->getMessage());
@@ -317,12 +308,9 @@ class AdminProductoController extends Controller
             $producto->save();
 
             return redirect()->route('productos')->with('success', 'El producto ha sido desbloqueado con éxito.');
-
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return redirect()->route('productos')->with('error', 'Error al desbloquear el producto.');
         }
     }
-
-
 }
