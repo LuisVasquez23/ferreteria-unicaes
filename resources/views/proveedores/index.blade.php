@@ -22,7 +22,7 @@
                     <thead class="text-dark fs-4">
                         <tr>
                             <th class="border-bottom-0">
-                                <b>NIT</b>
+                                <b>NIT/DUI</b>
                             </th>
                             <th class="border-bottom-0">
                                 <b>Nombre</b>

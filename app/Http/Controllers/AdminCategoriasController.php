@@ -116,7 +116,7 @@ class AdminCategoriasController extends Controller
               // Definir mensajes de validación personalizados
               $messages = [
                   'categoria.required' => 'El campo categoría es obligatorio.',
-                  'categoria.unique' => 'La categoría ya existe en la base de datos.',
+                  'categoria.unique' => 'La categoría ya existe.',
                   'descripcion.required' => 'El campo descripción es obligatorio.',
               ];
               // Validar los datos del formulario

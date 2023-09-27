@@ -82,13 +82,13 @@ class AdminProveedoresController extends Controller
 
             $messages = [
                 'nit_opcion.required' => 'El campo "NIT" es obligatorio.',
-                'nit_opcion.unique' => 'El NIT ingresado ya está registrado en la base de datos, intenta de nuevo.',
+                'nit_opcion.unique' => 'El NIT ingresado ya está registrado, intenta de nuevo.',
                 'nombre_opcion.required' => 'Debes registrar al menos un nombre.',
                 'telefono_opcion.required' => 'El campo "Teléfono" es obligatorio.',
-                'telefono_opcion.unique' => 'Este teléfono ya está registrado en la base de datos, intenta de nuevo.',
+                'telefono_opcion.unique' => 'Este teléfono ya está registrado, intenta de nuevo.',
                 'telefono_opcion.regex' => 'El campo "Teléfono" debe tener el formato correcto (por ejemplo, 7889-1256).',
                 'email_opcion.required' => 'El email es requerido.',
-                'email_opcion.unique' => 'El email ya está registrado en la base de datos, intenta de nuevo.',
+                'email_opcion.unique' => 'El email ya está registrado, intenta de nuevo.',
                 'departamento.required' => 'Debes seleccionar un departamento.',
                 'departamento.not_in' => 'Debes seleccionar un departamento.',
                 'municipio.required' => 'Debes seleccionar un municipio.',

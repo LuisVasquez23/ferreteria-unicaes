@@ -42,7 +42,7 @@
                 @endif
             </div>
 
-            <div class="col-md-4 mt-2">
+            <div class="col-md-6 mt-2">
                 <!-- Departamento -->
                 <div class="form-group">
                     <label for="departamento">Departamento *</label>
@@ -55,7 +55,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4 mt-2">
+            <div class="col-md-6 mt-2">
                 <!-- Municipio -->
                 <div class="form-group">
                     <label for="municipio">Municipio *</label>

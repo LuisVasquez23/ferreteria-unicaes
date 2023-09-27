@@ -9,7 +9,7 @@
             @csrf
 
             <div class="form-group col-md-4">
-                <label for="nit_opcion">NIT: *</label>
+                <label for="nit_opcion">NIT/DUI: *</label>
                 <input type="text" class="form-control {{ $errors->has('nit_opcion') ? 'is-invalid' : '' }}"
                     name="nit_opcion" id="nit_opcion" required>
                 @if ($errors->has('nit_opcion'))
@@ -40,7 +40,7 @@
                     </div>
                 @endif
             </div>
-            <div class="col-md-4 mt-2">
+            <div class="col-md-6 mt-2">
                 <!-- Departamento -->
                 <div class="form-group">
                     <label for="departamento">Departamento *</label>
@@ -56,7 +56,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4 mt-2">
+            <div class="col-md-6 mt-2">
                 <!-- Municipio -->
                 <div class="form-group">
                     <label for="municipio">Municipio *</label>
