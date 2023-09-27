@@ -140,7 +140,7 @@ class AdminEmpleadosController extends Controller
             // Verificar que el usuario tenga al menos 18 años
             $edadMinima = Carbon::now()->subYears(18);
             if ($fechaNacimiento->greaterThan($edadMinima)) {
-                return redirect()->route('empleados.create')->with('error', 'Debes ser mayor de 18 años para registrarte.');
+                return redirect()->route('empleados.index')->with('error', 'Debe ingresar una fecha valida siendo este mayor de edad.');
             } else {
                 $empleado->fecha_nacimiento = $fechaNacimiento;
             }
