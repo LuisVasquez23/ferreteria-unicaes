@@ -92,7 +92,7 @@
                                 </td>
 
                                 <td class="border-bottom-0">
-                                    {{ $producto->periodo->fecha_inicio->format('Y/m/d') }}  -  {{ $producto->periodo->fecha_fin->format('Y/m/d') }}
+                                    {{ $producto->periodo->fecha_inicio->format('Y/m/d') }}
                                 </td>
 
 

@@ -34,7 +34,7 @@
 
                 <div class="form-group col-md-4 mt-2">
                     <label for="precio_opcion">Precio: *</label>
-                    <input type="number" class="form-control  {{ $errors->has('precio_opcion') ? 'is-invalid' : '' }}"
+                    <input type="number" min="0" step=".1" class="form-control  {{ $errors->has('precio_opcion') ? 'is-invalid' : '' }}"
                         name="precio_opcion" id="precio_opcion" required>
                     
                     @if ($errors->has('precio_opcion'))
@@ -47,7 +47,7 @@
 
                 <div class="form-group col-md-4 mt-2">
                     <label for="cantidad_opcion">Cantidad: *</label>
-                    <input type="number" class="form-control {{ $errors->has('cantidad_opcion') ? 'is-invalid' : '' }}"
+                    <input type="number" min="0" class="form-control {{ $errors->has('cantidad_opcion') ? 'is-invalid' : '' }}"
                         name="cantidad_opcion" id="cantidad_opcion" required>
                         
                     @if ($errors->has('cantidad_opcion'))
@@ -130,15 +130,9 @@
                             @if($periodos->isEmpty())
                                 <option value="" disabled selected>No se encontraron períodos</option>
                             @else
-                                @foreach($periodos as $periodo_id => $periodo)
-                                    @php
-                                        // Dividir la cadena en dos fechas
-                                        $fechas = explode(' - ', $periodo);
-                                        $fecha_inicio = $fechas[0];
-                                        $fecha_fin = $fechas[1];
-                                    @endphp
+                                @foreach($periodos as $periodo_id => $fecha)
                                     <option value="{{ $periodo_id }}">
-                                        {{ \Carbon\Carbon::parse($fecha_inicio)->format('Y/m/d') }} - {{ \Carbon\Carbon::parse($fecha_fin)->format('Y/m/d') }}
+                                        {{ \Carbon\Carbon::parse($fecha)->format('Y/m/d') }}
                                     </option>
                                 @endforeach
                             @endif
