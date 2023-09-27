@@ -91,14 +91,14 @@
 
 
 
-        <div class="form-group col-md-6 mt-2">
+        <div class="form-group col-md-4 mt-2">
             <label for="direccion_opcion">Dirección:</label>
             <input type="text" class="form-control"
                 name="direccion_opcion" id="direccion_opcion">
         </div>
 
 
-        <div class="form-group col-md-6 mt-2">
+        <div class="form-group col-md-4 mt-2">
             <label for="email_opcion">Correo electronico: *</label>
             <input type="text" class="form-control {{ $errors->has('email_opcion') ? 'is-invalid' : '' }}"
                 name="email_opcion" id="email_opcion" required
@@ -107,6 +107,33 @@
             @if ($errors->has('email_opcion'))
                 <div class="invalid-feedback">
                     {{ $errors->first('email_opcion') }}
+                </div>
+            @endif
+        </div>
+        <div class="form-group col-md-4 mt-2">
+            <label for="fecha_nacimiento">Fecha de nacimiento: *</label>
+            <input type="date" class="form-control"
+                name="fecha_nacimiento" id="fecha_nacimiento" required>
+        </div>
+
+        <div class="form-group col-md-6">
+            <label for="password">Contraseña: </label>
+            <input type="password" class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}"
+                name="password" id="password">
+            @if ($errors->has('password'))
+                <div class="invalid-feedback">
+                    {{ $errors->first('password') }}
+                </div>
+            @endif
+        </div>
+
+        <div class="form-group col-md-6">
+            <label for="confirm_password">Confirmar contraseña: </label>
+            <input type="password" class="form-control {{ $errors->has('confirm_password') ? 'is-invalid' : '' }}"
+                name="confirm_password" id="confirm_password">
+            @if ($errors->has('confirm_password'))
+                <div class="invalid-feedback">
+                    {{ $errors->first('confirm_password') }}
                 </div>
             @endif
         </div>

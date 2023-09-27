@@ -97,6 +97,38 @@
                 @endif
             </div>
 
+            <div class="form-group col-md-4 mt-3">
+                <label for="password">Contraseña actual: </label>
+                <input type="password" class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}"
+                    name="password" id="password" required>
+                @if ($errors->has('password'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('password') }}
+                    </div>
+                @endif
+            </div>
+
+            <div class="form-group col-md-4 mt-3">
+                <label for="new_password">Contraseña nueva: </label>
+                <input type="password" class="form-control {{ $errors->has('new_password') ? 'is-invalid' : '' }}"
+                    name="new_password" id="new_password">
+                @if ($errors->has('new_password'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('new_password') }}
+                    </div>
+                @endif
+            </div>
+
+            <div class="form-group col-md-4 mt-3">
+                <label for="confirm_password">Confirmar contraseña: </label>
+                <input type="password" class="form-control {{ $errors->has('confirm_password') ? 'is-invalid' : '' }}"
+                    name="confirm_password" id="confirm_password">
+                @if ($errors->has('confirm_password'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('confirm_password') }}
+                    </div>
+                @endif
+            </div>
              
 
                 <div class="form-group col-md-12 mt-3">

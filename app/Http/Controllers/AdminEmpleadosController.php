@@ -11,8 +11,10 @@ use App\Models\Role;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Carbon\Carbon;
 
 class AdminEmpleadosController extends Controller
 {
@@ -77,6 +79,9 @@ class AdminEmpleadosController extends Controller
                 'telefono_opcion' => 'required|regex:/^\d{4}-\d{4}$/|unique:usuarios,telefono',
                 'direccion_opcion' => 'nullable',
                 'email_opcion' => 'required|email|unique:usuarios,email',
+                'password' => 'required',
+                'confirm_password' => 'required',
+                'fecha_nacimiento' => 'required|date'
             ];
     
             $messages = [
@@ -91,6 +96,10 @@ class AdminEmpleadosController extends Controller
                 'email_opcion.required' => 'El correo es requerido',
                 'email_opcion.unique' => 'El correo ya está registrado, intenta de nuevo',
                 'email_opcion.email' => 'El campo "correo" debe ser una dirección de correo electrónico válida.',
+                'password.required' => 'La contraseña es obligatoria.',
+                'confirm_password.required' => 'Es necesario que confirme su contraseña.',
+                'fecha_nacimiento.required' => 'Debe ingresar una fecha de nacimiento.',
+                'fecha_nacimiento.date' => 'La fecha de nacimiento debe ser una fecha valida.'
     
             ];
     
@@ -103,6 +112,7 @@ class AdminEmpleadosController extends Controller
                     ->withInput();
             }
     
+            
     
             // Verificar si se seleccionó "Seleccionar..." en el campo "departamento"
             if ($request->input('departamento') === 'Seleccionar ...') {
@@ -125,9 +135,23 @@ class AdminEmpleadosController extends Controller
             $empleado->municipio = $request->input('municipio');
             $empleado->direccion = $request->input('direccion_opcion');
             $empleado->email = $request->input('email_opcion');
-    
+            $fechaNacimiento = Carbon::createFromFormat('Y-m-d', $request->input('fecha_nacimiento'));
+
+            // Verificar que el usuario tenga al menos 18 años
+            $edadMinima = Carbon::now()->subYears(18);
+            if ($fechaNacimiento->greaterThan($edadMinima)) {
+                return redirect()->route('empleados.create')->with('error', 'Debes ser mayor de 18 años para registrarte.');
+            } else {
+                $empleado->fecha_nacimiento = $fechaNacimiento;
+            }
             $empleado->creado_por = Auth::user()->nombres;
             $empleado->fecha_creacion = now();
+
+            if ($request->input('password') === $request->input('confirm_password')) {
+                $empleado->password = bcrypt($request->input('password'));
+            } else {
+                return redirect()->route('empleados.index')->with('error', 'La contraseña y la confirmación no coinciden.');
+            }
     
             $empleado->save();
     
@@ -218,6 +242,7 @@ class AdminEmpleadosController extends Controller
                 'direccion_opcion' => 'nullable',
     
                 'email_opcion' => 'required|email|unique:usuarios,email,'.$id.',usuario_id',
+                
             ];
     
             $messages = [
@@ -272,6 +297,21 @@ class AdminEmpleadosController extends Controller
             $empleado->municipio = $municipioSeleccionado;
             $empleado->direccion = $request->input('direccion_opcion');
             $empleado->email = $request->input('email_opcion');
+
+            if ($request->filled('new_password')) {
+                if ($request->input('new_password') === $request->input('confirm_password')) {
+                    if (Hash::check($request->input('password'), $empleado->password)) {
+                        $empleado->password = bcrypt($request->input('new_password'));
+                    } else {
+                        return redirect()->route('empleados.index')->with('error', 'La contraseña actual es incorrecta.');
+                    }
+                } else {
+                    return redirect()->route('empleados.index')->with('error', 'La nueva contraseña y la confirmación no coinciden.');
+                }
+            }
+
+            $empleado->actualizado_por = Auth::user()->nombres;
+            $empleado->fecha_actualizacion = now();
             
             $empleado->save();
     
