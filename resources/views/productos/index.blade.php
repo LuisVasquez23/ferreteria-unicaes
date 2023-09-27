@@ -1,17 +1,16 @@
 @extends('layouts/dashboard')
-@section('title', 'Administrar unidades')
+@section('title', 'Administrar productos')
 @section('contenido')
 
-
     <div class="card mt-3">
-        <h5 class="card-header">Administración de unidades</h5>
+        <h5 class="card-header">Administración de productos</h5>
         <div class="card-body">
-            <a href="{{ route('unidad.create') }}" class="btn btn-success mb-3">
+            <a href="{{ route('producto.create') }}" class="btn btn-success mb-3">
                 <i class="fas fa-plus"></i>
                 Agregar
             </a>
 
-            <div class="col-md-4 mx-auto text-center">
+            <div class="col-md-4 mx-auto text-center mb-3">
                 <label class="mb-2" for="filtro-bloqueo">Filtrar por Estado:</label>
                 <select id="filtro-bloqueo" class="form-select">
                     <option>Seleccionar...</option>
@@ -28,8 +27,30 @@
                                 <b>Nombre</b>
                             </th>
                             <th class="border-bottom-0">
-                                <b>Descripción</b>
+                                <b>Descripcion</b>
                             </th>
+                            <th class="border-bottom-0">
+                                <b>Precio</b>
+                            </th>
+                            <th class="border-bottom-0">
+                                <b>Cantidad</b>
+                            </th>
+                            <th class="border-bottom-0">
+                                <b>Proveedor</b>
+                            </th>
+                            <th class="border-bottom-0">
+                                <b>Categoria</b>
+                            </th>
+                            <th class="border-bottom-0">
+                                <b>Estante</b>
+                            </th>
+                            <th class="border-bottom-0">
+                                <b>Unidad de medida</b>
+                            </th>
+                            <th class="border-bottom-0">
+                                <b>Periodo</b>
+                            </th>
+
                             @if ($filtro === 'bloqueados')
                                 <th class="border-bottom-0">
                                     <b>Bloqueado por</b>
@@ -42,38 +63,61 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($medidas as $medida)
+                        @foreach ($productos as $producto)
                             <tr>
                                 <td class="border-bottom-0">
-                                    <h6 class="mb-0">{{ $medida->nombre }}</h6>
+                                    <h6>{{ $producto->nombre }}</h6>
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="mb-0">{{ $medida->descripcion }}</h6>
+                                    <h6>{{ $producto->descripcion }}</h6>
                                 </td>
+                                <td class="border-bottom-0">
+                                    <h6>$ {{ $producto->precio }}</h6>
+                                </td>
+                                <td class="border-bottom-0">
+                                    <h6>{{ $producto->cantidad }}</h6>
+                                </td>
+                                <td class="border-bottom-0">
+                                    <h6>{{ $producto->usuario->nombres}}</h6>
+                                </td>
+                                <td class="border-bottom-0">
+                                    <h6>{{ $producto->categoria->categoria }}</h6>
+                                </td>
+                                
+                                <td class="border-bottom-0">
+                                    <h6>{{ $producto->estante->estante }}</h6>
+                                </td>
+                                <td class="border-bottom-0">
+                                    <h6>{{ $producto->medida->nombre }}</h6>
+                                </td>
+
+                                <td class="border-bottom-0">
+                                    {{ $producto->periodo->fecha_inicio->format('Y/m/d') }}  -  {{ $producto->periodo->fecha_fin->format('Y/m/d') }}
+                                </td>
+
 
                                 @if ($filtro === 'bloqueados')
                                     <td class="border-bottom-0">
-                                        <h6 class="mb-0">{{ $medida->bloqueado_por }}</h6>
+                                        <h6>{{ $producto->bloqueado_por }}</h6>
                                     </td>
                                 @endif
 
                                 <td class="d-flex gap-1 justify-content-center">
 
                                     @if ($filtro !== 'bloqueados')
-                                        <a href="{{ route('unidad.edit', $medida->unidad_medida_id) }}"
-                                            class="btn btn-primary">
+                                        <a href="{{ route('producto.edit', $producto->producto_id) }}" class="btn btn-primary">
                                             <i class="ti ti-pencil"></i>
                                         </a>
                                     @endif
 
                                     @if ($filtro !== 'bloqueados')
-                                        <form action="{{ route('unidad.destroy', $medida->unidad_medida_id) }}"
-                                            method="POST" id="block-form-{{ $medida->unidad_medida_id }}">
+                                        <form action="{{ route('producto.destroy', $producto->producto_id) }}" method="POST"
+                                            id="block-form-{{ $producto->producto_id }}">
                                             @csrf
                                             @method('DELETE')
                                             <input type="hidden" name="action" value="update">
                                             <button type="button" class="btn btn-danger"
-                                                onclick="confirmBlock({{ $medida->unidad_medida_id }})">
+                                                onclick="confirmBlock({{ $producto->producto_id }})">
                                                 <i class="fa-solid fa-lock"></i>
                                             </button>
                                         </form>
@@ -81,12 +125,12 @@
 
 
                                     @if ($filtro === 'bloqueados')
-                                        <form action="{{ route('unidad.unblock', $medida->unidad_medida_id) }}"
-                                            method="POST" id="unblock-form-{{ $medida->unidad_medida_id }}">
+                                        <form action="{{ route('producto.unblock', $producto->producto_id) }}" method="POST"
+                                            id="unblock-form-{{ $producto->producto_id }}">
                                             @csrf
                                             @method('PUT')
                                             <button type="button" class="btn btn-warning"
-                                                onclick="confirmUnblock({{ $medida->unidad_medida_id }})">
+                                                onclick="confirmUnblock({{ $producto->producto_id }})">
                                                 <i class="fa-solid fa-unlock"></i>
                                             </button>
                                         </form>
@@ -111,7 +155,7 @@
         $(document).ready(function() {
             $("#filtro-bloqueo").on("change", function() {
                 var filtro = $(this).val();
-                var url = "{{ route('unidades') }}?filtro=" + filtro;
+                var url = "{{ route('productos') }}?filtro=" + filtro;
                 window.location.href = url;
             });
         });
