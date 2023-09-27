@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CategoriaFactory extends Factory
 {
+    protected $model = Categoria::class;
+    private static $contador = 1; // Contador para asegurar unicidad
+
+
     /**
      * Define the model's default state.
      *
@@ -14,10 +18,25 @@ class CategoriaFactory extends Factory
      */
     public function definition(): array
     {
-        $categorias = ['Agriculta y jardín', 'Construcción', 'Domésticos', 'Pinturas', 'Electrico e iluminicación', 'Fontanería', 'Ferreteria','Herramientas','Seguridad y salud ocupacional'];
+        $categorias = [
+            'Agriculta y jardín',
+            'Construcción',
+            'Domésticos',
+            'Pinturas',
+            'Electrico e iluminicación',
+            'Fontanería',
+            'Ferreteria',
+            'Herramientas',
+            'Seguridad y salud ocupacional'
+        ];
+
+        // Agregar el contador al final de la categoría
+        $categoria = $categorias[array_rand($categorias)] . ' ' . self::$contador;
+
+        self::$contador++; // Incrementar el contador para la siguiente categoría
 
         return [
-            'categoria' => $this->faker->unique()->randomElement($categorias),
+            'categoria' => $categoria,
             'descripcion' => '',
             'creado_por' => '',
             'fecha_creacion' => null,
