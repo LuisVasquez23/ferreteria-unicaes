@@ -36,7 +36,7 @@
     
                 <div class="form-group col-md-4 mt-2">
                     <label for="precio_opcion">Precio: </label>
-                    <input type="text" class="form-control {{ $errors->has('precio_opcion') ? 'is-invalid' : '' }}"
+                    <input type="number" min="0" step=".1" class="form-control {{ $errors->has('precio_opcion') ? 'is-invalid' : '' }}"
                         name="precio_opcion" id="precio_opcion" value="{{$producto->precio}}" required>
                     @if ($errors->has('precio_opcion'))
                         <div class="invalid-feedback">
@@ -47,7 +47,7 @@
 
                 <div class="form-group col-md-4 mt-2">
                     <label for="cantidad_opcion">Cantidad: </label>
-                    <input type="text" class="form-control {{ $errors->has('cantidad_opcion') ? 'is-invalid' : '' }}"
+                    <input type="number" min="0" class="form-control {{ $errors->has('cantidad_opcion') ? 'is-invalid' : '' }}"
                         name="cantidad_opcion" id="cantidad_opcion" value="{{$producto->cantidad}}" required>
                     @if ($errors->has('cantidad_opcion'))
                         <div class="invalid-feedback">
@@ -115,15 +115,9 @@
                     <div class="form-group">
                         <label for="periodo_id">Período:</label>
                         <select name="periodo_id" id="periodo_id" class="form-control">
-                            @foreach($periodos as $periodo_id => $periodo)
-                            @php
-                                // Dividir la cadena en dos fechas
-                                $fechas = explode(' - ', $periodo);
-                                $fecha_inicio = $fechas[0];
-                                $fecha_fin = $fechas[1];
-                            @endphp
+                            @foreach($periodos as $periodo_id => $fecha)
                             <option value="{{ $periodo_id }}" {{ $producto->periodo_id == $periodo_id ? 'selected' : '' }}>
-                                {{ \Carbon\Carbon::parse($fecha_inicio)->format('Y/m/d') }} - {{ \Carbon\Carbon::parse($fecha_fin)->format('Y/m/d') }}
+                                {{ \Carbon\Carbon::parse($fecha)->format('Y/m/d') }}
                             </option>
                         @endforeach
                         </select>

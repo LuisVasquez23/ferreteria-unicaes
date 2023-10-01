@@ -65,7 +65,7 @@ class AdminProductoController extends Controller
 
             // //periodos de la db
 
-            $periodos = Periodo::whereNull('bloqueado_por')->pluck(DB::raw("CONCAT(fecha_inicio, ' - ', fecha_fin)"), 'periodo_id');
+            $periodos = Periodo::whereNull('bloqueado_por')->pluck('fecha_inicio', 'periodo_id');
 
 
 
@@ -171,7 +171,8 @@ class AdminProductoController extends Controller
 
             // //periodos de la db
 
-            $periodos = Periodo::whereNull('bloqueado_por')->pluck(DB::raw("CONCAT(fecha_inicio, ' - ', fecha_fin)"), 'periodo_id');
+            $periodos = Periodo::whereNull('bloqueado_por')->pluck('fecha_inicio', 'periodo_id');
+
 
             $producto = Producto::find($id);
 
