@@ -20,8 +20,7 @@ return new class extends Migration
             $table->float('monto');
             $table->string('numerosfactura');
             $table->unsignedBigInteger('periodo_id');
-            $table->unsignedBigInteger('cliente_id');
-            $table->unsignedBigInteger('vendedor_id');
+            $table->unsignedBigInteger('comprador_id');
 
             // Campos de auditoria
             $table->string('creado_por')->nullable();
@@ -33,8 +32,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Llaves foraneas
-            $table->foreign('cliente_id')->references('usuario_id')->on('usuarios')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('vendedor_id')->references('usuario_id')->on('usuarios')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('comprador_id')->references('usuario_id')->on('usuarios')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('periodo_id')->references('periodo_id')->on('periodos')->onDelete('cascade')->onUpdate('cascade');
         });
     }

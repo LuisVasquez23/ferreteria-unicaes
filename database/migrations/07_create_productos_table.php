@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id('producto_id')->zerofill();
             $table->string('nombre');
             $table->longText('descripcion');
-            $table->float('precio');
             $table->integer('cantidad');
             $table->unsignedBigInteger('proveedor_id');
             $table->unsignedBigInteger('categoria_id');
