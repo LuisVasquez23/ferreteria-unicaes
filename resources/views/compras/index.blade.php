@@ -29,7 +29,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($compras as $compra)
+                @foreach ($compras as $compra)
+                    @if ($compra->numerosfactura != 1)
                     <tr>
                         <td class="border-bottom-0">
                             <h6 class="mb-0">{{ $compra->numerosfactura }}</h6>
@@ -38,18 +39,18 @@
                             <h6 class="mb-0">${{ $compra->monto }}</h6>
                         </td>
                         <td class="border-bottom-0">
-                            <h6 class="mb-0">{{ $compra->usuario->nombres }} {{ $compra->usuario->apellidos }}</h6>
+                            <h6 class="mb-0">{{ $compra->comprador->nombres }} {{ $compra->comprador->apellidos }}</h6>
                         </td>
                         <td class="d-flex gap-1 justify-content-center">
                             <!-- Botón para ver el detalle de la compra con modal -->
                             <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detalleCompraModal{{ $compra->compra_id }}">
                                 <i class="fas fa-eye"></i> Ver detalle
                             </button>
-
-                     
                         </td>
                     </tr>
-                    @endforeach
+                    @endif
+                @endforeach
+
                 </tbody>
             </table>
         </div>
@@ -110,7 +111,9 @@
                 <div class="row">
                     <div class="justify-contentend end">
                         <h4>IVA: ${{ ($detalle->precioUnitario * $detalle->cantidad)*0.13 }}</h4>
-
+                    </div>
+                    <div class="justify-contentend end">
+                        <h4>Total con IVA: ${{  $compra->monto }}</h4>
                     </div>
 
                 </div>

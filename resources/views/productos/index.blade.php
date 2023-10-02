@@ -29,9 +29,7 @@
                             <th class="border-bottom-0">
                                 <b>Descripcion</b>
                             </th>
-                            <th class="border-bottom-0">
-                                <b>Precio</b>
-                            </th>
+                          
                             <th class="border-bottom-0">
                                 <b>Cantidad</b>
                             </th>
@@ -71,9 +69,7 @@
                                 <td class="border-bottom-0">
                                     <h6>{{ $producto->descripcion }}</h6>
                                 </td>
-                                <td class="border-bottom-0">
-                                    <h6>$ {{ $producto->precio }}</h6>
-                                </td>
+                            
                                 <td class="border-bottom-0">
                                     <h6>{{ $producto->cantidad }}</h6>
                                 </td>

@@ -52,6 +52,7 @@ class Venta extends Model
 
 	protected $fillable = [
 		'monto',
+		'numerosfactura',
 		'periodo_id',
 		'cliente_id',
 		'vendedor_id',
@@ -67,6 +68,14 @@ class Venta extends Model
 	{
 		return $this->belongsTo(Usuario::class, 'vendedor_id');
 	}
+	public function cliente()
+    {
+        return $this->belongsTo(Usuario::class, 'cliente_id');
+    }
+	public function detalle_ventas()
+    {
+        return $this->hasMany(DetalleVenta::class, 'venta_id');
+    }
 
 	public function periodo()
 	{

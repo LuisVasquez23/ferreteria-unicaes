@@ -36,16 +36,6 @@
                 </div>
 
                 <!-- Columna para seleccionar el proveedor -->
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label for="proveedor_id" class="form-label">Proveedor:</label>
-                        <select class="form-select" id="proveedor_id" name="proveedor_id" required>
-                            @foreach ($proveedores as $proveedor_id => $proveedor_nombre)
-                                <option value="{{ $proveedor_id }}">{{ $proveedor_nombre }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
             </div>
 
             <div class="row">
@@ -55,7 +45,7 @@
                         <label for="producto_id" class="form-label">Producto:</label>
                         <select class="form-select" id="producto_id" name="producto_id" required>
                             @foreach ($productos as $producto)
-                                <option value="{{ $producto->producto_id }}" data-precio="{{ $producto->precio }}">{{ $producto->nombre }} - Precio: {{ $producto->precio }}</option>
+                                <option value="{{ $producto->producto_id }}" data-precio="{{ $producto->precio }}">{{ $producto->nombre }} - Proveedor: {{  $producto->usuario->nombres }}</option>
                             @endforeach
                         </select>
                     </div>

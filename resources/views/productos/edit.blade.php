@@ -34,16 +34,7 @@
                     @endif
                 </div>
     
-                <div class="form-group col-md-4 mt-2">
-                    <label for="precio_opcion">Precio: </label>
-                    <input type="number" min="0" step=".1" class="form-control {{ $errors->has('precio_opcion') ? 'is-invalid' : '' }}"
-                        name="precio_opcion" id="precio_opcion" value="{{$producto->precio}}" required>
-                    @if ($errors->has('precio_opcion'))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('precio_opcion') }}
-                        </div>
-                    @endif
-                </div>
+        
 
                 <div class="form-group col-md-4 mt-2">
                     <label for="cantidad_opcion">Cantidad: </label>

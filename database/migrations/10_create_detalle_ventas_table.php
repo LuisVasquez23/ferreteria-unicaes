@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('cantidad');
             $table->integer('numero_lote')->default(0)->unsigned()->nullable(false);
             $table->float('precio');
-            $table->unsignedBigInteger('compra_id');
+            $table->unsignedBigInteger('venta_id');
             $table->unsignedBigInteger('producto_id');
 
             // Campos de auditoria
@@ -31,7 +31,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Llaves foraneas
-            $table->foreign('compra_id')->references('compra_id')->on('compras')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('venta_id')->references('venta_id')->on('ventas')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('producto_id')->references('producto_id')->on('productos')->onDelete('cascade')->onUpdate('cascade');
         });
     }

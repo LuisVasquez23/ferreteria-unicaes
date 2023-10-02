@@ -43,7 +43,7 @@ class DetalleVenta extends Model
 	protected $casts = [
 		'cantidad' => 'int',
 		'precio' => 'float',
-		'compra_id' => 'int',
+		'venta_id' => 'int',
 		'producto_id' => 'int',
 		'fecha_creacion' => 'datetime',
 		'fecha_actualizacion' => 'datetime',
@@ -53,7 +53,7 @@ class DetalleVenta extends Model
 	protected $fillable = [
 		'cantidad',
 		'precio',
-		'compra_id',
+		'venta_id',
 		'producto_id',
 		'creado_por',
 		'fecha_creacion',
@@ -63,13 +63,15 @@ class DetalleVenta extends Model
 		'fecha_bloqueo'
 	];
 
-	public function compra()
+	public function venta()
 	{
-		return $this->belongsTo(Compra::class);
+		return $this->belongsTo(venta::class,'venta_id');
 	}
 
 	public function producto()
 	{
-		return $this->belongsTo(Producto::class);
+		return $this->belongsTo(Producto::class,'producto_id');
 	}
+
+	
 }

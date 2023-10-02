@@ -59,6 +59,7 @@ class AdminClienteController extends Controller
             return view('cliente.create');
         } catch (\Exception $e) {
             Log::error($e->getMessage());
+            
             return redirect()->route('clientes')->with('error', 'Error al cargar la página de creacion de clientes');
         }
     }

@@ -51,7 +51,6 @@ class Producto extends Model
 	protected $primaryKey = 'producto_id';
 
 	protected $casts = [
-		'precio' => 'float',
 		'cantidad' => 'int',
 		'proveedor_id' => 'int',
 		'categoria_id' => 'int',
@@ -66,7 +65,6 @@ class Producto extends Model
 	protected $fillable = [
 		'nombre',
 		'descripcion',
-		'precio',
 		'cantidad',
 		'proveedor_id',
 		'categoria_id',

@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Models\Compra;
+use App\Models\DetalleCompra;
+
 
 class AdminProductoController extends Controller
 {
@@ -88,7 +91,6 @@ class AdminProductoController extends Controller
 
                 'nombre_opcion' => 'required|unique:productos,nombre',
                 'descripcion_opcion' => 'required',
-                'precio_opcion' => 'required|regex:/^\d+(\.\d+)?$/|gt:0',
                 'cantidad_opcion' => 'required|gt:0',
             ];
 
@@ -99,9 +101,7 @@ class AdminProductoController extends Controller
 
                 'descripcion_opcion.required' => 'El campo "descripción" es obligatorio.',
 
-                'precio_opcion.required' => 'El campo "precio" es obligatorio.',
-                'precio_opcion.regex' => 'El campo "precio" debe tener un formato válido (Ej: 1 o 1.75).',
-                'precio_opcion.gt' => 'El campo "precio" debe ser mayor a 0.',
+           
 
                 'cantidad_opcion.required' => 'El campo "cantidad" es obligatorio.',
                 'cantidad_opcion.gt' => 'El campo "cantidad" debe ser mayor a 0.',
@@ -116,12 +116,13 @@ class AdminProductoController extends Controller
                     ->withInput();
             }
 
+            // Iniciar una transacción de base de datos
+            DB::beginTransaction();
 
             $producto = new Producto();
 
             $producto->nombre = $request->input('nombre_opcion');
             $producto->descripcion = $request->input('descripcion_opcion');
-            $producto->precio = $request->input('precio_opcion');
             $producto->cantidad = $request->input('cantidad_opcion');
             $producto->proveedor_id = $request->input('usuario_id');
             $producto->categoria_id = $request->input('categoria_id');
@@ -136,10 +137,36 @@ class AdminProductoController extends Controller
             $producto->fecha_creacion = now();
 
             $producto->save();
+            // Crear la compra
+            $compra = new Compra();
+            $compra->numerosfactura = 1;
+            $compra->periodo_id = $request->input('periodo_id');
+            $compra->comprador_id = Auth::user()->usuario_id;
+            $compra->monto = 0.0;
 
 
+            // Aquí debes establecer otros campos de la compra según tu estructura de datos
+            $compra->save();
+            //Obtener ID del usuario que se esta ingresando
+            $compraId = $compra->compra_id;
+            $idProduccto = $producto->producto_id; 
+            // Guardar los detalles de la compra
+            $detalleCompra = new DetalleCompra();
+            $detalleCompra->cantidad =  $request->input('cantidad_opcion');
+            $detalleCompra->numero_lote = $detalleCompra::max('numero_lote')+1;
+            $detalleCompra->precioUnitario = 0.0;
+            $detalleCompra->producto_id = $idProduccto;
+            $detalleCompra->compra_id = $compraId;
+                    // Aquí puedes establecer otros campos del detalle según tu estructura de datos
+            $detalleCompra->save();
+                
+            // Confirmar la transacción
+            DB::commit();
             return redirect()->route('productos')->with('success', 'El producto se ha agregado con éxito.');
         } catch (\Throwable $th) {
+            DB::rollBack();
+            dd($th);
+
             return redirect()->route('productos')->with('error', 'Sucedio un error al ingresar el producto, todos los campos deben ser correctos');
         }
     }
@@ -154,7 +181,7 @@ class AdminProductoController extends Controller
 
             //Proveedores de la db
             $proveedores = Usuario::whereHas('detalle_roles', function ($query) {
-                $query->where('role_id', 3);
+                $query->where('role_id', 5);
             })->whereNull('bloqueado_por')->pluck('nombres', 'usuario_id');
 
             //categorias de la db
@@ -218,11 +245,6 @@ class AdminProductoController extends Controller
                 return redirect()->route('productos')->with('error', 'Debes añadir descripcion del producto');
             }
 
-            $precio = $request->input('precio_opcion');
-
-            if ($precio <= 0) {
-                return redirect()->route('productos')->with('error', 'El precio debe ser mayor a 0');
-            }
 
 
             $cantidad = $request->input('cantidad_opcion');
@@ -233,7 +255,6 @@ class AdminProductoController extends Controller
 
             $producto->nombre = $request->input('nombre_opcion');
             $producto->descripcion = $request->input('descripcion_opcion');
-            $producto->precio = $request->input('precio_opcion');
             $producto->cantidad = $request->input('cantidad_opcion');
             $producto->proveedor_id = $request->input('usuario_id');
             $producto->categoria_id = $request->input('categoria_id');
