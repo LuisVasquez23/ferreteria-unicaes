@@ -91,7 +91,6 @@ class AdminProductoController extends Controller
 
                 'nombre_opcion' => 'required|unique:productos,nombre',
                 'descripcion_opcion' => 'required',
-                'cantidad_opcion' => 'required|gt:0',
             ];
 
             $messages = [
@@ -104,7 +103,6 @@ class AdminProductoController extends Controller
            
 
                 'cantidad_opcion.required' => 'El campo "cantidad" es obligatorio.',
-                'cantidad_opcion.gt' => 'El campo "cantidad" debe ser mayor a 0.',
             ];
 
             $validator = Validator::make($request->all(), $rules, $messages);
@@ -123,7 +121,7 @@ class AdminProductoController extends Controller
 
             $producto->nombre = $request->input('nombre_opcion');
             $producto->descripcion = $request->input('descripcion_opcion');
-            $producto->cantidad = $request->input('cantidad_opcion');
+            $producto->cantidad = 0;
             $producto->proveedor_id = $request->input('usuario_id');
             $producto->categoria_id = $request->input('categoria_id');
             $producto->estante_id = $request->input('estante_id');
@@ -137,29 +135,7 @@ class AdminProductoController extends Controller
             $producto->fecha_creacion = now();
 
             $producto->save();
-            // Crear la compra
-            $compra = new Compra();
-            $compra->numerosfactura = 1;
-            $compra->periodo_id = $request->input('periodo_id');
-            $compra->comprador_id = Auth::user()->usuario_id;
-            $compra->monto = 0.0;
-
-
-            // Aquí debes establecer otros campos de la compra según tu estructura de datos
-            $compra->save();
-            //Obtener ID del usuario que se esta ingresando
-            $compraId = $compra->compra_id;
-            $idProduccto = $producto->producto_id; 
-            // Guardar los detalles de la compra
-            $detalleCompra = new DetalleCompra();
-            $detalleCompra->cantidad =  $request->input('cantidad_opcion');
-            $detalleCompra->numero_lote = $detalleCompra::max('numero_lote')+1;
-            $detalleCompra->precioUnitario = 0.0;
-            $detalleCompra->producto_id = $idProduccto;
-            $detalleCompra->compra_id = $compraId;
-                    // Aquí puedes establecer otros campos del detalle según tu estructura de datos
-            $detalleCompra->save();
-                
+          
             // Confirmar la transacción
             DB::commit();
             return redirect()->route('productos')->with('success', 'El producto se ha agregado con éxito.');
@@ -247,15 +223,9 @@ class AdminProductoController extends Controller
 
 
 
-            $cantidad = $request->input('cantidad_opcion');
-
-            if ($cantidad <= 0) {
-                return redirect()->route('productos')->with('error', 'La cantidad debe ser mayor a 0');
-            }
 
             $producto->nombre = $request->input('nombre_opcion');
             $producto->descripcion = $request->input('descripcion_opcion');
-            $producto->cantidad = $request->input('cantidad_opcion');
             $producto->proveedor_id = $request->input('usuario_id');
             $producto->categoria_id = $request->input('categoria_id');
             $producto->estante_id = $request->input('estante_id');

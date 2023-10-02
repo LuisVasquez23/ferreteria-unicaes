@@ -65,7 +65,8 @@
                 <div class="col-md-4">
                     <div class="mb-3">
                         <label for="cantidad" class="form-label">Cantidad:</label>
-                        <input type="number" class="form-control" id="cantidad" name="cantidad" required min="1">
+                        <input type="number" class="form-control" id="cantidad" name="cantidad" step="1" required min="1">
+                        <div class="invalid-feedback" id="error-cantidad"></div> <!-- Agregado para mostrar el mensaje de error -->
                     </div>
                 </div>
 
@@ -74,6 +75,7 @@
                     <div class="mb-3">
                         <label for="precio_unitario" class="form-label">Precio Unitario:</label>
                         <input type="number" class="form-control" id="precio_unitario" name="precio_unitario" step="0.01" required min="0.01">
+                        <div class="invalid-feedback" id="error-precio-unitario"></div> <!-- Agregado para mostrar el mensaje de error -->
                     </div>
                 </div>
             </div>
@@ -169,10 +171,40 @@
             var precioUnitario = parseFloat($('#precio_unitario').val());
             var numeroFactura = $('#numero_factura').val();
 
-            // Validaciones adicionales
-            if (cantidad <= 0 || precioUnitario <= 0) {
-                alert('La cantidad y el precio unitario deben ser mayores que cero.');
-                return;
+            
+
+            // Limpia los mensajes de error si no hay errores.
+                $('#error-cantidad').text('');
+                $('#error-precio-unitario').text('');
+                $('#error-numero-factura').text('');
+
+            // Validación de número de factura no vacío
+            if (numeroFactura === '') {
+                $('#error-numero-factura').text('El número de factura no puede estar vacío.');
+                alert("El número de factura no puede estar vacío.")
+                return; // Detiene la ejecución si hay un error.
+            } else {
+                $('#error-numero-factura').text('');
+            }
+
+            // Validación de cantidad no vacía
+            if (isNaN(cantidad) || cantidad <= 0) {
+                $('#error-cantidad').text('La cantidad debe ser un número mayor que cero.');
+                alert("El número de cantidad no puede estar vacío deb ser mayor cero.")
+
+                return; // Detiene la ejecución si hay un error.
+            } else {
+                $('#error-cantidad').text('');
+            }
+
+            // Validación de precio unitario no vacío
+            if (isNaN(precioUnitario) || precioUnitario <= 0) {
+                alert("El número de cantidad no puede estar vacío deb ser mayor cero.")
+
+                $('#error-precio-unitario').text('El precio unitario debe ser un número mayor que cero.');
+                return; // Detiene la ejecución si hay un error.
+            } else {
+                $('#error-precio-unitario').text('');
             }
 
             // Calcular el subtotal del producto
@@ -255,6 +287,9 @@
 
         // Evento click para el botón "Agregar Producto"
         $('#agregar-producto').click(function() {
+             // Limpia los mensajes de error si no hay errores.
+        $('#error-cantidad').text('');
+        $('#error-precio-unitario').text('');
             agregarProducto();
         });
 

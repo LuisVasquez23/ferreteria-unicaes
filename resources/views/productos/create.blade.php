@@ -37,17 +37,6 @@
                 </div>
 
 
-                <div class="form-group col-md-4 mt-2">
-                    <label for="cantidad_opcion">Cantidad: *</label>
-                    <input type="number" min="0" class="form-control {{ $errors->has('cantidad_opcion') ? 'is-invalid' : '' }}"
-                        name="cantidad_opcion" id="cantidad_opcion" required>
-                        
-                    @if ($errors->has('cantidad_opcion'))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('cantidad_opcion') }}
-                        </div>
-                    @endif
-                </div>
 
                 <div class="col-md-4 mt-2">
 

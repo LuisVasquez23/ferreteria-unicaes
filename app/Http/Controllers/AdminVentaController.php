@@ -58,6 +58,7 @@ class AdminVentaController extends Controller
     public function store(Request $request)
     {
         try {
+            
             // Lógica para guardar la compra y sus detalles en la base de datos
             // Recuperar los datos del formulario
             $data = $request->validate([
@@ -69,7 +70,10 @@ class AdminVentaController extends Controller
     
             // Recuperar la lista de productos desde el campo oculto
             $listaProductos = json_decode($request->input('lista_productos'), true);
-    
+
+
+       
+
             // Iniciar una transacción de base de datos
             DB::beginTransaction();
     
@@ -90,6 +94,16 @@ class AdminVentaController extends Controller
             foreach ($listaProductos as $producto) {
                 $productoId = $producto['productoId'];
                 $cantidadComprar = $producto['cantidad'];
+
+                $productoDis = Producto::find($productoId);
+                $cantidad = $productoDis->cantidad;
+                $nombre =  $productoDis->nombre;
+
+                if($cantidadComprar > $cantidad){
+                     DB::rollBack();
+                    return redirect()->route('ventas.create')->with('error', 'Error: No existe suficiente stock de: '.$nombre);
+                }
+
     
                 // Obtener los lotes disponibles para el producto
                 // Consultar la disponibilidad de lotes teniendo en cuenta compras y ventas
