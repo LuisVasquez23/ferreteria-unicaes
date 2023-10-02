@@ -9,10 +9,9 @@ use Illuminate\Support\Facades\Route;
 Route::controller(AdminPerfilController::class)->group(function () {
 
     // GET METHOD
-    Route::get('/perfiles', 'edit')->middleware(['auth', 'verified', 'checkRole:Admin'])->name('perfiles');
-    
+    Route::get('/perfiles', 'edit')->middleware(['auth', 'verified', 'checkRole:Admin,MegaAdmin,Empleado'])->name('perfiles');
+
 
     // PUT METHOD
-    Route::put('/perfiles/update/{id}', 'update')->middleware(['auth', 'verified', 'checkRole:Admin'])->name('perfil.update');
-
+    Route::put('/perfiles/update/{id}', 'update')->middleware(['auth', 'verified', 'checkRole:Admin,MegaAdmin,Empleado'])->name('perfil.update');
 });
