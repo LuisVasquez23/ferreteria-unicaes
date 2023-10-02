@@ -54,6 +54,7 @@ class AdminVentaController extends Controller
         return view('ventas.create', compact('proveedores', 'productos','periodos','categorias','clientes'));
     }
 
+
     public function store(Request $request)
     {
         try {
@@ -61,17 +62,17 @@ class AdminVentaController extends Controller
             // Recuperar los datos del formulario
             $data = $request->validate([
                 'numero_factura' => 'required|numeric',
-                'periodo_id' => 'required|numeric',              
+                'periodo_id' => 'required|numeric',
                 'totalMasIVA' => 'required|numeric',
-                'cliente_id' => 'required|numeric'
+                'cliente_id' => 'required|numeric',
             ]);
-
+    
             // Recuperar la lista de productos desde el campo oculto
             $listaProductos = json_decode($request->input('lista_productos'), true);
-
+    
             // Iniciar una transacción de base de datos
             DB::beginTransaction();
-
+    
             // Crear la compra
             $venta = new Venta();
             $venta->periodo_id = $data['periodo_id'];
@@ -79,39 +80,80 @@ class AdminVentaController extends Controller
             $venta->vendedor_id = Auth::user()->usuario_id;
             $venta->monto = $data['totalMasIVA'];
             $venta->numerosfactura = $data['numero_factura'];
-
+    
             // Aquí debes establecer otros campos de la compra según tu estructura de datos
             $venta->save();
-            //Obtener ID del usuario que se esta ingresando
+            // Obtener ID de la venta que se está creando
             $ventaId = $venta->venta_id;
-            
-            // Guardar los detalles de la compra
+    
+            // Recorrer la lista de productos y guardar detalles de compra
             foreach ($listaProductos as $producto) {
-                $detalleVenta = new DetalleVenta();
-                $detalleVenta->cantidad = $producto['cantidad'];
-                $detalleVenta->numero_lote = $detalleVenta::max('numero_lote')+1;
-                $detalleVenta->precio = $producto['precioUnitario'];
-                $detalleVenta->venta_id = $ventaId;
-                $detalleVenta->producto_id = $producto['productoId'];
-                // Aquí puedes establecer otros campos del detalle según tu estructura de datos
-                $detalleVenta->save();
+                $productoId = $producto['productoId'];
+                $cantidadComprar = $producto['cantidad'];
+    
+                // Obtener los lotes disponibles para el producto
+                // Consultar la disponibilidad de lotes teniendo en cuenta compras y ventas
+                $lotesDisponibles = DB::table('detalle_compras AS dc')
+                    ->select('dc.numero_lote', DB::raw('SUM(dc.cantidad) - COALESCE(SUM(dv.cantidad), 0) AS cantidad_disponible'))
+                    ->leftJoin('detalle_ventas AS dv', function ($join) use ($productoId) {
+                        $join->on('dc.numero_lote', '=', 'dv.numero_lote')
+                            ->where('dv.producto_id', '=', $productoId);
+                    })
+                    ->where('dc.producto_id', $productoId)
+                    ->groupBy('dc.numero_lote')
+                    ->havingRaw('cantidad_disponible > 0')
+                    ->orderBy('dc.numero_lote')
+                    ->get();
+    
+                // Inicializar un array para almacenar los lotes disponibles para la compra
+                $lotesParaCompra = [];
+    
+                // Calcular la cantidad disponible en los lotes para la compra
+                foreach ($lotesDisponibles as $lote) {
+                    $cantidadDisponible = $lote->cantidad_disponible;
+                    if ($cantidadComprar > 0 && $cantidadDisponible > 0) {
+                        // Verificar si la cantidad a comprar cabe en el lote
+                        $cantidadAComprar = min($cantidadComprar, $cantidadDisponible);
+                        if ($cantidadAComprar <= $cantidadDisponible) {
+                            $lotesParaCompra[] = [
+                                'numero_lote' => $lote->numero_lote,
+                                'cantidad_a_comprar' => $cantidadAComprar,
+                            ];
+                            $cantidadComprar -= $cantidadAComprar;
+                        } else {
+                            // La cantidad a comprar no cabe en el lote, maneja el error aquí si es necesario
+                            DB::rollBack();
+                            return redirect()->route('ventas.create')->with('error', 'Error: La cantidad a comprar no cabe en el lote.');
+                        }
+                    }
+                }
+    
+                // Guardar los detalles de compra para los lotes disponibles
+                foreach ($lotesParaCompra as $loteCompra) {
+                    $detalleVenta = new DetalleVenta();
+                    $detalleVenta->cantidad = $loteCompra['cantidad_a_comprar'];
+                    $detalleVenta->numero_lote = $loteCompra['numero_lote'];
+                    $detalleVenta->precio = $producto['precioUnitario'];
+                    $detalleVenta->venta_id = $ventaId;
+                    $detalleVenta->producto_id = $productoId;
+                    // Aquí puedes establecer otros campos del detalle según tu estructura de datos
+                    $detalleVenta->save();
+                }
             }
-
-
-
+    
             // Confirmar la transacción
             DB::commit();
-
+    
             // Redirigir a la vista de éxito o a donde desees
             return redirect()->route('ventas')->with('success', 'Compra creada exitosamente.');
         } catch (\Exception $e) {
             // En caso de error, revertir la transacción y manejar la excepción
             DB::rollBack();
-
+            dd($e);
             // Puedes registrar el error en los registros o mostrar un mensaje de error al usuario
             return redirect()->route('ventas.create')->with('error', 'Error al crear la compra: ' . $e->getMessage());
         }
     }
-
-  
+    
+    
 }
