@@ -31,42 +31,35 @@
                     @endif
                 </div>
 
-
-                <div class="form-group col-md-4 mt-2">
-            
-                </div>
-
-
-
-                <div class="col-md-4 mt-2">
+                <div class="col-md-6 mt-2">
 
                     <div class="form-group">
                         <label for="usuario_id">Proveedor: *</label>
                         <select name="usuario_id" id="usuario_id" class="form-control">
-                            @if($proveedores->isEmpty())
-                        <option value="" disabled selected>No se encontraron proveedores</option>
-                        @else
-                            @foreach($proveedores as $usuario_id => $nombres)
-                                <option value="{{ $usuario_id }}">{{ $nombres }}</option>
-                            @endforeach
-                        @endif
+                            @if ($proveedores->isEmpty())
+                                <option value="" disabled selected>No se encontraron proveedores</option>
+                            @else
+                                @foreach ($proveedores as $usuario_id => $nombres)
+                                    <option value="{{ $usuario_id }}">{{ $nombres }}</option>
+                                @endforeach
+                            @endif
                         </select>
                     </div>
 
                 </div>
-  
+
                 <div class="col-md-6 mt-2">
 
                     <div class="form-group">
                         <label for="categoria_id">Categoria: *</label>
                         <select name="categoria_id" id="categoria_id" class="form-control">
-                            @if($categorias->isEmpty())
-                        <option value="" disabled selected>No se encontraron categorías</option>
-                        @else
-                            @foreach($categorias as $categoria_id => $categoria)
-                                <option value="{{ $categoria_id }}">{{ $categoria }}</option>
-                            @endforeach
-                        @endif
+                            @if ($categorias->isEmpty())
+                                <option value="" disabled selected>No se encontraron categorías</option>
+                            @else
+                                @foreach ($categorias as $categoria_id => $categoria)
+                                    <option value="{{ $categoria_id }}">{{ $categoria }}</option>
+                                @endforeach
+                            @endif
                         </select>
                     </div>
 
@@ -78,40 +71,40 @@
                     <div class="form-group">
                         <label for="estante_id">Estante: *</label>
                         <select name="estante_id" id="estante_id" class="form-control">
-                            @if($estantes->isEmpty())
+                            @if ($estantes->isEmpty())
                                 <option value="" disabled selected>No se encontraron estantes</option>
                             @else
-                                @foreach($estantes as $estante_id => $nombreEstante)
+                                @foreach ($estantes as $estante_id => $nombreEstante)
                                     <option value="{{ $estante_id }}">{{ $nombreEstante }}</option>
                                 @endforeach
                             @endif
                         </select>
                     </div>
                 </div>
-                
+
                 <div class="col-md-6 mt-2">
                     <div class="form-group">
                         <label for="unidad_medida_id">Unidad de Medida: *</label>
                         <select name="unidad_medida_id" id="unidad_medida_id" class="form-control">
-                            @if($unidades->isEmpty())
+                            @if ($unidades->isEmpty())
                                 <option value="" disabled selected>No se encontraron unidades de medida</option>
                             @else
-                                @foreach($unidades as $unidad_medida_id => $nombreUnidad)
+                                @foreach ($unidades as $unidad_medida_id => $nombreUnidad)
                                     <option value="{{ $unidad_medida_id }}">{{ $nombreUnidad }}</option>
                                 @endforeach
                             @endif
                         </select>
                     </div>
                 </div>
-                
+
                 <div class="col-md-6 mt-2">
                     <div class="form-group">
                         <label for="periodo_id">Período: *</label>
                         <select name="periodo_id" id="periodo_id" class="form-control">
-                            @if($periodos->isEmpty())
+                            @if ($periodos->isEmpty())
                                 <option value="" disabled selected>No se encontraron períodos</option>
                             @else
-                                @foreach($periodos as $periodo_id => $fecha)
+                                @foreach ($periodos as $periodo_id => $fecha)
                                     <option value="{{ $periodo_id }}">
                                         {{ \Carbon\Carbon::parse($fecha)->format('Y/m/d') }}
                                     </option>
@@ -120,9 +113,9 @@
                         </select>
                     </div>
                 </div>
-                
-                
-                
+
+
+
 
                 <div class="form-group col-md-12 mt-3">
                     <input type="submit" class="btn btn-primary" value="Ingresar">
