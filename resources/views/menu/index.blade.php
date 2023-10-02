@@ -37,19 +37,19 @@
                         @foreach ($opcionesMenu as $opcionMenu)
                             <tr>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $opcionMenu->id }}</h6>
+                                    {{ $opcionMenu->id }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $opcionMenu->nombre }}</h6>
+                                    {{ $opcionMenu->nombre }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $opcionMenu->direccion }}</h6>
+                                    {{ $opcionMenu->direccion }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $opcionMenu->role->role }}</h6>
+                                    {{ $opcionMenu->role->role }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $opcionMenu->parent->nombre ?? '' }}</h6>
+                                    {{ $opcionMenu->parent->nombre ?? '' }}
                                 </td>
                                 <td class="d-flex gap-1 justify-content-center">
                                     <a href="{{ route('menu.edit', $opcionMenu->id) }}" class="btn btn-primary">

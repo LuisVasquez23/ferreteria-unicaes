@@ -37,9 +37,9 @@
                                 <b>Locación</b>
                             </th>
                             @if ($filtro === 'bloqueados')
-                            <th class="border-bottom-0">
-                                <b>Bloqueado por</b>
-                            </th>
+                                <th class="border-bottom-0">
+                                    <b>Bloqueado por</b>
+                                </th>
                             @endif
 
                             <th>
@@ -53,25 +53,25 @@
                             <tr>
 
                                 <td class="border-bottom-0">
-                                    <h6>{{ $proveedor->nit }}</h6>
+                                    {{ $proveedor->nit }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6>{{ $proveedor->nombres }} </h6>
+                                    {{ $proveedor->nombres }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6>{{ $proveedor->email }}</h6>
+                                    {{ $proveedor->email }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6>+503 {{ $proveedor->telefono }}</h6>
+                                    +503 {{ $proveedor->telefono }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6>{{ $proveedor->municipio }} ,
-                                        {{ $proveedor->departamento }}, {{ $proveedor->direccion }}</h6>
+                                    {{ $proveedor->municipio }} ,
+                                    {{ $proveedor->departamento }}, {{ $proveedor->direccion }}
                                 </td>
                                 @if ($filtro === 'bloqueados')
                                     <td class="border-bottom-0">
-                                    <h6>{{ $proveedor->bloqueado_por }}</h6>
-                                    </ts>
+                                        {{ $proveedor->bloqueado_por }}
+                                    </td>
                                 @endif
                                 <td class="d-flex gap-1 justify-content-center">
 

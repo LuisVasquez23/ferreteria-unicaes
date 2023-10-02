@@ -41,14 +41,14 @@
                             <th class="border-bottom-0">
                                 <b>Dirección</b>
                             </th>
-                            <th class="border-bottom-0"> 
+                            <th class="border-bottom-0">
                                 <b>Email</b>
                             </th>
                             @if ($filtro === 'bloqueados')
-                            <th class="border-bottom-0">
-                                <b>Bloqueado por</b>
-                            </th>
-                        @endif
+                                <th class="border-bottom-0">
+                                    <b>Bloqueado por</b>
+                                </th>
+                            @endif
                             <th>
                                 <b>Acciones</b>
                             </th>
@@ -58,33 +58,30 @@
                         @foreach ($empleados as $empleado)
                             <tr>
                                 <td class="border-bottom-0">
-                                    <h6>{{ $empleado->dui }}</h6>
+                                    {{ $empleado->dui }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6>{{ $empleado->nombres }} {{ $empleado->apellidos }}</h6>
+                                    {{ $empleado->nombres }} {{ $empleado->apellidos }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6>{{ \Carbon\Carbon::parse($empleado->fecha_nacimiento)->age }} años</h6>
+                                    {{ \Carbon\Carbon::parse($empleado->fecha_nacimiento)->age }} años
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6>+503 {{ $empleado->telefono }}</h6>
+                                    +503 {{ $empleado->telefono }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6>{{ $empleado->municipio }} , {{ $empleado->departamento }}
-                                    </h6>
+                                    {{ $empleado->municipio }} , {{ $empleado->departamento }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6>{{ $empleado->direccion }} 
-                                    </h6>
+                                    {{ $empleado->direccion }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6>{{ $empleado->email }} 
-                                    </h6>
+                                    {{ $empleado->email }}
                                 </td>
                                 @if ($filtro === 'bloqueados')
-                                <td class="border-bottom-0">
-                                    <h6>{{ $empleado->bloqueado_por }}</h6>
-                                </td>
+                                    <td class="border-bottom-0">
+                                        <h6>{{ $empleado->bloqueado_por }}</h6>
+                                    </td>
                                 @endif
                                 <td class="d-flex gap-1 justify-content-center">
 

@@ -51,23 +51,22 @@
                         @foreach ($clientes as $cliente)
                             <tr>
                                 <td class="border-bottom-0">
-                                    <h6>{{ $cliente->dui }}</h6>
+                                    {{ $cliente->dui }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6>{{ $cliente->nombres }} , {{ $cliente->apellidos }}</h6>
+                                    {{ $cliente->nombres }} , {{ $cliente->apellidos }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6>+503 {{ $cliente->telefono }}</h6>
+                                    +503 {{ $cliente->telefono }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6>{{ $cliente->municipio }} , {{ $cliente->departamento }}
-                                    </h6>
+                                    {{ $cliente->municipio }} , {{ $cliente->departamento }}
                                 </td>
 
 
                                 @if ($filtro === 'bloqueados')
                                     <td class="border-bottom-0">
-                                        <h6>{{ $cliente->bloqueado_por }}</h6>
+                                        {{ $cliente->bloqueado_por }}
                                     </td>
                                 @endif
 

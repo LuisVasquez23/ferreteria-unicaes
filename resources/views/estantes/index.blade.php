@@ -48,18 +48,18 @@
                         @foreach ($estantes as $estante)
                             <tr>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $estante->estante }}</h6>
+                                    {{ $estante->estante }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $estante->ubicacion }}</h6>
+                                    {{ $estante->ubicacion }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $estante->descripcion }}</h6>
+                                    {{ $estante->descripcion }}
                                 </td>
 
                                 @if ($filtro === 'bloqueados')
                                     <td class="border-bottom-0">
-                                        <h6 class="fw-semibold mb-0">{{ $estante->bloqueado_por }}</h6>
+                                        {{ $estante->bloqueado_por }}
                                     </td>
                                 @endif
 

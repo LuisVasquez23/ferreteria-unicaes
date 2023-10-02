@@ -48,20 +48,19 @@
                         @foreach ($detalles_roles as $rol)
                             <tr>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $rol->role->role }}</h6>
+                                    {{ $rol->role->role }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $rol->usuario->nombres }} {{ $rol->usuario->apellidos }}
-                                    </h6>
+                                    {{ $rol->usuario->nombres }} {{ $rol->usuario->apellidos }}
                                 </td>
 
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $rol->usuario->email }}</h6>
+                                    {{ $rol->usuario->email }}
                                 </td>
 
                                 @if ($filtro === 'bloqueados')
                                     <td class="border-bottom-0">
-                                        <h6 class="fw-semibold mb-0">{{ $rol->bloqueado_por }}</h6>
+                                        {{ $rol->bloqueado_por }}
                                     </td>
                                 @endif
 

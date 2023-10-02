@@ -44,22 +44,22 @@
                         @foreach ($roles as $role)
                             <tr>
                                 <td>
-                                    <h6 class="mb-0">{{ $role->role }}</h6>
+                                    {{ $role->role }}
                                 </td>
                                 <td>
-                                    <h6 class="mb-0">{{ $role->descripcion }}</h6>
+                                    {{ $role->descripcion }}
                                 </td>
 
                                 @if ($filtro === 'bloqueados')
                                     <td class="border-bottom-0">
-                                        <h6 class="mb-0">{{ $role->bloqueado_por }}</h6>
+                                        {{ $role->bloqueado_por }}
                                     </td>
                                 @endif
                                 <td class="d-flex gap-1 justify-content-center">
 
 
                                     @if ($role->role == 'MegaAdmin')
-                                    <p class="mt-2">Nada por hacer</p>
+                                        <p class="mt-2">Nada por hacer</p>
                                     @endif
 
 

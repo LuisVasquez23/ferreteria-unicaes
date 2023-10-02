@@ -43,23 +43,21 @@
                             <tr>
                                 <td class="border-bottom-0">
                                     @if ($periodo->fecha_inicio)
-                                        <h6 class="fw-semibold mb-0">{{ date('d/m/Y', strtotime($periodo->fecha_inicio)) }}
-                                        </h6>
+                                        {{ date('d/m/Y', strtotime($periodo->fecha_inicio)) }}
                                     @endif
                                 </td>
                                 <td class="border-bottom-0">
                                     @if ($periodo->fecha_fin)
-                                        <h6 class="fw-semibold mb-0">{{ date('d/m/Y', strtotime($periodo->fecha_fin)) }}
-                                        </h6>
+                                        {{ date('d/m/Y', strtotime($periodo->fecha_fin)) }}
                                     @endif
                                 </td>
                                 <td class="border-bottom-0">
                                     @if ($periodo->fecha_inicio)
-                                        <h6 class="fw-semibold mb-0">{{ date('Y', strtotime($periodo->fecha_inicio)) }}</h6>
+                                        {{ date('Y', strtotime($periodo->fecha_inicio)) }}
                                     @endif
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">{{ $periodo->creado_por }}</h6>
+                                    {{ $periodo->creado_por }}
                                 </td>
                                 <td class="d-flex gap-1 justify-content-center">
                                     @if ($filtro !== 'bloqueados')

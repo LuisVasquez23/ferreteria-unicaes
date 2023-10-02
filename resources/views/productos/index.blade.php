@@ -29,7 +29,7 @@
                             <th class="border-bottom-0">
                                 <b>Descripcion</b>
                             </th>
-                          
+
                             <th class="border-bottom-0">
                                 <b>Cantidad</b>
                             </th>
@@ -64,27 +64,27 @@
                         @foreach ($productos as $producto)
                             <tr>
                                 <td class="border-bottom-0">
-                                    <h6>{{ $producto->nombre }}</h6>
+                                    {{ $producto->nombre }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6>{{ $producto->descripcion }}</h6>
+                                    {{ $producto->descripcion }}
                                 </td>
-                            
+
                                 <td class="border-bottom-0">
-                                    <h6>{{ $producto->cantidad }}</h6>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <h6>{{ $producto->usuario->nombres}}</h6>
+                                    {{ $producto->cantidad }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6>{{ $producto->categoria->categoria }}</h6>
-                                </td>
-                                
-                                <td class="border-bottom-0">
-                                    <h6>{{ $producto->estante->estante }}</h6>
+                                    {{ $producto->usuario->nombres }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6>{{ $producto->medida->nombre }}</h6>
+                                    {{ $producto->categoria->categoria }}
+                                </td>
+
+                                <td class="border-bottom-0">
+                                    {{ $producto->estante->estante }}
+                                </td>
+                                <td class="border-bottom-0">
+                                    {{ $producto->medida->nombre }}
                                 </td>
 
                                 <td class="border-bottom-0">
@@ -94,21 +94,22 @@
 
                                 @if ($filtro === 'bloqueados')
                                     <td class="border-bottom-0">
-                                        <h6>{{ $producto->bloqueado_por }}</h6>
+                                        {{ $producto->bloqueado_por }}
                                     </td>
                                 @endif
 
                                 <td class="d-flex gap-1 justify-content-center">
 
                                     @if ($filtro !== 'bloqueados')
-                                        <a href="{{ route('producto.edit', $producto->producto_id) }}" class="btn btn-primary">
+                                        <a href="{{ route('producto.edit', $producto->producto_id) }}"
+                                            class="btn btn-primary">
                                             <i class="ti ti-pencil"></i>
                                         </a>
                                     @endif
 
                                     @if ($filtro !== 'bloqueados')
-                                        <form action="{{ route('producto.destroy', $producto->producto_id) }}" method="POST"
-                                            id="block-form-{{ $producto->producto_id }}">
+                                        <form action="{{ route('producto.destroy', $producto->producto_id) }}"
+                                            method="POST" id="block-form-{{ $producto->producto_id }}">
                                             @csrf
                                             @method('DELETE')
                                             <input type="hidden" name="action" value="update">
@@ -121,8 +122,8 @@
 
 
                                     @if ($filtro === 'bloqueados')
-                                        <form action="{{ route('producto.unblock', $producto->producto_id) }}" method="POST"
-                                            id="unblock-form-{{ $producto->producto_id }}">
+                                        <form action="{{ route('producto.unblock', $producto->producto_id) }}"
+                                            method="POST" id="unblock-form-{{ $producto->producto_id }}">
                                             @csrf
                                             @method('PUT')
                                             <button type="button" class="btn btn-warning"

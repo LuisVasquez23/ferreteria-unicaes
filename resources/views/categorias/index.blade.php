@@ -41,15 +41,15 @@
                         @foreach ($categorias as $categoria)
                             <tr>
                                 <td class="border-bottom-0">
-                                    <h6>{{ $categoria->categoria }}</h6>
+                                    {{ $categoria->categoria }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    <h6>{{ $categoria->descripcion }}</h6>
+                                    {{ $categoria->descripcion }}
                                 </td>
                                 @if ($filtro === 'bloqueados')
                                     <td class="border-bottom-0">
-                                    <h6>{{ $categoria->bloqueado_por }}</h6>
-                                    </ts>
+                                        {{ $categoria->bloqueado_por }}
+                                    </td>
                                 @endif
                                 <td class="d-flex gap-1 justify-content-center">
 
