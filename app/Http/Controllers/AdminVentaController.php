@@ -105,7 +105,7 @@ class AdminVentaController extends Controller
 
                 if ($cantidadComprar > $cantidad) {
                     DB::rollBack();
-                    return redirect()->route('ventas.create')->with('error', 'Error: No existe suficiente stock de: ' . $nombre);
+                    return redirect()->route('ventas.create')->with('error', 'No existe suficiente stock de: ' . $nombre);
                 }
 
 
@@ -141,7 +141,7 @@ class AdminVentaController extends Controller
                         } else {
                             // La cantidad a comprar no cabe en el lote, maneja el error aquí si es necesario
                             DB::rollBack();
-                            return redirect()->route('ventas.create')->with('error', 'Error: La cantidad a comprar no cabe en el lote.');
+                            return redirect()->route('ventas.create')->with('error', 'La cantidad a comprar no cabe en el lote.');
                         }
                     }
                 }
@@ -168,7 +168,7 @@ class AdminVentaController extends Controller
             // En caso de error, revertir la transacción y manejar la excepción
             DB::rollBack();
             // Puedes registrar el error en los registros o mostrar un mensaje de error al usuario
-            return redirect()->route('ventas.create')->with('error', 'Error al crear la compra: Por favor, revisar los campos');
+            return redirect()->route('ventas.create')->with('error', 'Por favor, revisar los campos');
         }
     }
 }
