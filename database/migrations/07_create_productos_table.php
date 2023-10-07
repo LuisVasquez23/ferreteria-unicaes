@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id('producto_id')->zerofill();
             $table->string('nombre');
             $table->longText('descripcion');
+            $table->longText('img_path');
             $table->integer('cantidad');
             $table->unsignedBigInteger('proveedor_id');
             $table->unsignedBigInteger('categoria_id');
