@@ -66,6 +66,7 @@ class Producto extends Model
 		'nombre',
 		'descripcion',
 		'cantidad',
+		'img_path',
 		'proveedor_id',
 		'categoria_id',
 		'estante_id',

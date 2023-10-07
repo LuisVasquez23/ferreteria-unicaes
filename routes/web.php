@@ -54,3 +54,4 @@ require __DIR__ . '/AdminUnidad_Medida/unidad_medida.php';
 require __DIR__ . '/AdminProductos/productos.php';
 require __DIR__ . '/AdminCompra/compra.php';
 require __DIR__ . '/AdminVenta/venta.php';
+require __DIR__ . '/Settings/settings.php';

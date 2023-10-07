@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AdminVentaController;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(AdminVentaController::class)->group(function () {

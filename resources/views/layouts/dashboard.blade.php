@@ -136,6 +136,9 @@
                                 <i class="ti ti-menu-2"></i>
                             </a>
                         </li>
+                        <li class="nav-item d-none d-xl-block">
+                            <h2>{{ $nombreEmpresa }}</h2>
+                        </li>
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
@@ -151,6 +154,11 @@
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
                                     aria-labelledby="drop2">
                                     <div class="message-body" style="position: relative">
+                                        <a href="{{ route('settings.index') }}"
+                                            class="d-flex align-items-center gap-2 dropdown-item">
+                                            <i class="ti ti-adjustments-alt fs-6"></i>
+                                            <p class="mb-0 fs-3">Ajustes</p>
+                                        </a>
                                         <a href="{{ route('perfiles') }}"
                                             class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
@@ -183,7 +191,7 @@
     <script src="{{ asset('libs/simplebar/dist/simplebar.js') }}"></script>
     <script src="{{ asset('js/helpers.js') }}"></script>
     <script>
-       $(document).ready(function() {
+        $(document).ready(function() {
             $('#miTabla').DataTable({
                 "paging": true,
                 "ordering": true,
@@ -213,7 +221,6 @@
                 }
             });
         });
-
     </script>
 
     <script>
