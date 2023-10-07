@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('cantidad');
             $table->integer('numero_lote')->default(0)->unsigned()->nullable(false);
             $table->float('precioUnitario');
+            $table->dateTime('fecha_vencimiento')->nullable();
             $table->unsignedBigInteger('compra_id');
             $table->unsignedBigInteger('producto_id');
 

@@ -18,6 +18,7 @@ class DetalleCompra extends Model
         'precio' => 'float',
         'compra_id' => 'int',
         'producto_id' => 'int',
+        'fecha_vencimiento' => 'datetime',
         'fecha_creacion' => 'datetime',
         'fecha_actualizacion' => 'datetime',
         'fecha_bloqueo' => 'datetime',
@@ -26,6 +27,7 @@ class DetalleCompra extends Model
     protected $fillable = [
         'cantidad',
         'numero_lote', // Agregado el campo 'numero_lote'
+        'fecha_vencimiento',
         'precio',
         'compra_id',
         'producto_id',
