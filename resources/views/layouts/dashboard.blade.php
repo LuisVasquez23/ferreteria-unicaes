@@ -18,6 +18,7 @@
 
     <!-- DataTable -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.11.5/i18n/Spanish.json"></script>
 
     <!-- DATA-TABLES CDN -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.3/datatables.min.css" />
@@ -182,16 +183,37 @@
     <script src="{{ asset('libs/simplebar/dist/simplebar.js') }}"></script>
     <script src="{{ asset('js/helpers.js') }}"></script>
     <script>
-        $(document).ready(function() {
+       $(document).ready(function() {
             $('#miTabla').DataTable({
                 "paging": true,
                 "ordering": true,
-                "searching": true, // Habilita la función de búsqueda
+                "searching": true,
                 "info": true,
-                "lengthMenu": [5, 10, 25, 50, 100], // Define las opciones de longitud de página
-                "pageLength": 5 // Establece la cantidad de registros por página en 5
+                "lengthMenu": [5, 10, 25, 50, 100],
+                "pageLength": 5,
+                "language": {
+                    "sProcessing": "Procesando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros por página",
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Buscar:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    }
+                }
             });
         });
+
     </script>
 
     <script>

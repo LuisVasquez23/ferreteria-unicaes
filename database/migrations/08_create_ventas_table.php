@@ -16,7 +16,7 @@ return new class extends Migration
             // Campos generales de la tabla
             $table->id('venta_id');
             $table->float('monto');
-            $table->string('numerosfactura');
+            $table->string('numerosfactura')->unique();
             $table->unsignedBigInteger('periodo_id');
             $table->unsignedBigInteger('cliente_id');
             $table->unsignedBigInteger('vendedor_id');

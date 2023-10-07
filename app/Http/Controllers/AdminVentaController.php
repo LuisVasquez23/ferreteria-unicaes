@@ -88,6 +88,8 @@ class AdminVentaController extends Controller
             $venta->vendedor_id = Auth::user()->usuario_id;
             $venta->monto = $data['totalMasIVA'];
             $venta->numerosfactura = $data['numero_factura'];
+            $venta->fecha_creacion = now();
+            $venta->creado_por = Auth::user()->nombres;
 
             // Aquí debes establecer otros campos de la compra según tu estructura de datos
             $venta->save();

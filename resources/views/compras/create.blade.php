@@ -12,8 +12,11 @@
                 <!-- Columna para el número de factura -->
                 <div class="col-md-4">
                     <div class="mb-3">
-                        <label for="numero_factura" class="form-label">Número de Factura:</label>
-                        <input type="number" class="form-control" id="numero_factura" name="numero_factura" required value="{{ old('numero_factura') }}">
+                        <label for="numerosfactura" class="form-label">Número de Factura:</label>
+                        <input type="number" class="form-control @error('numerosfactura') is-invalid @enderror" id="numerosfactura" name="numerosfactura" required value="{{ old('numerosfactura') }}">
+                        @error('numerosfactura')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
@@ -21,7 +24,7 @@
                 <div class="col-md-4">
                     <div class="mb-3">
                         <label for="periodo_id" class="form-label">Período: *</label>
-                        <select name="periodo_id" id="periodo_id" class="form-select">
+                        <select name="periodo_id" id="periodo_id" class="form-select @error('periodo_id') is-invalid @enderror">
                             @if($periodos->isEmpty())
                                 <option value="" disabled selected>No se encontraron períodos</option>
                             @else
@@ -32,10 +35,11 @@
                                 @endforeach
                             @endif
                         </select>
+                        @error('periodo_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
-
-                <!-- Columna para seleccionar el proveedor -->
             </div>
 
             <div class="row">
@@ -43,11 +47,14 @@
                 <div class="col-md-4">
                     <div class="mb-3">
                         <label for="producto_id" class="form-label">Producto:</label>
-                        <select class="form-select" id="producto_id" name="producto_id" required>
+                        <select class="form-select @error('producto_id') is-invalid @enderror" id="producto_id" name="producto_id" required>
                             @foreach ($productos as $producto)
                                 <option value="{{ $producto->producto_id }}" data-precio="{{ $producto->precio }}">{{ $producto->nombre }} - Proveedor: {{  $producto->usuario->nombres }}</option>
                             @endforeach
                         </select>
+                        @error('producto_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
@@ -55,7 +62,10 @@
                 <div class="col-md-4">
                     <div class="mb-3">
                         <label for="cantidad" class="form-label">Cantidad:</label>
-                        <input type="number" class="form-control" id="cantidad" name="cantidad" required min="1">
+                        <input type="number" class="form-control @error('cantidad') is-invalid @enderror" id="cantidad" name="cantidad" required min="1">
+                        @error('cantidad')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
@@ -63,7 +73,21 @@
                 <div class="col-md-4">
                     <div class="mb-3">
                         <label for="precio_unitario" class="form-label">Precio Unitario:</label>
-                        <input type="number" class="form-control" id="precio_unitario" name="precio_unitario" step="0.01" required min="0.01">
+                        <input type="number" class="form-control @error('precio_unitario') is-invalid @enderror" id="precio_unitario" name="precio_unitario" step="0.01" required min="0.01">
+                        @error('precio_unitario')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Columna para la fecha de vencimiento -->
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="fecha_vencimiento" class="form-label">Fecha de Vencimiento:</label>
+                        <input type="date" class="form-control @error('fecha_vencimiento') is-invalid @enderror" id="fecha_vencimiento" name="fecha_vencimiento" required>
+                        @error('fecha_vencimiento')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
             </div>
@@ -80,7 +104,7 @@
             <!-- Campo oculto para la lista de productos -->
             <input type="hidden" name="lista_productos" id="lista_productos_input" value="">
             <input type="hidden" name="monto_total" id="monto_total" value="">
-            <input type="hidden" name="ivaToatl" id="ivaTotal" value="">
+            <input type="hidden" name="ivaTotal" id="ivaTotal" value="">
             <input type="hidden" name="totalFin" id="totalFin" value="">
         </form>
 
@@ -94,6 +118,7 @@
                             <th>Nombre Producto</th>
                             <th>Cantidad</th>
                             <th>Precio Unitario</th>
+                            <th>Fecha de Vencimiento</th>
                             <th>Precio Total</th>
                             <th>Acción</th>
                         </tr>
@@ -157,13 +182,31 @@
             var productoNombre = $('#producto_id option:selected').text().split(' - Precio')[0];
             var cantidad = parseInt($('#cantidad').val());
             var precioUnitario = parseFloat($('#precio_unitario').val());
-            var numeroFactura = $('#numero_factura').val();
+            var fechaVencimiento = $('#fecha_vencimiento').val();
+            var numeroFactura = $('#numerosfactura').val();
+            
+                if (!numeroFactura || numeroFactura.trim() === "") {
+                    // Mostrar alerta personalizada
+                    AlertMessage("Por favor, ingrese un número de factura válido.", "error");
+                    return;
+                }
+                if (isNaN(cantidad) || cantidad <= 0) {
+                    // Mostrar alerta personalizada
+                    AlertMessage('La cantidad debe se un número mayor que cero', 'error');
+                    return;
+                }
 
-            // Validaciones adicionales
-            if (cantidad <= 0 || precioUnitario <= 0) {
-                alert('La cantidad y el precio unitario deben ser mayores que cero.');
-                return;
-            }
+                if (isNaN(precioUnitario) || precioUnitario <= 0) {
+                    // Mostrar alerta personalizada
+                    AlertMessage("El precio unitario debe ser un número mayor que cero.", "error");
+                    return;
+                }
+                
+                if (!fechaVencimiento || fechaVencimiento.trim() === "") {
+                    // Mostrar alerta personalizada
+                    AlertMessage("Por favor, ingrese un fecha de vencimiento  válida.", "error");
+                    return;
+                }
 
             // Calcular el subtotal del producto
             var subtotal = cantidad * precioUnitario;
@@ -185,7 +228,8 @@
                     cantidad: cantidad,
                     precioUnitario: precioUnitario,
                     subtotal: subtotal,
-                    numeroFactura: numeroFactura
+                    numeroFactura: numeroFactura,
+                    fechaVencimiento: fechaVencimiento // Agregar la fecha de vencimiento
                 });
             }
 
@@ -204,6 +248,8 @@
             // Limpiar los campos de cantidad y precio unitario
             $('#cantidad').val('');
             $('#precio_unitario').val('');
+            $('#fecha_vencimiento').val('');
+
         }
 
         // Función para actualizar la lista de productos en la vista
@@ -214,6 +260,7 @@
                 listaHtml += '<td>' + producto.nombre + '</td>';
                 listaHtml += '<td><input type="number" class="form-control cantidad-editable" value="' + producto.cantidad + '"></td>';
                 listaHtml += '<td><input type="number" class="form-control precio-unitario-editable" step="0.01" value="' + producto.precioUnitario.toFixed(2) + '"></td>';
+                listaHtml += '<td>' + producto.fechaVencimiento + '</td>';
                 listaHtml += '<td>' + producto.subtotal.toFixed(2) + '</td>';
                 listaHtml += '<td><button type="button" class="btn btn-danger eliminar-producto" data-index="' + index + '">Eliminar</button></td>';
                 listaHtml += '</tr>';
@@ -300,6 +347,8 @@
             $('form').submit();
 
         });
+
+
     });
 </script>
 @endsection

@@ -23,6 +23,9 @@
                             <th class="border-bottom-0">
                                 <b>Proveedor</b>
                             </th>
+                            <th class="borde-bottom-o">
+                                <b>Fecha de compra</b>    
+                            </th>
                             <th class="border-bottom-0">
                                 <b>Acciones</b>
                             </th>
@@ -41,6 +44,10 @@
                                     <td class="border-bottom-0">
                                         {{ $compra->comprador->nombres }}
                                         {{ $compra->comprador->apellidos }}
+                                    </td>
+                                    <td class="border-bottom-0">
+                                        {{ $compra->periodo->fecha_inicio->format('Y/m/d')  }}
+                                        
                                     </td>
                                     <td class="d-flex gap-1 justify-content-center">
                                         <!-- Botón para ver el detalle de la compra con modal -->

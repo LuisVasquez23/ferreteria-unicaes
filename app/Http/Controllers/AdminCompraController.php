@@ -12,6 +12,8 @@ use App\Models\DetalleCompra;
 use App\Models\Periodo;
 use App\Models\Categoria;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+
 
 
 class AdminCompraController extends Controller
@@ -56,61 +58,91 @@ class AdminCompraController extends Controller
     public function store(Request $request)
     {
         try {
-            // Lógica para guardar la compra y sus detalles en la base de datos
-            // Recuperar los datos del formulario
-            $data = $request->validate([
-                'numero_factura' => 'required|numeric',
-                'periodo_id' => 'required|numeric',              
-                'totalFin' => 'required|numeric',
-            ]);
+         
+                // Define las reglas de validación
+                $rules = [
+                    'numerosfactura' => 'required|numeric|unique:compras',
+                    'periodo_id' => 'required|numeric',
+                    'producto_id' => 'required|numeric',
+                   'cantidad' => 'required|numeric|min:1',
+                    'precio_unitario' => 'required|numeric|min:0.01',
+                    'fecha_vencimiento' => 'required|date',
+                ];
 
-            // Recuperar la lista de productos desde el campo oculto
-            $listaProductos = json_decode($request->input('lista_productos'), true);
+                // Define los mensajes de error personalizados en español
+                $messages = [
+                    'numerosfactura.required' => 'El campo "Número de Factura" es obligatorio.',
+                    'numerosfactura.numeric' => 'El campo "Número de Factura" debe ser un número.',
+                    'numerosfactura.unique' => 'El campo "Número de Factura" debe ser un unico.',
+                    'periodo_id.required' => 'El campo "Período" es obligatorio.',
+                    'periodo_id.numeric' => 'El campo "Período" debe ser un número.',
+                    'producto_id.required' => 'El campo "Producto" es obligatorio.',
+                    'producto_id.numeric' => 'El campo "Producto" debe ser un número.',
+                    'cantidad.required' => 'El campo "Cantidad" es obligatorio.',
+                    'cantidad.numeric' => 'El campo "Cantidad" debe ser un número.',
+                    'cantidad.min' => 'El campo "Cantidad" debe ser mayor o igual a 1.',
+                    'precio_unitario.required' => 'El campo "Precio Unitario" es obligatorio.',
+                    'precio_unitario.numeric' => 'El campo "Precio Unitario" debe ser un número.',
+                    'precio_unitario.min' => 'El campo "Precio Unitario" debe ser mayor o igual a 0.01.',
+                   'fecha_vencimiento.required' => 'El campo "Fecha de Vencimiento" es obligatorio.',
+                    'fecha_vencimiento.date' => 'El campo "Fecha de Vencimiento" debe ser una fecha válida.',
+                ];
 
-            // Iniciar una transacción de base de datos
-            DB::beginTransaction();
-
-            // Crear la compra
-            $compra = new Compra();
-            $compra->numerosfactura = $data['numero_factura'];
-            $compra->periodo_id = $data['periodo_id'];
-            $compra->comprador_id = Auth::user()->usuario_id;
-            $compra->monto = $data['totalFin'];
-            // Aquí debes establecer otros campos de la compra según tu estructura de datos
-            $compra->save();
-            //Obtener ID del usuario que se esta ingresando
-            $compraId = $compra->compra_id;
             
-            // Guardar los detalles de la compra
+                // Realiza la validación
+                $validator = Validator::make($request->all(), $rules, $messages);
+
+                
+                if ($validator->fails()) {
+                    return redirect()
+                        ->route('compras.create')
+                        ->withErrors($validator)
+                        ->withInput();
+                }
+            // Create the compra record
+            $compra = new Compra();
+            $compra->numerosfactura = $request->input('numerosfactura');
+            $compra->periodo_id = $request->input('periodo_id');
+            $compra->comprador_id = Auth::user()->usuario_id;
+            $compra->monto = $request->input('totalFin');
+            $compra->fecha_creacion = now();
+            $compra->creado_por = Auth::user()->nombres;
+            // Set other compra fields as needed
+            $compra->save();
+
+            $compraId = $compra->compra_id;
+
+            // Create and save detalles de compra
+            $listaProductos = $request->input('lista_productos');
+            var_dump($listaProductos);
             foreach ($listaProductos as $producto) {
                 $detalleCompra = new DetalleCompra();
                 $detalleCompra->cantidad = $producto['cantidad'];
-                $detalleCompra->numero_lote = $detalleCompra::max('numero_lote')+1;
+                $detalleCompra->numero_lote = DetalleCompra::max('numero_lote') + 1;
                 $detalleCompra->precioUnitario = $producto['precioUnitario'];
                 $detalleCompra->producto_id = $producto['productoId'];
                 $detalleCompra->compra_id = $compraId;
-                // Aquí puedes establecer otros campos del detalle según tu estructura de datos
+                $detalleCompra->fecha_vencimiento = $producto['fechaVencimiento'];
+                // Set other detalle fields as needed
                 $detalleCompra->save();
             }
 
-
-
-            // Confirmar la transacción
+            // Commit the database transaction
             DB::commit();
 
-            // Redirigir a la vista de éxito o a donde desees
+            // Redirect to a success view or wherever you want
             return redirect()->route('compras')->with('success', 'Compra creada exitosamente.');
         } catch (\Exception $e) {
-            // En caso de error, revertir la transacción y manejar la excepción
+            // In case of an error, roll back the transaction and handle the exception
             DB::rollBack();
-            
-
-            // Puedes registrar el error en los registros o mostrar un mensaje de error al usuario
+        
+            // You can log the error or show an error message to the user
             return redirect()->route('compras.create')->with('error', 'Error al crear la compra: ' . $e->getMessage());
         }
     }
 
-    
 
-  
-}
+        
+
+    
+ }
