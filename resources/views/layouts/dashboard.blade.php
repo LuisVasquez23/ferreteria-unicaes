@@ -41,7 +41,7 @@
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
                     <a href="{{ route('dashboard') }}" class="text-nowrap logo-img">
-                        <img src="{{ asset('images/logos/unicaes.jpg') }}" width="180" alt="Logo sistema" />
+                        <img src="{{ asset('storage/upload/' . $logo) }}" width="180" alt="Logo sistema" />
                     </a>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
                         <i class="ti ti-x fs-8"></i>
@@ -137,7 +137,7 @@
                             </a>
                         </li>
                         <li class="nav-item d-none d-xl-block">
-                            <h2>{{ $nombreEmpresa }}</h2>
+                            <h3>{{ $nombreEmpresa }}</h3>
                         </li>
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">

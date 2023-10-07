@@ -51,5 +51,6 @@ class DatabaseSeeder extends Seeder
         $this->call(EstanteSeeder::class);
         $this->call(Unidad_MedidaSeeder::class);
         $this->call(CategoriaSeeder::class);
+        $this->call(CatalogosTableSeeder::class);
     }
 }
