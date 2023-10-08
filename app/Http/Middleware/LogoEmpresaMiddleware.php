@@ -20,9 +20,11 @@ class LogoEmpresaMiddleware
         // Obtener el nombre del archivo del logo de la empresa desde la base de datos
         $nombreArchivoLogo = Catalogo::where('nombre', 'LOGO_EMPRESA')->first()->valor;
 
-        
+        // Generar la URL del logo de la empresa utilizando asset()
+        $urlLogoEmpresa = asset('storage/upload/' . $nombreArchivoLogo);
+
         // Compartir la URL del logo de la empresa con todas las vistas
-        view()->share('logo', $nombreArchivoLogo);
+        view()->share('urlLogoEmpresa', $urlLogoEmpresa);
 
         return $next($request);
     }
