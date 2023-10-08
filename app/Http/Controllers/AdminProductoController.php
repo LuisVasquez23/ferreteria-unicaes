@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use App\Models\Compra;
 use App\Models\DetalleCompra;
-
+use Illuminate\Support\Facades\Storage;
 
 class AdminProductoController extends Controller
 {
@@ -84,25 +84,18 @@ class AdminProductoController extends Controller
     public function store(Request $request)
     {
         try {
-
-
             // Define las reglas de validación
             $rules = [
-
                 'nombre_opcion' => 'required|unique:productos,nombre',
                 'descripcion_opcion' => 'required',
+                'imagenProducto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Ajusta las reglas de validación según tus necesidades
             ];
 
             $messages = [
-
                 'nombre_opcion.required' => 'El campo "nombre" es obligatorio.',
                 'nombre_opcion.unique' => 'El producto ingresado ya está registrado, intentelo de nuevo.',
-
                 'descripcion_opcion.required' => 'El campo "descripción" es obligatorio.',
-
-           
-
-                'cantidad_opcion.required' => 'El campo "cantidad" es obligatorio.',
+                'imagenProducto.required' => 'El campo "imagen" es obligatorio.',
             ];
 
             $validator = Validator::make($request->all(), $rules, $messages);
@@ -128,21 +121,29 @@ class AdminProductoController extends Controller
             $producto->unidad_medida_id = $request->input('unidad_medida_id');
             $producto->periodo_id = $request->input('periodo_id');
 
-
-
-
             $producto->creado_por = Auth::user()->nombres . ' ' . Auth::user()->apellidos;
             $producto->fecha_creacion = now();
 
+            // Sube la imagen del producto a la ubicación deseada
+            $imagenProducto = $request->file('imagenProducto');
+            $imagenProductoExtension = $imagenProducto->getClientOriginalExtension();
+            $nombreImagen = $request->input('nombre_opcion') . '_' . $request->input('categoria_id') . '_' . $request->input('estante_id') . '.' . $imagenProductoExtension;
+            $imagenProductoName = 'public/upload/productos/' . str_replace(' ', '', $nombreImagen);
+
+            Storage::put($imagenProductoName, file_get_contents($imagenProducto));
+
+            // Actualiza el campo de imagen en la tabla de productos
+            // Tendra el siguiente formato: PRODUCTO_1_1.jpeg
+            $producto->img_path =  str_replace(' ', '', $nombreImagen);
             $producto->save();
-          
+
             // Confirmar la transacción
             DB::commit();
+
             return redirect()->route('productos')->with('success', 'El producto se ha agregado con éxito.');
         } catch (\Throwable $th) {
             DB::rollBack();
             dd($th);
-
             return redirect()->route('productos')->with('error', 'Sucedio un error al ingresar el producto, todos los campos deben ser correctos');
         }
     }
@@ -195,35 +196,35 @@ class AdminProductoController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-
-
             $producto = Producto::find($id);
 
             if (!$producto) {
-
                 return redirect()->route('productos')->with('error', 'Producto no encontrado');
             }
 
+            // Define las reglas de validación
+            $rules = [
+                'nombre_opcion' => 'required|unique:productos,nombre,' . $id,
+                'descripcion_opcion' => 'required',
+                'imagenProducto' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Ajusta las reglas de validación según tus necesidades
+            ];
 
-            //validar nombre del producto
-            $existingName = Producto::where('nombre', $request->input('nombre_opcion'))
-                ->where('producto_id', '<>', $id)
-                ->first();
+            $messages = [
+                'nombre_opcion.required' => 'El campo "nombre" es obligatorio.',
+                'nombre_opcion.unique' => 'El producto ya está registrado, prueba con otro.',
+                'descripcion_opcion.required' => 'El campo "descripción" es obligatorio.',
+            ];
 
-            if ($existingName) {
-                return redirect()->route('productos')->with('error', 'El producto ya está registrado, prueba con otro');
+            $validator = Validator::make($request->all(), $rules, $messages);
+
+            if ($validator->fails()) {
+                return redirect()
+                    ->route('productos.edit', ['id' => $id])
+                    ->withErrors($validator)
+                    ->withInput();
             }
 
-
-            $descripcion = $request->input('descripcion_opcion');
-
-            if ($descripcion == '') {
-                return redirect()->route('productos')->with('error', 'Debes añadir descripcion del producto');
-            }
-
-
-
-
+            // Actualiza los campos del producto
             $producto->nombre = $request->input('nombre_opcion');
             $producto->descripcion = $request->input('descripcion_opcion');
             $producto->proveedor_id = $request->input('usuario_id');
@@ -234,6 +235,24 @@ class AdminProductoController extends Controller
 
             $producto->actualizado_por = Auth::user()->nombres . ' ' . Auth::user()->apellidos;
 
+            // Actualiza la imagen del producto si se proporciona una nueva
+            if ($request->hasFile('imagenProducto')) {
+                $imagenProducto = $request->file('imagenProducto');
+                $imagenProductoExtension = $imagenProducto->getClientOriginalExtension();
+                $imagenProductoName = 'public/upload/productos/' . $producto->id . '.' . $imagenProductoExtension;
+
+                // Elimina el archivo existente si existe
+                if (Storage::exists($producto->imagen)) {
+                    Storage::delete($producto->imagen);
+                }
+
+                // Sube la nueva imagen
+                Storage::put($imagenProductoName, file_get_contents($imagenProducto));
+
+                // Actualiza el campo de imagen en la tabla de productos
+                $producto->imagen = $imagenProductoName;
+            }
+
             $producto->save();
 
             return redirect()->route('productos')->with('success', 'Producto actualizado con éxito.');
@@ -241,6 +260,7 @@ class AdminProductoController extends Controller
             return redirect()->route('productos')->with('error', 'Sucedio un error al actualizar el producto, todos los campos deben ser correctos');
         }
     }
+
 
 
     public function destroy(string $id)

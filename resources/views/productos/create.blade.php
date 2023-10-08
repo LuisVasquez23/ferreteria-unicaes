@@ -5,7 +5,8 @@
     <div class="card mt-3">
         <h5 class="card-header">Ingresar producto</h5>
         <div class="card-body">
-            <form action="{{ route('producto.store') }}" method="post" class="row needs-validation" novalidate>
+            <form action="{{ route('producto.store') }}" method="post" class="row needs-validation"
+                enctype="multipart/form-data" novalidate>
                 @csrf
 
 
@@ -27,6 +28,20 @@
                     @if ($errors->has('descripcion_opcion'))
                         <div class="invalid-feedback">
                             {{ $errors->first('descripcion_opcion') }}
+                        </div>
+                    @endif
+                </div>
+
+                <div class="form-group col-md-6 mt-2">
+                    <label for="imagenProducto">Imagen: *</label>
+
+                    <input type="file" class="form-control {{ $errors->has('imagenProducto') ? 'is-invalid' : '' }}"
+                        name="imagenProducto" id="imagenProducto" accept="image/*" required>
+
+
+                    @if ($errors->has('imagenProducto'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('imagenProducto') }}
                         </div>
                     @endif
                 </div>

@@ -53,7 +53,7 @@ class SettingsController extends Controller
             // Redirige de vuelta con un mensaje de éxito
             return redirect()->back()->with('success', 'Logo de la empresa cambiado exitosamente');
         } catch (\Throwable $th) {
-            return redirect()->back()->with('error', $th->getMessage());
+            return redirect()->back()->with('error', "Sucedió un error al almacenar la imagen");
         }
     }
 

@@ -30,6 +30,10 @@
                                 <b>Descripcion</b>
                             </th>
 
+                            <th>
+                                Imagen
+                            </th>
+
                             <th class="border-bottom-0">
                                 <b>Cantidad</b>
                             </th>
@@ -70,6 +74,12 @@
                                     {{ $producto->descripcion }}
                                 </td>
 
+                                <!-- Agrega esta celda para mostrar la imagen -->
+                                <td class="border-bottom-0">
+                                    <img src="{{ asset('storage/upload/productos/' . $producto->img_path) }}"
+                                        alt="{{ $producto->nombre }}" class="img-thumbnail" width="100">
+                                </td>
+
                                 <td class="border-bottom-0">
                                     {{ $producto->cantidad }}
                                 </td>
@@ -98,41 +108,42 @@
                                     </td>
                                 @endif
 
-                                <td class="d-flex gap-1 justify-content-center">
+                                <td style="height:auto !important;">
 
-                                    @if ($filtro !== 'bloqueados')
-                                        <a href="{{ route('producto.edit', $producto->producto_id) }}"
-                                            class="btn btn-primary">
-                                            <i class="ti ti-pencil"></i>
-                                        </a>
-                                    @endif
+                                    <div class="d-flex gap-2">
+                                        @if ($filtro !== 'bloqueados')
+                                            <a href="{{ route('producto.edit', $producto->producto_id) }}"
+                                                class="btn btn-primary">
+                                                <i class="ti ti-pencil"></i>
+                                            </a>
+                                        @endif
 
-                                    @if ($filtro !== 'bloqueados')
-                                        <form action="{{ route('producto.destroy', $producto->producto_id) }}"
-                                            method="POST" id="block-form-{{ $producto->producto_id }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <input type="hidden" name="action" value="update">
-                                            <button type="button" class="btn btn-danger"
-                                                onclick="confirmBlock({{ $producto->producto_id }})">
-                                                <i class="fa-solid fa-lock"></i>
-                                            </button>
-                                        </form>
-                                    @endif
+                                        @if ($filtro !== 'bloqueados')
+                                            <form action="{{ route('producto.destroy', $producto->producto_id) }}"
+                                                method="POST" id="block-form-{{ $producto->producto_id }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <input type="hidden" name="action" value="update">
+                                                <button type="button" class="btn btn-danger"
+                                                    onclick="confirmBlock({{ $producto->producto_id }})">
+                                                    <i class="fa-solid fa-lock"></i>
+                                                </button>
+                                            </form>
+                                        @endif
 
 
-                                    @if ($filtro === 'bloqueados')
-                                        <form action="{{ route('producto.unblock', $producto->producto_id) }}"
-                                            method="POST" id="unblock-form-{{ $producto->producto_id }}">
-                                            @csrf
-                                            @method('PUT')
-                                            <button type="button" class="btn btn-warning"
-                                                onclick="confirmUnblock({{ $producto->producto_id }})">
-                                                <i class="fa-solid fa-unlock"></i>
-                                            </button>
-                                        </form>
-                                    @endif
-
+                                        @if ($filtro === 'bloqueados')
+                                            <form action="{{ route('producto.unblock', $producto->producto_id) }}"
+                                                method="POST" id="unblock-form-{{ $producto->producto_id }}">
+                                                @csrf
+                                                @method('PUT')
+                                                <button type="button" class="btn btn-warning"
+                                                    onclick="confirmUnblock({{ $producto->producto_id }})">
+                                                    <i class="fa-solid fa-unlock"></i>
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </div>
 
                                 </td>
                             </tr>
