@@ -19,6 +19,7 @@ return new class extends Migration
             $table->longText('descripcion');
             $table->longText('img_path');
             $table->integer('cantidad');
+            $table->dateTime('fecha_vencimiento');
             $table->unsignedBigInteger('proveedor_id');
             $table->unsignedBigInteger('categoria_id');
             $table->unsignedBigInteger('estante_id');
