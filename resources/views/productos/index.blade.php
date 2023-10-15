@@ -49,9 +49,6 @@
                             <th class="border-bottom-0">
                                 <b>Unidad de medida</b>
                             </th>
-                            <th class="border-bottom-0">
-                                <b>Periodo</b>
-                            </th>
 
                             @if ($filtro === 'bloqueados')
                                 <th class="border-bottom-0">
@@ -87,7 +84,7 @@
                                     {{ $producto->usuario->nombres }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    {{ $producto->fecha_vencimiento }}
+                                    {{ $producto->fecha_vencimiento == null ? '' : date('d/m/Y', strtotime($producto->fecha_vencimiento)) }}
                                 </td>
 
                                 <td class="border-bottom-0">
@@ -97,9 +94,6 @@
                                     {{ $producto->medida->nombre }}
                                 </td>
 
-                                <td class="border-bottom-0">
-                                    {{ date('d/m/Y', strtotime($producto->fecha_vencimiento)) }}
-                                </td>
 
                                 @if ($filtro === 'bloqueados')
                                     <td class="border-bottom-0">
