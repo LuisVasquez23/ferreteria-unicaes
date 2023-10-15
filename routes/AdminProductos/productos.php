@@ -10,6 +10,7 @@ Route::controller(AdminProductoController::class)->group(function () {
     Route::get('/productos', 'index')->middleware(['auth', 'verified', 'checkRole:Admin,MegaAdmin,Empleado'])->name('productos');
     Route::get('/productos/create', 'create')->middleware(['auth', 'verified', 'checkRole:Admin,MegaAdmin,Empleado'])->name('producto.create');
     Route::get('/productos/edit/{id}', 'edit')->middleware(['auth', 'verified', 'checkRole:Admin,MegaAdmin,Empleado'])->name('producto.edit');
+    Route::get('/productos/detail/{id}', 'detail')->middleware(['auth', 'verified', 'checkRole:Admin,MegaAdmin,Empleado'])->name('producto.detail');
 
     // POST METHOD
     Route::post('/productos/create', 'store')->middleware(['auth', 'verified', 'checkRole:Admin,MegaAdmin,Empleado'])->name('producto.store');

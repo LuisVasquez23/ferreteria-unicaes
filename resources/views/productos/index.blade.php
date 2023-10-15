@@ -26,19 +26,12 @@
                             <th class="border-bottom-0">
                                 <b>Nombre</b>
                             </th>
-                            <th class="border-bottom-0">
-                                <b>Descripcion</b>
-                            </th>
-
                             <th>
                                 Imagen
                             </th>
 
                             <th class="border-bottom-0">
                                 <b>Cantidad</b>
-                            </th>
-                            <th class="border-bottom-0">
-                                <b>Proveedor</b>
                             </th>
                             <th class="border-bottom-0">
                                 <b>Fecha vencimiento</b>
@@ -67,9 +60,6 @@
                                 <td class="border-bottom-0">
                                     {{ $producto->nombre }}
                                 </td>
-                                <td class="border-bottom-0">
-                                    {{ $producto->descripcion }}
-                                </td>
 
                                 <!-- Agrega esta celda para mostrar la imagen -->
                                 <td class="border-bottom-0">
@@ -79,9 +69,6 @@
 
                                 <td class="border-bottom-0">
                                     {{ $producto->cantidad }}
-                                </td>
-                                <td class="border-bottom-0">
-                                    {{ $producto->usuario->nombres }}
                                 </td>
                                 <td class="border-bottom-0">
                                     {{ $producto->fecha_vencimiento == null ? '' : date('d/m/Y', strtotime($producto->fecha_vencimiento)) }}
@@ -104,14 +91,16 @@
                                 <td style="height:auto !important;">
 
                                     <div class="d-flex gap-2">
+
                                         @if ($filtro !== 'bloqueados')
+                                            <a href="{{ route('producto.detail', $producto->producto_id) }}"
+                                                class="btn btn-warning">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </a>
                                             <a href="{{ route('producto.edit', $producto->producto_id) }}"
                                                 class="btn btn-primary">
                                                 <i class="ti ti-pencil"></i>
                                             </a>
-                                        @endif
-
-                                        @if ($filtro !== 'bloqueados')
                                             <form action="{{ route('producto.destroy', $producto->producto_id) }}"
                                                 method="POST" id="block-form-{{ $producto->producto_id }}">
                                                 @csrf

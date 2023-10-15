@@ -18,3 +18,9 @@ select[name="miTabla_length"] {
    margin-bottom: 10px;
 }
 
+
+#auto-resize-textarea {
+    overflow: hidden;
+    resize: none;
+    /* Para evitar que el usuario cambie manualmente el tamaño */
+}
