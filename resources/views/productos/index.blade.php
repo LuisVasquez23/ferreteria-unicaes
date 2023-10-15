@@ -41,7 +41,7 @@
                                 <b>Proveedor</b>
                             </th>
                             <th class="border-bottom-0">
-                                <b>Categoria</b>
+                                <b>Fecha vencimiento</b>
                             </th>
                             <th class="border-bottom-0">
                                 <b>Estante</b>
@@ -87,7 +87,7 @@
                                     {{ $producto->usuario->nombres }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    {{ $producto->categoria->categoria }}
+                                    {{ $producto->fecha_vencimiento }}
                                 </td>
 
                                 <td class="border-bottom-0">
@@ -98,9 +98,8 @@
                                 </td>
 
                                 <td class="border-bottom-0">
-                                    {{ $producto->periodo->fecha_inicio->format('Y/m/d') }}
+                                    {{ date('d/m/Y', strtotime($producto->fecha_vencimiento)) }}
                                 </td>
-
 
                                 @if ($filtro === 'bloqueados')
                                     <td class="border-bottom-0">

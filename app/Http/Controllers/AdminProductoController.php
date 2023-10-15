@@ -119,6 +119,7 @@ class AdminProductoController extends Controller
             $producto->categoria_id = $request->input('categoria_id');
             $producto->estante_id = $request->input('estante_id');
             $producto->unidad_medida_id = $request->input('unidad_medida_id');
+            $producto->fecha_vencimiento = $request->input('fecha_vencimiento');
             $producto->periodo_id = $request->input('periodo_id');
 
             $producto->creado_por = Auth::user()->nombres . ' ' . Auth::user()->apellidos;
