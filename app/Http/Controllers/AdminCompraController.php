@@ -58,8 +58,18 @@ class AdminCompraController extends Controller
     public function store(Request $request)
     {
         try {
-         
-                // Define las reglas de validación
+
+            $listaProductos = json_decode($request->input('lista_productos'), true);
+
+            if (!is_array($listaProductos)) {
+                return redirect()->route('compras.create')->with('error', 'Lista de productos no es válida.');
+            }
+            
+
+
+            if (empty($listaProductos)) {
+
+                 // Define las reglas de validación
                 $rules = [
                     'numerosfactura' => 'required|numeric|unique:compras',
                     'periodo_id' => 'required|numeric',
@@ -99,22 +109,33 @@ class AdminCompraController extends Controller
                         ->withErrors($validator)
                         ->withInput();
                 }
-            // Create the compra record
+
+            }else{
+
+            $monto = 0;
+            foreach ($listaProductos as $producto) {
+                $monto += $producto['subtotal'];
+            }
+
+            
             $compra = new Compra();
             $compra->numerosfactura = $request->input('numerosfactura');
             $compra->periodo_id = $request->input('periodo_id');
-            $compra->comprador_id = Auth::user()->usuario_id;
-            $compra->monto = $request->input('totalFin');
+
+            $producto = Producto::find($request->input('producto_id'));
+            $compra->comprador_id = $producto->proveedor_id;
+
+            $compra->monto = $monto;
             $compra->fecha_creacion = now();
-            $compra->creado_por = Auth::user()->nombres;
-            // Set other compra fields as needed
+
+            $creadoPor = Auth::user()->nombres . ' ' . Auth::user()->apellidos;
+            $compra->creado_por = $creadoPor;
+            
             $compra->save();
 
             $compraId = $compra->compra_id;
 
-            // Create and save detalles de compra
-            $listaProductos = $request->input('lista_productos');
-            var_dump($listaProductos);
+            
             foreach ($listaProductos as $producto) {
                 $detalleCompra = new DetalleCompra();
                 $detalleCompra->cantidad = $producto['cantidad'];
@@ -123,21 +144,27 @@ class AdminCompraController extends Controller
                 $detalleCompra->producto_id = $producto['productoId'];
                 $detalleCompra->compra_id = $compraId;
                 $detalleCompra->fecha_vencimiento = $producto['fechaVencimiento'];
-                // Set other detalle fields as needed
                 $detalleCompra->save();
             }
 
-            // Commit the database transaction
+           
             DB::commit();
 
-            // Redirect to a success view or wherever you want
+            }
+         
+            
             return redirect()->route('compras')->with('success', 'Compra creada exitosamente.');
         } catch (\Exception $e) {
-            // In case of an error, roll back the transaction and handle the exception
+
+            if (strpos($e->getMessage(), 'Duplicate entry') !== false) {
+                return redirect()->route('compras.create')->with('error', 'Ya existe una compra con el número de factura proporcionado. Por favor, ingrese un número de factura único.');
+            }
+            
             DB::rollBack();
         
-            // You can log the error or show an error message to the user
+          
             return redirect()->route('compras.create')->with('error', 'Error al crear la compra: ' . $e->getMessage());
+            
         }
     }
 

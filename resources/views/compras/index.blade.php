@@ -24,7 +24,10 @@
                                 <b>Proveedor</b>
                             </th>
                             <th class="borde-bottom-o">
-                                <b>Fecha de compra</b>    
+                                <b>Fecha de compra</b>
+                            </th>
+                            <th class="borde-bottom-o">
+                                <b>Realizada por</b>
                             </th>
                             <th class="border-bottom-0">
                                 <b>Acciones</b>
@@ -46,41 +49,54 @@
                                         {{ $compra->comprador->apellidos }}
                                     </td>
                                     <td class="border-bottom-0">
-                                        {{ $compra->periodo->fecha_inicio->format('Y/m/d')  }}
-                                        
+                                        {{ $compra->periodo->fecha_inicio->format('Y/m/d') }}
                                     </td>
+
+                                    <td class="border-bottom-0">
+                                        {{ $compra->creado_por}}
+                                    </td>
+
                                     <td class="d-flex gap-1 justify-content-center">
                                         <!-- Botón para ver el detalle de la compra con modal -->
                                         <button type="button" class="btn btn-info" data-bs-toggle="modal"
                                             data-bs-target="#detalleCompraModal{{ $compra->compra_id }}">
-                                            <i class="fas fa-eye"></i> Ver detalle
+                                            <i class="fas fa-eye"></i>
                                         </button>
                                     </td>
                                 </tr>
                             @endif
                         @endforeach
-
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
+    <style>
+    /* Estilo para limitar la altura máxima del modal y permitir desplazamiento vertical */
+    .modal-content {
+        max-height: 80vh; /* Ajusta la altura máxima según lo necesites, aquí se usa el 80% de la altura visible */
+        overflow-y: auto; /* Habilita el desplazamiento vertical si es necesario */
+    }
+</style>
+
     <!-- Modal para el detalle de compra -->
     @foreach ($compras as $compra)
         <div class="modal fade" id="detalleCompraModal{{ $compra->compra_id }}" tabindex="-1" role="dialog"
-            aria-labelledby="detalleCompraModalLabel{{ $compra->compra_id }}" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            aria-labelledby="detalleCompraModalLabel{{ $compra->compra_id }}" aria-hidden="true" data-bs-backdrop="static" >
+            <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="detalleCompraModalLabel{{ $compra->compra_id }}">Detalle de Compra</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h5 class="modal-title" id="detalleCompraModalLabel{{ $compra->compra_id }}">Detalle de Compra
+                        </h5>
+                        
                     </div>
                     <div class="modal-body">
+                    <div class="table-responsive">
                         <table id="miTabla" class="table text-nowrap mb-0 align-middle table-striped table-bordered">
                             <thead class="text-dark fs-4">
                                 <tr>
-                                    <th class="border-bottom-0">
+                                    <th class="border-bottom-0 text-center">
                                         <b>Producto</b>
                                     </th>
                                     <th class="border-bottom-0">
@@ -92,44 +108,40 @@
                                     <th class="border-bottom-0">
                                         <b>Total</b>
                                     </th>
+                                    <th class="border-bottom-0">
+                                        <b>IVA (13%)</b>
+                                    </th>
+                                    <th class="border-bottom-0">
+                                        <b>Total con IVA</b>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($compra->detalle_compras as $detalle)
                                     <tr>
-                                        <td class="border-bottom-0">
+                                        <td class="border-bottom-0 text-center">
                                             <h6 class="mb-0">{{ $detalle->producto->nombre }}</h6>
                                         </td>
-                                        <td class="border-bottom-0">
+                                        <td class="border-bottom-0 text-center">
                                             <h6 class="mb-0">{{ $detalle->cantidad }}</h6>
                                         </td>
-                                        <td class="border-bottom-0">
+                                        <td class="border-bottom-0 text-center">
                                             <h6 class="mb-0">${{ $detalle->precioUnitario }}</h6>
                                         </td>
-                                        <td class="border-botteom-0">
-
+                                        <td class="border-bottom-0 text-center">
                                             <h6 class="mb-0">${{ $detalle->precioUnitario * $detalle->cantidad }}</h6>
                                         </td>
-
+                                        <td class="border-bottom-0 text-center">
+                                            <h6 class="mb-0">${{ $detalle->precioUnitario * $detalle->cantidad * 0.13 }}</h6>
+                                        </td>
+                                        <td class="border-bottom-0 text-center">
+                                            <h6 class="mb-0">${{ $detalle->precioUnitario * $detalle->cantidad * 1.13 }}</h6>
+                                        </td>
                                     </tr>
                                 @endforeach
-
                             </tbody>
-
-
                         </table>
-                        <div class="row">
-                            <div class="justify-contentend end">
-                                <h4>IVA: ${{ $detalle->precioUnitario * $detalle->cantidad * 0.13 }}</h4>
-                            </div>
-                            <div class="justify-contentend end">
-                                <h4>Total con IVA: ${{ $compra->monto }}</h4>
-                            </div>
-
                         </div>
-
-                        <!-- Aquí puedes mostrar la información detallada de la compra, por ejemplo: -->
-
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -138,8 +150,9 @@
             </div>
         </div>
     @endforeach
-
 @endsection
+
+
 
 @section('AfterScript')
     <script>

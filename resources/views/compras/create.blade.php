@@ -1,9 +1,9 @@
 @extends('layouts/dashboard')
-@section('title', 'Crear Compra')
+@section('title', 'Ingresar Compra')
 @section('contenido')
 
 <div class="card mt-3">
-    <h5 class="card-header">Crear Compra</h5>
+    <h5 class="card-header">Ingresar Compra</h5>
     <div class="card-body">
         <form action="{{ route('compras.store') }}" method="POST">
             @csrf
@@ -12,7 +12,7 @@
                 <!-- Columna para el número de factura -->
                 <div class="col-md-4">
                     <div class="mb-3">
-                        <label for="numerosfactura" class="form-label">Número de Factura:</label>
+                        <label for="numerosfactura" class="form-label">Número de Factura: *</label>
                         <input type="number" class="form-control @error('numerosfactura') is-invalid @enderror" id="numerosfactura" name="numerosfactura" required value="{{ old('numerosfactura') }}">
                         @error('numerosfactura')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -40,13 +40,25 @@
                         @enderror
                     </div>
                 </div>
+
+                <!-- Columna para la fecha de vencimiento -->
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="fecha_vencimiento" class="form-label">Fecha de Vencimiento: *</label>
+                        <input type="date" class="form-control @error('fecha_vencimiento') is-invalid @enderror" id="fecha_vencimiento" name="fecha_vencimiento" required>
+                        @error('fecha_vencimiento')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
             </div>
 
             <div class="row">
                 <!-- Columna para seleccionar el producto -->
                 <div class="col-md-4">
                     <div class="mb-3">
-                        <label for="producto_id" class="form-label">Producto:</label>
+                        <label for="producto_id" class="form-label">Producto: *</label>
                         <select class="form-select @error('producto_id') is-invalid @enderror" id="producto_id" name="producto_id" required>
                             @foreach ($productos as $producto)
                                 <option value="{{ $producto->producto_id }}" data-precio="{{ $producto->precio }}">{{ $producto->nombre }} - Proveedor: {{  $producto->usuario->nombres }}</option>
@@ -61,7 +73,7 @@
                 <!-- Columna para la cantidad de producto -->
                 <div class="col-md-4">
                     <div class="mb-3">
-                        <label for="cantidad" class="form-label">Cantidad:</label>
+                        <label for="cantidad" class="form-label">Cantidad: *</label>
                         <input type="number" class="form-control @error('cantidad') is-invalid @enderror" id="cantidad" name="cantidad" required min="1">
                         @error('cantidad')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -72,7 +84,7 @@
                 <!-- Columna para el precio unitario -->
                 <div class="col-md-4">
                     <div class="mb-3">
-                        <label for="precio_unitario" class="form-label">Precio Unitario:</label>
+                        <label for="precio_unitario" class="form-label">Precio Unitario: *</label>
                         <input type="number" class="form-control @error('precio_unitario') is-invalid @enderror" id="precio_unitario" name="precio_unitario" step="0.01" required min="0.01">
                         @error('precio_unitario')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -80,23 +92,16 @@
                     </div>
                 </div>
 
-                <!-- Columna para la fecha de vencimiento -->
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label for="fecha_vencimiento" class="form-label">Fecha de Vencimiento:</label>
-                        <input type="date" class="form-control @error('fecha_vencimiento') is-invalid @enderror" id="fecha_vencimiento" name="fecha_vencimiento" required>
-                        @error('fecha_vencimiento')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
+                
             </div>
 
             <div class="row">
                 <!-- Columna para el botón "Agregar Producto" -->
-                <div class="col-md-4">
-                    <div class="mb-3">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <div class="mb-3 mt-2">
                         <button type="button" class="btn btn-success" id="agregar-producto">Agregar Producto</button>
+                        <a href="{{ route('compras') }}" class="btn btn-dark me-1 ms-2">Regresar</a>
+
                     </div>
                 </div>
             </div>
@@ -110,7 +115,7 @@
 
         <!-- Lista de productos seleccionados -->
         <div class="mt-4">
-            <h5>Productos Seleccionados:</h5>
+            <h5 class="mb-3">Productos Seleccionados:</h5>
             <div style="overflow-x: auto;">
                 <table class="table">
                     <thead>
@@ -156,9 +161,9 @@
             </div>
 
             <!-- Columna para el botón "Finalizar Compra" -->
-            <div class="col-md-4">
-                <div class="mb-3">
-                    <button type="button" class="btn btn-primary" id="finalizar-compra">Finalizar Compra</button>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <div class="mb-3 mt-2">
+                    <button type="button" class="btn btn-primary" id="finalizar-compra" disabled>Finalizar Compra</button>
                 </div>
             </div>
         </div>
@@ -250,6 +255,8 @@
             $('#precio_unitario').val('');
             $('#fecha_vencimiento').val('');
 
+            $('#finalizar-compra').prop('disabled', false);
+
         }
 
         // Función para actualizar la lista de productos en la vista
@@ -335,18 +342,27 @@
         });
 
         // Evento click para finalizar la compra
-        $('#finalizar-compra').click(function() {
-             // Antes de enviar el formulario, actualizar los campos ocultos con los valores
-            $('#monto_total').val(montoTotal.toFixed(2));
-            $('#iva').val(ivaTotal.toFixed(2));
-            calcularTotalMasIVA()
+    $('#finalizar-compra').click(function() {
+        // Verificar que se haya ingresado un número de factura
+        var numeroFactura = $('#numerosfactura').val().trim();
+        if (!numeroFactura) {
+            // Mostrar alerta personalizada
+            AlertMessage("Por favor, ingrese un número de factura válido.", "error");
+            return;
+        }
 
-            // Antes de enviar el formulario, actualizar el campo oculto con la lista de productos
-            $('#lista_productos_input').val(JSON.stringify(listaProductos));
-            
-            $('form').submit();
+        // Antes de enviar el formulario, actualizar los campos ocultos con los valores
+        $('#monto_total').val(montoTotal.toFixed(2));
+        $('#ivaTotal').val(ivaTotal.toFixed(2));
+        $('#totalFin').val(totalMasIVA.toFixed(2));
 
-        });
+        // Convertir la lista de productos a JSON y actualizar el campo oculto
+        $('#lista_productos_input').val(JSON.stringify(listaProductos));
+
+        // Enviar el formulario
+        $('form').submit();
+    });
+
 
 
     });
