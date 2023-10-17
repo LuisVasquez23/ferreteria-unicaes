@@ -181,7 +181,16 @@
         var ivaTotal = 0;
         var totalMasIVA  = 0;
 
+        //desahbilitar finalizar compra:
+        function habilitarDeshabilitarBotonFinalizar() {
+            if (listaProductos.length > 0) {
+                $('#finalizar-compra').prop('disabled', false);
+            } else {
+                $('#finalizar-compra').prop('disabled', true);
+            }
+        }
         // Función para agregar producto a la lista
+       // Función para agregar producto a la lista
         function agregarProducto() {
             var productoId = $('#producto_id').val();
             var productoNombre = $('#producto_id option:selected').text().split(' - Precio')[0];
@@ -190,74 +199,122 @@
             var fechaVencimiento = $('#fecha_vencimiento').val();
             var numeroFactura = $('#numerosfactura').val();
             
-                if (!numeroFactura || numeroFactura.trim() === "") {
-                    // Mostrar alerta personalizada
-                    AlertMessage("Por favor, ingrese un número de factura válido.", "error");
-                    return;
-                }
-                if (isNaN(cantidad) || cantidad <= 0) {
-                    // Mostrar alerta personalizada
-                    AlertMessage('La cantidad debe se un número mayor que cero', 'error');
-                    return;
-                }
-
-                if (isNaN(precioUnitario) || precioUnitario <= 0) {
-                    // Mostrar alerta personalizada
-                    AlertMessage("El precio unitario debe ser un número mayor que cero.", "error");
-                    return;
-                }
-                
-                if (!fechaVencimiento || fechaVencimiento.trim() === "") {
-                    // Mostrar alerta personalizada
-                    AlertMessage("Por favor, ingrese un fecha de vencimiento  válida.", "error");
-                    return;
-                }
-
-            // Calcular el subtotal del producto
-            var subtotal = cantidad * precioUnitario;
-
-            // Verificar si el producto ya está en la lista y actualizar su cantidad
-            var productoExistente = listaProductos.find(function(producto) {
-                return producto.productoId == productoId;
-            });
-
-            if (productoExistente) {
-                productoExistente.cantidad += cantidad;
-                productoExistente.subtotal += subtotal;
-                productoExistente.precioUnitario = precioUnitario;
-            } else {
-                listaProductos.push({
-                    productoId: productoId,
-                    proveedorId: $('#proveedor_id').val(),
-                    nombre: productoNombre,
-                    cantidad: cantidad,
-                    precioUnitario: precioUnitario,
-                    subtotal: subtotal,
-                    numeroFactura: numeroFactura,
-                    fechaVencimiento: fechaVencimiento // Agregar la fecha de vencimiento
-                });
+            if (!numeroFactura || numeroFactura.trim() === "") {
+                // Mostrar alerta personalizada
+                AlertMessage("Por favor, ingrese un número de factura válido.", "error");
+                return;
+            }
+            if (isNaN(cantidad) || cantidad <= 0) {
+                // Mostrar alerta personalizada
+                AlertMessage('La cantidad debe ser un número mayor que cero', 'error');
+                return;
+            }
+            if (isNaN(precioUnitario) || precioUnitario <= 0) {
+                // Mostrar alerta personalizada
+                AlertMessage("El precio unitario debe ser un número mayor que cero.", "error");
+                return;
+            }
+            if (!fechaVencimiento || fechaVencimiento.trim() === "") {
+                // Mostrar alerta personalizada
+                AlertMessage("Por favor, ingrese una fecha de vencimiento válida.", "error");
+                return;
+            }
+            
+            // Validar que la fecha de vencimiento no sea menor que la fecha actual
+            var fechaActual = new Date();
+            var fechaVencimientoDate = new Date(fechaVencimiento);
+            
+            if (fechaVencimientoDate < fechaActual) {
+                // Mostrar alerta personalizada
+                AlertMessage("La fecha de vencimiento no puede ser menor que la fecha actual.", "error");
+                return;
             }
 
-            // Actualizar la lista de productos en la vista
-            actualizarListaProductos();
+            // Calcular la diferencia en milisegundos entre la fecha de vencimiento y la fecha actual
+            var diferenciaFechas = fechaVencimientoDate - fechaActual;
+            
+            // Calcular el número de días enteros y el número de horas restantes
+            var diasRestantes = Math.floor(diferenciaFechas / (1000 * 60 * 60 * 24)); // Convertir la diferencia a días y redondear hacia abajo
+            var horasRestantes = Math.floor((diferenciaFechas % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); // Convertir el residuo a horas y redondear hacia abajo
 
-            // Calcular el monto total
-            calcularMontoTotal();
-
-            // Calcular el IVA
-            calcularIVA();
-
-            // Calcular el Total + IVA
-            calcularTotalMasIVA();
-
-            // Limpiar los campos de cantidad y precio unitario
-            $('#cantidad').val('');
-            $('#precio_unitario').val('');
-            $('#fecha_vencimiento').val('');
-
-            $('#finalizar-compra').prop('disabled', false);
-
+            // Combinar días y horas en el mensaje de advertencia
+            var mensajeAdvertencia = "El producto se vence en " + diasRestantes + " día(s) y " + horasRestantes + " hora(s). ¿Aún desea agregarlo?";
+            
+            if (diasRestantes <= 7) {
+                // Mostrar la alerta de SweetAlert para confirmación
+                Swal.fire({
+                    title: 'Advertencia',
+                    text: mensajeAdvertencia,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sí, agregar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Si el usuario confirma, agregar el producto a la lista
+                        var subtotal = cantidad * precioUnitario;
+                        var productoExistente = listaProductos.find(function(producto) {
+                            return producto.productoId == productoId;
+                        });
+                        if (productoExistente) {
+                            productoExistente.cantidad += cantidad;
+                            productoExistente.subtotal += subtotal;
+                            productoExistente.precioUnitario = precioUnitario;
+                        } else {
+                            listaProductos.push({
+                                productoId: productoId,
+                                proveedorId: $('#proveedor_id').val(),
+                                nombre: productoNombre,
+                                cantidad: cantidad,
+                                precioUnitario: precioUnitario,
+                                subtotal: subtotal,
+                                numeroFactura: numeroFactura,
+                                fechaVencimiento: fechaVencimiento
+                            });
+                        }
+                        actualizarListaProductos();
+                        calcularMontoTotal();
+                        calcularIVA();
+                        calcularTotalMasIVA();
+                        $('#cantidad').val('');
+                        $('#precio_unitario').val('');
+                        $('#fecha_vencimiento').val('');
+                    }
+                });
+            } else {
+                // Agregar el producto a la lista sin mostrar alerta
+                var subtotal = cantidad * precioUnitario;
+                var productoExistente = listaProductos.find(function(producto) {
+                    return producto.productoId == productoId;
+                });
+                if (productoExistente) {
+                    productoExistente.cantidad += cantidad;
+                    productoExistente.subtotal += subtotal;
+                    productoExistente.precioUnitario = precioUnitario;
+                } else {
+                    listaProductos.push({
+                        productoId: productoId,
+                        proveedorId: $('#proveedor_id').val(),
+                        nombre: productoNombre,
+                        cantidad: cantidad,
+                        precioUnitario: precioUnitario,
+                        subtotal: subtotal,
+                        numeroFactura: numeroFactura,
+                        fechaVencimiento: fechaVencimiento
+                    });
+                }
+                actualizarListaProductos();
+                calcularMontoTotal();
+                calcularIVA();
+                calcularTotalMasIVA();
+                $('#cantidad').val('');
+                $('#precio_unitario').val('');
+                $('#fecha_vencimiento').val('');
+            }
         }
+
 
         // Función para actualizar la lista de productos en la vista
         function actualizarListaProductos() {
@@ -302,19 +359,27 @@
         // Evento click para el botón "Agregar Producto"
         $('#agregar-producto').click(function() {
             agregarProducto();
+            habilitarDeshabilitarBotonFinalizar();
         });
 
         // Evento change para las cantidades de productos en la lista
         $('#lista-productos').on('change', '.cantidad-editable', function() {
             var index = $(this).closest('tr').index();
             var nuevaCantidad = parseInt($(this).val());
-            if (!isNaN(nuevaCantidad)) {
+
+            if (!isNaN(nuevaCantidad) && nuevaCantidad > 0) {
                 listaProductos[index].cantidad = nuevaCantidad;
                 listaProductos[index].subtotal = nuevaCantidad * listaProductos[index].precioUnitario;
                 actualizarListaProductos();
                 calcularMontoTotal();
                 calcularIVA();
                 calcularTotalMasIVA();
+            } else {
+                // Mostrar un mensaje de error o realizar alguna otra acción si la cantidad es inválida
+                // En este ejemplo, se mostrará una alerta
+                AlertMessage('La cantidad debe se un número mayor que cero', 'error');
+                // También puedes restablecer el valor a su estado anterior si es necesario
+                $(this).val(listaProductos[index].cantidad);
             }
         });
 
@@ -322,14 +387,22 @@
         $('#lista-productos').on('change', '.precio-unitario-editable', function() {
             var index = $(this).closest('tr').index();
             var nuevoPrecio = parseFloat($(this).val());
-            if (!isNaN(nuevoPrecio)) {
+
+            if (!isNaN(nuevoPrecio) && nuevoPrecio > 0) {
                 listaProductos[index].precioUnitario = nuevoPrecio;
                 listaProductos[index].subtotal = listaProductos[index].cantidad * nuevoPrecio;
                 actualizarListaProductos();
                 calcularMontoTotal();
                 calcularTotalMasIVA();
+            } else {
+                // Mostrar un mensaje de error o realizar alguna otra acción si el precio es inválido
+                // En este ejemplo, se mostrará una alerta
+                AlertMessage("El precio unitario debe ser un número mayor que cero.", "error");
+                // También puedes restablecer el valor a su estado anterior si es necesario
+                $(this).val(listaProductos[index].precioUnitario.toFixed(2));
             }
         });
+
 
         // Evento click para eliminar un producto de la lista
         $('#lista-productos').on('click', '.eliminar-producto', function() {
@@ -339,6 +412,8 @@
             calcularMontoTotal();
             calcularIVA();
             calcularTotalMasIVA();
+            habilitarDeshabilitarBotonFinalizar(); // Verificar después de eliminar
+
         });
 
         // Evento click para finalizar la compra

@@ -315,6 +315,27 @@
                 }
             });
         }
+        function mostrarAlertaAgregarProducto(mensajeAdvertencia) {
+            Swal.fire({
+                title: 'Advertencia',
+                text: mensajeAdvertencia,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, agregar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Si el usuario confirma, no hacemos nada aquí y dejamos que el flujo normal continúe
+                    
+                } else {
+                    // Si el usuario elige "Cancelar", haces un return para detener el proceso
+                    return;
+                }
+            });
+        }
+
     </script>
 
 

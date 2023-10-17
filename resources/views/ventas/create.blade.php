@@ -1,10 +1,10 @@
 @extends('layouts/dashboard')
 
-@section('title', 'Crear Venta')
+@section('title', 'Ingresar Venta')
 
 @section('contenido')
 <div class="card mt-3">
-    <h5 class="card-header">Crear Venta</h5>
+    <h5 class="card-header">Ingresar Venta</h5>
     <div class="card-body">
         <form action="{{ route('ventas.store') }}" method="POST">
             @csrf
@@ -44,7 +44,6 @@
                     </div>
                 </div>
 
-                <!-- Otras columnas según tus necesidades -->
 
             </div>
 
@@ -145,7 +144,7 @@
             <!-- Columna para el botón "Finalizar Venta" -->
             <div class="col-md-4">
                 <div class="mb-3">
-                    <button type="button" class="btn btn-primary" id="finalizar-venta">Finalizar Venta</button>
+                    <button type="button" class="btn btn-primary" id="finalizar-venta" disabled>Finalizar Venta</button>
                 </div>
             </div>
         </div>
@@ -245,6 +244,8 @@
             // Limpiar los campos de cantidad y precio unitario
             $('#cantidad').val('');
             $('#precio_unitario').val('');
+            $('#finalizar-venta').prop('disabled', false);
+
         }
 
         // Función para actualizar la lista de productos en la vista
