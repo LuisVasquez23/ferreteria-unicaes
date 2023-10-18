@@ -189,7 +189,6 @@
                 $('#finalizar-compra').prop('disabled', true);
             }
         }
-        // Función para agregar producto a la lista
        // Función para agregar producto a la lista
         function agregarProducto() {
             var productoId = $('#producto_id').val();
@@ -281,6 +280,9 @@
                         $('#cantidad').val('');
                         $('#precio_unitario').val('');
                         $('#fecha_vencimiento').val('');
+                        habilitarDeshabilitarBotonFinalizar(); 
+
+
                     }
                 });
             } else {
@@ -395,7 +397,6 @@
                 calcularMontoTotal();
                 calcularTotalMasIVA();
             } else {
-                // Mostrar un mensaje de error o realizar alguna otra acción si el precio es inválido
                 // En este ejemplo, se mostrará una alerta
                 AlertMessage("El precio unitario debe ser un número mayor que cero.", "error");
                 // También puedes restablecer el valor a su estado anterior si es necesario
