@@ -148,35 +148,53 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="jsonModalLabel">Seleccion precio</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <button type="button" class="close" aria-label="Close" data-bs-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+
                 </button>
+
             </div>
             <div class="modal-body">
             <div class="form-group">
-                <label>Opciones:</label>
-                <div class="form-check">
-                    <input type="radio" class="form-check-input" id="cambiarPrecio" name="opcionPrecio" value="cambiar">
-                    <label class="form-check-label" for="cambiarPrecio">Cambiar precio sugerido</label>
-                </div>
-                <div class="form-check">
-                    <input type="radio" class="form-check-input" id="mantenerPrecio" name="opcionPrecio" value="mantener">
-                    <label class="form-check-label" for="mantenerPrecio">Mantener precio</label>
-                </div>
-                <div class="form-check">
-                    <input type="radio" class="form-check-input" id="venderMismoPrecio" name="opcionPrecio" value="vender">
-                    <label class="form-check-label" for="venderMismoPrecio">Vender al mismo precio</label>
-                </div>
-            </div>
+                    <label>Opciones:</label>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="cambiarManual" name="opcionPrecio" value="cambiarManual">
+                        <label class="form-check-label" for="cambiarManual">Cambiar precio sugerido</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="mantenerFijo" name="opcionPrecio" value="mantenerFijo" checked>
+                        <label class="form-check-label" for="mantenerFijo">Mantener precio</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="mismoPrecio" name="opcionPrecio" value="mismoPrecio">
+                        <label class="form-check-label" for="mismoPrecio">Vender al mismo precio</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="porcentajeGanancia">Porcentaje de Ganancia:</label>
+                        <select class="form-control" id="porcentajeGanancia" name="porcentajeGanancia" disabled>
+                            <option value="0.10">10%</option>
+                            <option value="0.20">20%</option>
+                            <option value="0.30">30%</option>
+                            <option value="0.40">40%</option>
+                            <option value="0.50">50%</option>
+                            <option value="0.60">60%</option>
+                            <option value="0.70">70%</option>
+                            <option value="0.80">80%</option>
+                            <option value="0.90">90%</option>
+                            <option value="1.0">100%</option>
+                        </select>
+                    </div>
+             </div>
+
 
                 <table id="jsonTable" class="table table-bordered">
                     <thead>     
                         <tr>
                             <th>Número de Lote</th>
-                            <th>Cantidad Disponible</th>
-                            <th>Cantidad Comprada</th>
+                            <th>Cantidad disponible</th>
+                            <th>Cantidad a vender</th>
                             <th>Precio de compra</th>
-                            <th>Precio Sugerido</th> <!-- Nueva columna con inputs -->
+                            <th>Precio de venta sugerido</th> <!-- Nueva columna con inputs -->
                         </tr>
                     </thead>
                     <tbody>
@@ -184,7 +202,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="pb-5">
+            <div class="pb-5 text-center">
                 <button type="button" id="agregar-lista" class="btn btn-primary">Agregar a la Lista</button>
 
             </div>
@@ -212,14 +230,6 @@
                 $('#finalizar-venta').prop('disabled', false);
             } else {
                 $('#finalizar-venta').prop('disabled', true);
-            }
-        }
-         // Habilitar o deshabilitar los campos de precio sugerido
-        function habilitarPrecioSugerido(habilitar) {
-            if (habilitar) {
-                $('#precio_sugerido').prop('readonly', false);
-            } else {
-                $('#precio_sugerido').prop('readonly', true);
             }
         }
         //desahbilitar finalizar venta:
@@ -361,9 +371,7 @@
                 var numeroLote = productoModal.numeroLote;
                 var cantidad = parseInt(productoModal.cantidad);
                 var cantidadDipo = parseInt(productoModal.cantidadDisponible);
-                alert(cantidadDipo);
                 var precioUnitario = parseFloat(productoModal.precioUnitario);
-                console.log('precioUnitario:', precioUnitario);
 
                 // Obtener otros valores de los campos normales
                 var productoId = $('#producto_id').val();
@@ -545,14 +553,34 @@
             habilitarDeshabilitarBotonFinalizar();
 
         });
+
+
+
+
+
         // Evento change para las opciones de precio
         $('input[type=radio][name=opcionPrecio]').change(function() {
                     var selectedOption = $(this).val();
-                    if (selectedOption === 'cambiar') {
-                        habilitarPrecioSugerido(true);
-                    } else if(selectedOption ==='matener') {
-                        habilitarPrecioSugerido(false);
-                    } else if (selectedOption ==='vender'){
+                    if (selectedOption === 'cambiarManual') {
+                        $('#porcentajeGanancia').prop('disabled',false)
+                        $('.precio-sugerido').prop('readonly', false);
+                        $('.precio-sugerido').css('opacity', 1);
+           
+
+                    } else if(selectedOption ==='mantenerFijo') {
+                        $('#porcentajeGanancia').prop('disabled',true)
+                        $('.precio-sugerido').prop('readonly', true);
+                        $('.precio-sugerido').css('opacity', 0.2);
+                           // Si la opción es "mantenerFijo," establecer los precios sugeridos en el 10%
+                        var porcentajeSeleccionado = 0.10; // 10%
+                        $('.precio-sugerido').each(function() {
+                            var precioUnitario = parseFloat($(this).closest('tr').find('.precio-unitario').text());
+                            var nuevoPrecioSugerido = precioUnitario + (precioUnitario * porcentajeSeleccionado);
+                            $(this).val(nuevoPrecioSugerido.toFixed(2));
+                        });
+
+                    } else if (selectedOption ==='mismoPrecio'){
+
                          // Obtener el precio sugerido más alto de la tabla
                             var precioSugeridoMasAlto = 0;
                             $('#jsonTable tbody tr').each(function() {
@@ -566,8 +594,39 @@
                             $('#jsonTable tbody tr').each(function() {
                                 $(this).find('td:last input').val(precioSugeridoMasAlto);
                             });
+                        $('#porcentajeGanancia').prop('disabled',true)
+                        $('.precio-sugerido').prop('readonly', true);
+                        $('.precio-sugerido').css('opacity', 0.2);
                     }
         });
+
+        // Evento change para el select de porcentaje de ganancia
+        $('#porcentajeGanancia').change(function() {
+            var selectedPorcentaje = parseFloat($(this).val());
+
+            // Actualizar el precio sugerido por fila
+            $('#jsonTable tbody tr').each(function() {
+                var precioUnitario = parseFloat($(this).find('.precio-unitario').text());
+                var nuevoPrecioSugerido = precioUnitario + (precioUnitario * selectedPorcentaje);
+                $(this).find('.precio-sugerido').val(nuevoPrecioSugerido.toFixed(2));
+            });
+        });
+
+        $('.precio-sugerido').on('change', '.precio-unitario', function() {
+            alert("llegue a validar precio sugerido")
+            var precioSugerido = parseFloat($(this).val());
+            var precioCompra = parseFloat($(this).closest('tr').find('.precio-unitario').text()); // Ajusta según tu estructura HTML
+
+            if (precioSugerido < precioCompra) {
+                // El precio sugerido es menor que el precio de compra, restablecerlo al precio de compra
+                $(this).val(precioCompra.toFixed(2));
+                AlertMessage('El precio no puede ser menor al que se compró', 'error');
+            }
+        });
+
+
+
+
         // Evento click para finalizar la venta
         $('#finalizar-venta').click(function() {
             // Antes de enviar el formulario, actualizar los campos ocultos con los valores
