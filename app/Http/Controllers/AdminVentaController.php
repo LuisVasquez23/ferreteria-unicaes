@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Expr\FuncCall;
 
 class AdminVentaController extends Controller
 {
@@ -62,26 +63,21 @@ class AdminVentaController extends Controller
     public function store(Request $request)
     {
         try {
-
-            // Lógica para guardar la compra y sus detalles en la base de datos
-            // Recuperar los datos del formulario
+            // Recuperar los datos de la solicitud
             $data = $request->validate([
                 'numero_factura' => 'required|numeric',
                 'periodo_id' => 'required|numeric',
                 'totalMasIVA' => 'required|numeric',
                 'cliente_id' => 'required|numeric',
             ]);
-
+    
             // Recuperar la lista de productos desde el campo oculto
             $listaProductos = json_decode($request->input('lista_productos'), true);
-
-
-
-
+    
             // Iniciar una transacción de base de datos
             DB::beginTransaction();
-
-            // Crear la compra
+    
+            // Crear la venta
             $venta = new Venta();
             $venta->periodo_id = $data['periodo_id'];
             $venta->cliente_id = $data['cliente_id'];
@@ -90,82 +86,29 @@ class AdminVentaController extends Controller
             $venta->numerosfactura = $data['numero_factura'];
             $venta->fecha_creacion = now();
             $venta->creado_por = Auth::user()->nombres;
-
-            // Aquí debes establecer otros campos de la compra según tu estructura de datos
+            
             $venta->save();
-            // Obtener ID de la venta que se está creando
             $ventaId = $venta->venta_id;
-
+    
             // Recorrer la lista de productos y guardar detalles de compra
             foreach ($listaProductos as $producto) {
                 $productoId = $producto['productoId'];
                 $cantidadComprar = $producto['cantidad'];
-
-                $productoDis = Producto::find($productoId);
-                $cantidad = $productoDis->cantidad;
-                $nombre =  $productoDis->nombre;
-
-                if ($cantidadComprar > $cantidad) {
-                    DB::rollBack();
-                    return redirect()->route('ventas.create')->with('error', 'No existe suficiente stock de: ' . $nombre);
-                }
-
-
-                // Obtener los lotes disponibles para el producto
-                // Consultar la disponibilidad de lotes teniendo en cuenta compras y ventas
-                $lotesDisponibles = DB::table('detalle_compras AS dc')
-                    ->select('dc.numero_lote', DB::raw('SUM(dc.cantidad) - COALESCE(SUM(dv.cantidad), 0) AS cantidad_disponible'))
-                    ->leftJoin('detalle_ventas AS dv', function ($join) use ($productoId) {
-                        $join->on('dc.numero_lote', '=', 'dv.numero_lote')
-                            ->where('dv.producto_id', '=', $productoId);
-                    })
-                    ->where('dc.producto_id', $productoId)
-                    ->groupBy('dc.numero_lote')
-                    ->havingRaw('cantidad_disponible > 0')
-                    ->orderBy('dc.numero_lote')
-                    ->get();
-
-                // Inicializar un array para almacenar los lotes disponibles para la compra
-                $lotesParaCompra = [];
-
-                // Calcular la cantidad disponible en los lotes para la compra
-                foreach ($lotesDisponibles as $lote) {
-                    $cantidadDisponible = $lote->cantidad_disponible;
-                    if ($cantidadComprar > 0 && $cantidadDisponible > 0) {
-                        // Verificar si la cantidad a comprar cabe en el lote
-                        $cantidadAComprar = min($cantidadComprar, $cantidadDisponible);
-                        if ($cantidadAComprar <= $cantidadDisponible) {
-                            $lotesParaCompra[] = [
-                                'numero_lote' => $lote->numero_lote,
-                                'cantidad_a_comprar' => $cantidadAComprar,
-                            ];
-                            $cantidadComprar -= $cantidadAComprar;
-                        } else {
-                            // La cantidad a comprar no cabe en el lote, maneja el error aquí si es necesario
-                            DB::rollBack();
-                            return redirect()->route('ventas.create')->with('error', 'La cantidad a comprar no cabe en el lote.');
-                        }
-                    }
-                }
-
-                // Guardar los detalles de compra para los lotes disponibles
-                foreach ($lotesParaCompra as $loteCompra) {
-                    $detalleVenta = new DetalleVenta();
-                    $detalleVenta->cantidad = $loteCompra['cantidad_a_comprar'];
-                    $detalleVenta->numero_lote = $loteCompra['numero_lote'];
-                    $detalleVenta->precio = $producto['precioUnitario'];
-                    $detalleVenta->venta_id = $ventaId;
-                    $detalleVenta->producto_id = $productoId;
-                    // Aquí puedes establecer otros campos del detalle según tu estructura de datos
-                    $detalleVenta->save();
-                }
+    
+                $detalleVenta = new DetalleVenta();
+                $detalleVenta->cantidad = $cantidadComprar;
+                $detalleVenta->precio = $producto['precioUnitario'];
+                $detalleVenta->venta_id = $ventaId;
+                $detalleVenta->producto_id = $productoId;
+                $detalleVenta->numero_lote = $producto['numeroLote'];
+                $detalleVenta->save();
             }
-
+    
             // Confirmar la transacción
             DB::commit();
-
+    
             // Redirigir a la vista de éxito o a donde desees
-            return redirect()->route('ventas')->with('success', 'Compra creada exitosamente.');
+            return redirect()->route('ventas')->with('success', 'Venta creada exitosamente.');
         } catch (\Exception $e) {
             // En caso de error, revertir la transacción y manejar la excepción
             DB::rollBack();
@@ -173,4 +116,66 @@ class AdminVentaController extends Controller
             return redirect()->route('ventas.create')->with('error', 'Por favor, revisar los campos');
         }
     }
+    
+    //metodo para buscar cantidades en lotes y verificar si tenemos suficiente stock
+    public function verificarCantidad(Request $request)
+    {
+        // Recupera los datos de la solicitud AJAX
+        $productoId = $request->input('producto_id');
+        $cantidad = $request->input('cantidad');
+    
+        // Realiza la lógica para verificar la cantidad de productos (puedes usar tu lógica actual aquí)
+        $producto = Producto::find($productoId);
+        $cantidadDisponible = $producto->cantidad;
+    
+        // Inicializa un array para los lotes disponibles
+        $lotesDisponibles = [];
+        $lotesVendidos = [];
+        // Si la cantidad solicitada es menor o igual a la cantidad disponible
+        if ($cantidad <= $cantidadDisponible) {
+            $suficiente = true;
+                    // Consultar la disponibilidad de lotes teniendo en cuenta compras y ventas
+                    $lotesDisponibles = DB::table('detalle_compras AS dc')
+                    ->select('dc.numero_lote', DB::raw('SUM(dc.cantidad) - COALESCE(SUM(dv.cantidad), 0) AS cantidad_disponible'),'dc.precioUnitario')
+                    ->leftJoin('detalle_ventas AS dv', function ($join) use ($productoId) {
+                        $join->on('dc.numero_lote', '=', 'dv.numero_lote')
+                            ->where('dv.producto_id', '=', $productoId);
+                    })
+                    ->where('dc.producto_id', $productoId)
+                    ->groupBy('dc.numero_lote', 'dc.precioUnitario')
+                    ->havingRaw('cantidad_disponible > 0')
+                    ->orderBy('dc.numero_lote')
+                    ->get();
+                     // Calcular cuántos productos se venderán de cada lote
+                    $cantidadRestante = $cantidad;
+                    foreach ($lotesDisponibles as $lote) {
+                        $numeroLote = $lote->numero_lote;
+                        $cantidadDisponible = $lote->cantidad_disponible;
+                        $precioUnitario = $lote->precioUnitario; // Precio unitario
+                        $cantidadAVender = min($cantidadDisponible, $cantidadRestante);
+                        $lotesVendidos[] = [
+                            'numero_lote' => $numeroLote,
+                            'cantidad_disponible' => $cantidadDisponible,
+                            'cantidad_comprada' => $cantidadAVender,
+                            'precio_unitario' => $precioUnitario, // Agregar precio unitario al array
+
+                        ];
+                        $cantidadRestante -= $cantidadAVender;
+                        if ($cantidadRestante <= 0) {
+                            break; // Detén el bucle si no se necesita más cantidad
+                        }
+                    }
+        } else {
+            // La cantidad solicitada es mayor que la cantidad disponible
+    
+            // Obtener los lotes disponibles para el producto
+    
+    
+            $suficiente = false;
+        }
+    
+        // Devuelve una respuesta JSON con el resultado y los lotes disponibles si es necesario
+        return response()->json(['suficiente' => $suficiente, 'lotesDisponibles' => $lotesVendidos]);
+    }
+   
 }

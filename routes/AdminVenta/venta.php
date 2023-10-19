@@ -11,4 +11,6 @@ Route::controller(AdminVentaController::class)->group(function () {
 
     // POST METHOD
     Route::post('/ventas/create', 'store')->middleware(['auth', 'verified', 'checkRole:Admin,MegaAdmin,Empleado'])->name('ventas.store');
+    Route::post('/verificar-cantidad', 'verificarCantidad')->middleware(['auth', 'verified', 'checkRole:Admin,MegaAdmin,Empleado'])->name('verificar-cantidad');
+
 });

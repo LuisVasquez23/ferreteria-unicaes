@@ -1,10 +1,10 @@
 @extends('layouts/dashboard')
 
-@section('title', 'Crear Venta')
+@section('title', 'Ingresar Venta')
 
 @section('contenido')
 <div class="card mt-3">
-    <h5 class="card-header">Crear Venta</h5>
+    <h5 class="card-header">Ingresar Venta</h5>
     <div class="card-body">
         <form action="{{ route('ventas.store') }}" method="POST">
             @csrf
@@ -44,7 +44,6 @@
                     </div>
                 </div>
 
-                <!-- Otras columnas según tus necesidades -->
 
             </div>
 
@@ -72,22 +71,13 @@
 
                 <!-- Columna para el precio unitario -->
                 <div class="col-md-4">
-                    <div class="mb-3">
-                        <label for="precio_unitario" class="form-label">Precio Unitario:</label>
-                        <input type="number" class="form-control" id="precio_unitario" name="precio_unitario" step="0.01" required min="0.01">
-                        <div class="invalid-feedback" id="error-precio-unitario"></div> <!-- Agregado para mostrar el mensaje de error -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <!-- Columna para el botón "Agregar Producto" -->
-                <div class="col-md-4">
-                    <div class="mb-3">
+                    <div class="mb-3 pt-4">
                         <button type="button" class="btn btn-success" id="agregar-producto">Agregar Producto</button>
                     </div>
                 </div>
             </div>
+
+            
 
             <!-- Campo oculto para la lista de productos -->
             <input type="hidden" name="lista_productos" id="lista_productos_input" value="">
@@ -104,6 +94,7 @@
                     <thead>
                         <tr>
                             <th>Nombre Producto</th>
+                            <th>Número de Lote</th> <!-- Nueva columna para el número de lote -->
                             <th>Cantidad</th>
                             <th>Precio Unitario</th>
                             <th>Precio Total</th>
@@ -145,12 +136,83 @@
             <!-- Columna para el botón "Finalizar Venta" -->
             <div class="col-md-4">
                 <div class="mb-3">
-                    <button type="button" class="btn btn-primary" id="finalizar-venta">Finalizar Venta</button>
+                    <button type="button" class="btn btn-primary" id="finalizar-venta" disabled >Finalizar Venta</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<!-- HTML para el modal Bootstrap -->
+<div class="modal fade" id="jsonModal" tabindex="-1" role="dialog" aria-labelledby="jsonModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document"> <!-- Agregando la clase modal-lg para hacerlo ancho -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="jsonModalLabel">Seleccion precio</h5>
+                <button type="button" class="close" aria-label="Close" data-bs-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+
+                </button>
+
+            </div>
+            <div class="modal-body">
+            <div class="form-group">
+                    <label>Opciones:</label>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="cambiarManual" name="opcionPrecio" value="cambiarManual">
+                        <label class="form-check-label" for="cambiarManual">Cambiar precio sugerido</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="mantenerFijo" name="opcionPrecio" value="mantenerFijo" checked>
+                        <label class="form-check-label" for="mantenerFijo">Mantener precio</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="mismoPrecio" name="opcionPrecio" value="mismoPrecio">
+                        <label class="form-check-label" for="mismoPrecio">Vender al mismo precio</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="porcentajeGanancia">Porcentaje de Ganancia:</label>
+                        <select class="form-control" id="porcentajeGanancia" name="porcentajeGanancia" disabled>
+                            <option value="0.10">10%</option>
+                            <option value="0.20">20%</option>
+                            <option value="0.30">30%</option>
+                            <option value="0.40">40%</option>
+                            <option value="0.50">50%</option>
+                            <option value="0.60">60%</option>
+                            <option value="0.70">70%</option>
+                            <option value="0.80">80%</option>
+                            <option value="0.90">90%</option>
+                            <option value="1.0">100%</option>
+                        </select>
+                    </div>
+             </div>
+
+
+                <table id="jsonTable" class="table table-bordered">
+                    <thead>     
+                        <tr>
+                            <th>Número de Lote</th>
+                            <th>Cantidad disponible</th>
+                            <th>Cantidad a vender</th>
+                            <th>Precio de compra</th>
+                            <th>Precio de venta sugerido</th> <!-- Nueva columna con inputs -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Aquí se llenará la tabla con datos desde JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="pb-5 text-center">
+                <button type="button" id="agregar-lista" class="btn btn-primary">Agregar a la Lista</button>
+
+            </div>
+         </div>
+    </div>
+</div>
+
+
+
+
 
 @endsection
 
@@ -162,84 +224,206 @@
         var montoTotal = 0;
         var ivaTotal = 0;
         var totalMasIVA = 0;
-
-        // Función para agregar producto a la lista
-        function agregarProducto() {
+              //desahbilitar finalizar compra:
+        function habilitarDeshabilitarBotonFinalizar() {
+            if (listaProductos.length > 0) {
+                $('#finalizar-venta').prop('disabled', false);
+            } else {
+                $('#finalizar-venta').prop('disabled', true);
+            }
+        }
+        //desahbilitar finalizar venta:
+       
+        //entrar en modal para precios
+        function definirPrecio(){
             var productoId = $('#producto_id').val();
             var productoNombre = $('#producto_id option:selected').text().split(' - Precio')[0];
             var cantidad = parseInt($('#cantidad').val());
             var precioUnitario = parseFloat($('#precio_unitario').val());
             var numeroFactura = $('#numero_factura').val();
-
+            var cantidadNueva = 0;
             
 
-            // Limpia los mensajes de error si no hay errores.
-                $('#error-cantidad').text('');
-                $('#error-precio-unitario').text('');
-                $('#error-numero-factura').text('');
-
             // Validación de número de factura no vacío
-            if (numeroFactura === '') {
-                $('#error-numero-factura').text('El número de factura no puede estar vacío.');
-                alert("El número de factura no puede estar vacío.")
-                return; // Detiene la ejecución si hay un error.
-            } else {
-                $('#error-numero-factura').text('');
+            if (isNaN(cantidad) || cantidad <= 0) {
+                // Mostrar alerta personalizada
+                AlertMessage('La cantidad debe ser un número mayor que cero', 'error');
+                return;
             }
 
             // Validación de cantidad no vacía
             if (isNaN(cantidad) || cantidad <= 0) {
-                $('#error-cantidad').text('La cantidad debe ser un número mayor que cero.');
-                alert("El número de cantidad no puede estar vacío deb ser mayor cero.")
-
-                return; // Detiene la ejecución si hay un error.
-            } else {
-                $('#error-cantidad').text('');
+                // Mostrar alerta personalizada
+                AlertMessage('La cantidad debe ser un número mayor que cero', 'error');
+                return;
             }
 
-            // Validación de precio unitario no vacío
-            if (isNaN(precioUnitario) || precioUnitario <= 0) {
-                alert("El número de cantidad no puede estar vacío deb ser mayor cero.")
+           
+              // Buscar si el producto ya existe en la lista
+            var productoExistenteIndex = -1; // Inicializa el índice como -1 (no encontrado)
+            for (var i = 0; i < listaProductos.length; i++) {
+                if (listaProductos[i].productoId == productoId) {
+                    productoExistenteIndex = 1;
+                    
+                    cantidadNueva += parseInt(listaProductos[i].cantidad);
+                }
+            }
+            if (productoExistenteIndex !== -1) {
+                var cantidadTotal = cantidadNueva + cantidad;
+                alert(cantidadTotal);
+                    $.ajax({
+                    type: 'POST',
+                    url: '{{ route('verificar-cantidad') }}',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        producto_id: productoId,
+                        cantidad: cantidadTotal
+                    },
+                    success: function(response) {
+                        if (response.suficiente) {
 
-                $('#error-precio-unitario').text('El precio unitario debe ser un número mayor que cero.');
-                return; // Detiene la ejecución si hay un error.
-            } else {
-                $('#error-precio-unitario').text('');
+                            // Limpia la tabla antes de agregar nuevos datos
+                                $('#jsonTable tbody').empty();
+
+                                // Recorre los lotes disponibles en la respuesta JSON y crea filas de tabla
+                                response.lotesDisponibles.forEach(function(lote) {
+                                    var precioUnitario = parseFloat(lote.precio_unitario);
+                                    var precioConGanancia = precioUnitario + (precioUnitario * 0.10); // Calcula el precio con un 10% de ganancia
+
+                                    // Agrega input en lugar de texto
+                                    var newRow = '<tr>' +
+                                                    '<td class="numero-lote">' + lote.numero_lote + '</td>' +
+                                                    '<td class="cantidad-disponible">' + lote.cantidad_disponible + '</td>' +
+                                                    '<td class="cantidad-comprada">' + lote.cantidad_comprada + '</td>' +
+                                                    '<td class="precio-unitario">' + precioUnitario.toFixed(2) + '</td>' +
+                                                    '<td>' +
+                                                        '<input type="number" class="precio-sugerido" value="' + precioConGanancia.toFixed(2) + '" readonly>' +
+                                                    '</td>' +
+                                                    '</tr>';
+
+
+                                    $('#jsonTable tbody').append(newRow);
+                                });
+
+                                // Muestra el modal
+                                $('#jsonModal').modal('show');
+                        }else {
+                                // Si no hay suficiente cantidad, muestra un mensaje al usuario
+                                AlertMessage('No hay suficiente cantidad de este producto.', 'error');
+                        }
+
+                    }
+                })
+            }else{
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('verificar-cantidad') }}',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        producto_id: productoId,
+                        cantidad: cantidad
+                    },
+                    success: function(response) {
+                        if (response.suficiente) {
+
+                            // Limpia la tabla antes de agregar nuevos datos
+                                $('#jsonTable tbody').empty();
+
+                                // Recorre los lotes disponibles en la respuesta JSON y crea filas de tabla
+                                response.lotesDisponibles.forEach(function(lote) {
+                                    var precioUnitario = parseFloat(lote.precio_unitario);
+                                    var precioConGanancia = precioUnitario + (precioUnitario * 0.10); // Calcula el precio con un 10% de ganancia
+
+                                    // Agrega input en lugar de texto
+                                    var newRow = '<tr>' +
+                                                    '<td class="numero-lote">' + lote.numero_lote + '</td>' +
+                                                    '<td class="cantidad-disponible">' + lote.cantidad_disponible + '</td>' +
+                                                    '<td class="cantidad-comprada">' + lote.cantidad_comprada + '</td>' +
+                                                    '<td class="precio-unitario">' + precioUnitario.toFixed(2) + '</td>' +
+                                                    '<td>' +
+                                                        '<input type="number" class="precio-sugerido" value="' + precioConGanancia.toFixed(2) + '" readonly>' +
+                                                    '</td>' +
+                                                    '</tr>';
+
+
+                                    $('#jsonTable tbody').append(newRow);
+                                });
+
+                                // Muestra el modal
+                                $('#jsonModal').modal('show');
+                        }else {
+                                // Si no hay suficiente cantidad, muestra un mensaje al usuario
+                                AlertMessage('No hay suficiente cantidad de este producto.', 'error');
+                        }
+
+                    }
+                })
             }
 
-            // Calcular el subtotal del producto
-            var subtotal = cantidad * precioUnitario;
+          
 
-            // Verificar si el producto ya está en la lista y actualizar su cantidad
-            var productoExistente = listaProductos.find(function(producto) {
-                return producto.productoId == productoId;
-            });
+        }
+        // Función para agregar productos a la lista
+        function agregarProductos(productosModal) {
+            for (var i = 0; i < productosModal.length; i++) {
+                
+                var productoModal = productosModal[i];
+                var numeroLote = productoModal.numeroLote;
+                var cantidad = parseInt(productoModal.cantidad);
+                var cantidadDipo = parseInt(productoModal.cantidadDisponible);
+                var precioUnitario = parseFloat(productoModal.precioUnitario);
 
-            if (productoExistente) {
-                productoExistente.cantidad += cantidad;
-                productoExistente.subtotal += subtotal;
-                productoExistente.precioUnitario = precioUnitario;
-            } else {
-                listaProductos.push({
-                    productoId: productoId,
-                    nombre: productoNombre,
-                    cantidad: cantidad,
-                    precioUnitario: precioUnitario,
-                    subtotal: subtotal,
-                    numeroFactura: numeroFactura
+                // Obtener otros valores de los campos normales
+                var productoId = $('#producto_id').val();
+                var productoNombre = $('#producto_id option:selected').text().split(' - Proveedor')[0];
+
+                var numeroFactura = $('#numero_factura').val();
+
+                // Validar los valores
+                if (isNaN(cantidad) || cantidad <= 0) {
+                    AlertMessage('La cantidad debe ser un número mayor que cero', 'error');
+                    continue; // Salta a la siguiente iteración del bucle
+                }
+
+                if (isNaN(precioUnitario) || precioUnitario <= 0) {
+                    AlertMessage("El precio unitario debe ser un número mayor que cero.", "error");
+                    continue; // Salta a la siguiente iteración del bucle
+                }
+
+                // Calcular el subtotal
+                var subtotal = cantidad * precioUnitario;
+
+                // Buscar si el producto ya existe en la lista
+                var productoExistente = listaProductos.find(function (producto) {
+                    return producto.productoId == productoId && producto.numeroLote == numeroLote;;
                 });
+
+                // Actualizar o agregar el producto en la lista
+                if (productoExistente) {
+                    productoExistente.cantidad = cantidad;
+                    productoExistente.subtotal = subtotal;
+                    productoExistente.precioUnitario = precioUnitario;
+                } else {
+                    listaProductos.push({
+                        productoId: productoId,
+                        nombre: productoNombre,
+                        numeroLote: numeroLote,
+                        cantidad: cantidad,
+                        precioUnitario: precioUnitario,
+                        subtotal: subtotal,
+                        numeroFactura: numeroFactura,
+                        cantidadDiponible: cantidadDipo,
+                    });
+
+                }
             }
 
             // Actualizar la lista de productos en la vista
             actualizarListaProductos();
 
-            // Calcular el monto total
+            // Calcular el monto total, IVA y Total + IVA
             calcularMontoTotal();
-
-            // Calcular el IVA
             calcularIVA();
-
-            // Calcular el Total + IVA
             calcularTotalMasIVA();
 
             // Limpiar los campos de cantidad y precio unitario
@@ -247,12 +431,15 @@
             $('#precio_unitario').val('');
         }
 
+
+
         // Función para actualizar la lista de productos en la vista
         function actualizarListaProductos() {
             var listaHtml = '';
             listaProductos.forEach(function(producto, index) {
                 listaHtml += '<tr>';
                 listaHtml += '<td>' + producto.nombre + '</td>';
+                listaHtml +='<td>'+ producto.numeroLote +'</td>';
                 listaHtml += '<td><input type="number" class="form-control cantidad-editable" value="' + producto.cantidad + '"></td>';
                 listaHtml += '<td><input type="number" class="form-control precio-unitario-editable" step="0.01" value="' + producto.precioUnitario.toFixed(2) + '"></td>';
                 listaHtml += '<td>' + producto.subtotal.toFixed(2) + '</td>';
@@ -287,23 +474,53 @@
 
         // Evento click para el botón "Agregar Producto"
         $('#agregar-producto').click(function() {
-             // Limpia los mensajes de error si no hay errores.
-        $('#error-cantidad').text('');
-        $('#error-precio-unitario').text('');
-            agregarProducto();
+         
+            definirPrecio();
+
+        });
+
+        // Evento click para el botón "Agregar a la Lista" en el modal
+        $('#agregar-lista').click(function() {
+                // Crear un arreglo para almacenar los productos del modal
+                var productosModal = [];
+
+            // Recorrer las filas de la tabla en el modal y obtener los datos
+            $('#jsonTable tbody tr').each(function() {
+                var numeroLote = $(this).find('.numero-lote').text();
+                var cantidad = $(this).find('.cantidad-comprada').text();
+                var precioUnitario = ($(this).find('.precio-sugerido').val());
+                var cantidadDispo = ($(this).find('.cantidad-disponible').text());
+                // Agregar el producto actual al arreglo de productosModal
+                productosModal.push({
+                    numeroLote: numeroLote,
+                    cantidad: cantidad,
+                    precioUnitario: precioUnitario,
+                    cantidadDisponible: cantidadDispo
+                    
+                });
+            });
+            agregarProductos(productosModal);
+            // Cierra el modal si es necesario
+            $('#jsonModal').modal('hide');
+            habilitarDeshabilitarBotonFinalizar();
+
         });
 
         // Evento change para las cantidades de productos en la lista
         $('#lista-productos').on('change', '.cantidad-editable', function() {
             var index = $(this).closest('tr').index();
             var nuevaCantidad = parseInt($(this).val());
-            if (!isNaN(nuevaCantidad)) {
+            if (!isNaN(nuevaCantidad) && nuevaCantidad > 0) {
                 listaProductos[index].cantidad = nuevaCantidad;
                 listaProductos[index].subtotal = nuevaCantidad * listaProductos[index].precioUnitario;
                 actualizarListaProductos();
                 calcularMontoTotal();
                 calcularIVA();
                 calcularTotalMasIVA();
+            }else{
+                AlertMessage('La cantidad debe se un número mayor que cero', 'error');
+                // También puedes restablecer el valor a su estado anterior si es necesario
+                $(this).val(listaProductos[index].cantidad);
             }
         });
 
@@ -311,13 +528,17 @@
         $('#lista-productos').on('change', '.precio-unitario-editable', function() {
             var index = $(this).closest('tr').index();
             var nuevoPrecio = parseFloat($(this).val());
-            if (!isNaN(nuevoPrecio)) {
+            if (!isNaN(nuevoPrecio) && nuevoPrecio > 0) {
                 listaProductos[index].precioUnitario = nuevoPrecio;
                 listaProductos[index].subtotal = listaProductos[index].cantidad * nuevoPrecio;
                 actualizarListaProductos();
                 calcularMontoTotal();
                 calcularIVA();
                 calcularTotalMasIVA();
+            }else{
+                AlertMessage("El precio unitario debe ser un número mayor que cero.", "error");
+                // También puedes restablecer el valor a su estado anterior si es necesario
+                $(this).val(listaProductos[index].precioUnitario.toFixed(2));
             }
         });
 
@@ -329,7 +550,82 @@
             calcularMontoTotal();
             calcularIVA();
             calcularTotalMasIVA();
+            habilitarDeshabilitarBotonFinalizar();
+
         });
+
+
+
+
+
+        // Evento change para las opciones de precio
+        $('input[type=radio][name=opcionPrecio]').change(function() {
+                    var selectedOption = $(this).val();
+                    if (selectedOption === 'cambiarManual') {
+                        $('#porcentajeGanancia').prop('disabled',false)
+                        $('.precio-sugerido').prop('readonly', false);
+                        $('.precio-sugerido').css('opacity', 1);
+           
+
+                    } else if(selectedOption ==='mantenerFijo') {
+                        $('#porcentajeGanancia').prop('disabled',true)
+                        $('.precio-sugerido').prop('readonly', true);
+                        $('.precio-sugerido').css('opacity', 0.2);
+                           // Si la opción es "mantenerFijo," establecer los precios sugeridos en el 10%
+                        var porcentajeSeleccionado = 0.10; // 10%
+                        $('.precio-sugerido').each(function() {
+                            var precioUnitario = parseFloat($(this).closest('tr').find('.precio-unitario').text());
+                            var nuevoPrecioSugerido = precioUnitario + (precioUnitario * porcentajeSeleccionado);
+                            $(this).val(nuevoPrecioSugerido.toFixed(2));
+                        });
+
+                    } else if (selectedOption ==='mismoPrecio'){
+
+                         // Obtener el precio sugerido más alto de la tabla
+                            var precioSugeridoMasAlto = 0;
+                            $('#jsonTable tbody tr').each(function() {
+                                var precioSugerido = parseFloat($(this).find('td:last input').val());
+                                if (precioSugerido > precioSugeridoMasAlto) {
+                                    precioSugeridoMasAlto = precioSugerido;
+                                }
+                            });
+
+                            // Establecer el precio sugerido más alto para todos los productos
+                            $('#jsonTable tbody tr').each(function() {
+                                $(this).find('td:last input').val(precioSugeridoMasAlto);
+                            });
+                        $('#porcentajeGanancia').prop('disabled',true)
+                        $('.precio-sugerido').prop('readonly', true);
+                        $('.precio-sugerido').css('opacity', 0.2);
+                    }
+        });
+
+        // Evento change para el select de porcentaje de ganancia
+        $('#porcentajeGanancia').change(function() {
+            var selectedPorcentaje = parseFloat($(this).val());
+
+            // Actualizar el precio sugerido por fila
+            $('#jsonTable tbody tr').each(function() {
+                var precioUnitario = parseFloat($(this).find('.precio-unitario').text());
+                var nuevoPrecioSugerido = precioUnitario + (precioUnitario * selectedPorcentaje);
+                $(this).find('.precio-sugerido').val(nuevoPrecioSugerido.toFixed(2));
+            });
+        });
+
+        $('.precio-sugerido').on('change', '.precio-unitario', function() {
+            alert("llegue a validar precio sugerido")
+            var precioSugerido = parseFloat($(this).val());
+            var precioCompra = parseFloat($(this).closest('tr').find('.precio-unitario').text()); // Ajusta según tu estructura HTML
+
+            if (precioSugerido < precioCompra) {
+                // El precio sugerido es menor que el precio de compra, restablecerlo al precio de compra
+                $(this).val(precioCompra.toFixed(2));
+                AlertMessage('El precio no puede ser menor al que se compró', 'error');
+            }
+        });
+
+
+
 
         // Evento click para finalizar la venta
         $('#finalizar-venta').click(function() {

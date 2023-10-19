@@ -52,6 +52,7 @@ class DetalleVenta extends Model
 
 	protected $fillable = [
 		'cantidad',
+		'numero_lote',
 		'precio',
 		'venta_id',
 		'producto_id',
