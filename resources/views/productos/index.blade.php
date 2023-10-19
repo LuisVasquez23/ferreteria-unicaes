@@ -34,9 +34,6 @@
                                 <b>Cantidad</b>
                             </th>
                             <th class="border-bottom-0">
-                                <b>Fecha vencimiento</b>
-                            </th>
-                            <th class="border-bottom-0">
                                 <b>Estante</b>
                             </th>
                             <th class="border-bottom-0">
@@ -69,9 +66,6 @@
 
                                 <td class="border-bottom-0">
                                     {{ $producto->cantidad }}
-                                </td>
-                                <td class="border-bottom-0">
-                                    {{ $producto->fecha_vencimiento == null ? '' : date('d/m/Y', strtotime($producto->fecha_vencimiento)) }}
                                 </td>
 
                                 <td class="border-bottom-0">

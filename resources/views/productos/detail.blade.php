@@ -60,14 +60,6 @@
                 </div>
             </div>
 
-            <div class="col-md-6 mt-2">
-                <div class="form-group">
-                    <label for="periodo_id">Fecha de vencimiento:</label>
-                    <input type="text" class="form-control {{ $errors->has('nombre_opcion') ? 'is-invalid' : '' }}"
-                        value="{{ date('d/m/Y', strtotime($producto->fecha_vencimiento)) }}" disabled>
-                </div>
-            </div>
-
             <div class="form-group col-md-12 mt-md-2">
                 <label for="descripcion_opcion">Descripción: </label>
                 <textarea id="auto-resize-textarea" class="form-control" disabled>{{ $producto->descripcion }}</textarea>
