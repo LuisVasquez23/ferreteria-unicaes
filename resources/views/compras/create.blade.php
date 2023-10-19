@@ -1,9 +1,9 @@
 @extends('layouts/dashboard')
-@section('title', 'Crear Compra')
+@section('title', 'Ingresar Compra')
 @section('contenido')
 
 <div class="card mt-3">
-    <h5 class="card-header">Crear Compra</h5>
+    <h5 class="card-header">Ingresar Compra</h5>
     <div class="card-body">
         <form action="{{ route('compras.store') }}" method="POST">
             @csrf
@@ -12,7 +12,7 @@
                 <!-- Columna para el número de factura -->
                 <div class="col-md-4">
                     <div class="mb-3">
-                        <label for="numerosfactura" class="form-label">Número de Factura:</label>
+                        <label for="numerosfactura" class="form-label">Número de Factura: *</label>
                         <input type="number" class="form-control @error('numerosfactura') is-invalid @enderror" id="numerosfactura" name="numerosfactura" required value="{{ old('numerosfactura') }}">
                         @error('numerosfactura')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -40,13 +40,25 @@
                         @enderror
                     </div>
                 </div>
+
+                <!-- Columna para la fecha de vencimiento -->
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="fecha_vencimiento" class="form-label">Fecha de Vencimiento: *</label>
+                        <input type="date" class="form-control @error('fecha_vencimiento') is-invalid @enderror" id="fecha_vencimiento" name="fecha_vencimiento" required>
+                        @error('fecha_vencimiento')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
             </div>
 
             <div class="row">
                 <!-- Columna para seleccionar el producto -->
                 <div class="col-md-4">
                     <div class="mb-3">
-                        <label for="producto_id" class="form-label">Producto:</label>
+                        <label for="producto_id" class="form-label">Producto: *</label>
                         <select class="form-select @error('producto_id') is-invalid @enderror" id="producto_id" name="producto_id" required>
                             @foreach ($productos as $producto)
                                 <option value="{{ $producto->producto_id }}" data-precio="{{ $producto->precio }}">{{ $producto->nombre }} - Proveedor: {{  $producto->usuario->nombres }}</option>
@@ -61,7 +73,7 @@
                 <!-- Columna para la cantidad de producto -->
                 <div class="col-md-4">
                     <div class="mb-3">
-                        <label for="cantidad" class="form-label">Cantidad:</label>
+                        <label for="cantidad" class="form-label">Cantidad: *</label>
                         <input type="number" class="form-control @error('cantidad') is-invalid @enderror" id="cantidad" name="cantidad" required min="1">
                         @error('cantidad')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -72,7 +84,7 @@
                 <!-- Columna para el precio unitario -->
                 <div class="col-md-4">
                     <div class="mb-3">
-                        <label for="precio_unitario" class="form-label">Precio Unitario:</label>
+                        <label for="precio_unitario" class="form-label">Precio Unitario: *</label>
                         <input type="number" class="form-control @error('precio_unitario') is-invalid @enderror" id="precio_unitario" name="precio_unitario" step="0.01" required min="0.01">
                         @error('precio_unitario')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -80,37 +92,30 @@
                     </div>
                 </div>
 
-                <!-- Columna para la fecha de vencimiento -->
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label for="fecha_vencimiento" class="form-label">Fecha de Vencimiento:</label>
-                        <input type="date" class="form-control @error('fecha_vencimiento') is-invalid @enderror" id="fecha_vencimiento" name="fecha_vencimiento" required>
-                        @error('fecha_vencimiento')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
+                
             </div>
 
             <div class="row">
                 <!-- Columna para el botón "Agregar Producto" -->
-                <div class="col-md-4">
-                    <div class="mb-3">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <div class="mb-3 mt-2">
                         <button type="button" class="btn btn-success" id="agregar-producto">Agregar Producto</button>
+                        <a href="{{ route('compras') }}" class="btn btn-dark me-1 ms-2">Regresar</a>
+
                     </div>
                 </div>
             </div>
 
-            <!-- Campo oculto para la lista de productos -->
-            <input type="hidden" name="lista_productos" id="lista_productos_input" value="">
-            <input type="hidden" name="monto_total" id="monto_total" value="">
-            <input type="hidden" name="ivaTotal" id="ivaTotal" value="">
-            <input type="hidden" name="totalFin" id="totalFin" value="">
-        </form>
+                <!-- Campo oculto para la lista de productos -->
+                <input type="hidden" name="lista_productos" id="lista_productos_input" value="">
+                <input type="hidden" name="monto_total" id="monto_total" value="">
+                <input type="hidden" name="ivaTotal" id="ivaTotal" value="">
+                <input type="hidden" name="totalFin" id="totalFin" value="">
+            </form>
 
         <!-- Lista de productos seleccionados -->
         <div class="mt-4">
-            <h5>Productos Seleccionados:</h5>
+            <h5 class="mb-3">Productos Seleccionados:</h5>
             <div style="overflow-x: auto;">
                 <table class="table">
                     <thead>
@@ -130,35 +135,35 @@
             </div>
         </div>
 
-        <div class="row">
-            <!-- Columna para mostrar el monto total -->
-            <div class="col-md-4">
-                <div class="mb-3">
-                    <label for="monto_totalShow" class="form-label">Monto Total:</label>
-                    <input type="text" class="form-control" id="monto_totalShow" readonly>
+            <div class="row">
+                <!-- Columna para mostrar el monto total -->
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="monto_totalShow" class="form-label">Monto total:</label>
+                        <input type="text" class="form-control" id="monto_totalShow" readonly disabled>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Columna para mostrar el IVA -->
-            <div class="col-md-4">
-                <div class="mb-3">
-                    <label for="ivaShow" class="form-label">IVA (13%):</label>
-                    <input type="text" class="form-control" id="ivaShow" readonly>
+                <!-- Columna para mostrar el IVA -->
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="ivaShow" class="form-label">IVA (13%):</label>
+                        <input type="text" class="form-control" id="ivaShow" readonly disabled>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Columna para mostrar el total + IVA -->
-            <div class="col-md-4">
-                <div class="mb-3">
-                    <label for="totalFinShow" class="form-label">Total + IVA (13%):</label>
-                    <input type="text" class="form-control" id="totalFinShow" readonly>
+                <!-- Columna para mostrar el total + IVA -->
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="totalFinShow" class="form-label">Total + IVA (13%):</label>
+                        <input type="text" class="form-control" id="totalFinShow" readonly disabled>
+                    </div>
                 </div>
-            </div>
 
             <!-- Columna para el botón "Finalizar Compra" -->
-            <div class="col-md-4">
-                <div class="mb-3">
-                    <button type="button" class="btn btn-primary" id="finalizar-compra">Finalizar Compra</button>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <div class="mb-3 mt-2">
+                    <button type="button" class="btn btn-primary" id="finalizar-compra" disabled>Finalizar Compra</button>
                 </div>
             </div>
         </div>
@@ -168,15 +173,23 @@
 @endsection
 
 @section('AfterScript')
-<script>
-    $(document).ready(function() {
-        // Variables para almacenar la lista de productos y el monto total
-        var listaProductos = [];
-        var montoTotal = 0;
-        var ivaTotal = 0;
-        var totalMasIVA  = 0;
+    <script>
+        $(document).ready(function() {
+            // Variables para almacenar la lista de productos y el monto total
+            var listaProductos = [];
+            var montoTotal = 0;
+            var ivaTotal = 0;
+            var totalMasIVA = 0;
 
-        // Función para agregar producto a la lista
+        //desahbilitar finalizar compra:
+        function habilitarDeshabilitarBotonFinalizar() {
+            if (listaProductos.length > 0) {
+                $('#finalizar-compra').prop('disabled', false);
+            } else {
+                $('#finalizar-compra').prop('disabled', true);
+            }
+        }
+       // Función para agregar producto a la lista
         function agregarProducto() {
             var productoId = $('#producto_id').val();
             var productoNombre = $('#producto_id option:selected').text().split(' - Precio')[0];
@@ -185,129 +198,195 @@
             var fechaVencimiento = $('#fecha_vencimiento').val();
             var numeroFactura = $('#numerosfactura').val();
             
-                if (!numeroFactura || numeroFactura.trim() === "") {
-                    // Mostrar alerta personalizada
-                    AlertMessage("Por favor, ingrese un número de factura válido.", "error");
-                    return;
-                }
-                if (isNaN(cantidad) || cantidad <= 0) {
-                    // Mostrar alerta personalizada
-                    AlertMessage('La cantidad debe se un número mayor que cero', 'error');
-                    return;
-                }
-
-                if (isNaN(precioUnitario) || precioUnitario <= 0) {
-                    // Mostrar alerta personalizada
-                    AlertMessage("El precio unitario debe ser un número mayor que cero.", "error");
-                    return;
-                }
-                
-                if (!fechaVencimiento || fechaVencimiento.trim() === "") {
-                    // Mostrar alerta personalizada
-                    AlertMessage("Por favor, ingrese un fecha de vencimiento  válida.", "error");
-                    return;
-                }
-
-            // Calcular el subtotal del producto
-            var subtotal = cantidad * precioUnitario;
-
-            // Verificar si el producto ya está en la lista y actualizar su cantidad
-            var productoExistente = listaProductos.find(function(producto) {
-                return producto.productoId == productoId;
-            });
-
-            if (productoExistente) {
-                productoExistente.cantidad += cantidad;
-                productoExistente.subtotal += subtotal;
-                productoExistente.precioUnitario = precioUnitario;
-            } else {
-                listaProductos.push({
-                    productoId: productoId,
-                    proveedorId: $('#proveedor_id').val(),
-                    nombre: productoNombre,
-                    cantidad: cantidad,
-                    precioUnitario: precioUnitario,
-                    subtotal: subtotal,
-                    numeroFactura: numeroFactura,
-                    fechaVencimiento: fechaVencimiento // Agregar la fecha de vencimiento
-                });
+            if (!numeroFactura || numeroFactura.trim() === "") {
+                // Mostrar alerta personalizada
+                AlertMessage("Por favor, ingrese un número de factura válido.", "error");
+                return;
+            }
+            if (isNaN(cantidad) || cantidad <= 0) {
+                // Mostrar alerta personalizada
+                AlertMessage('La cantidad debe ser un número mayor que cero', 'error');
+                return;
+            }
+            if (isNaN(precioUnitario) || precioUnitario <= 0) {
+                // Mostrar alerta personalizada
+                AlertMessage("El precio unitario debe ser un número mayor que cero.", "error");
+                return;
+            }
+            if (!fechaVencimiento || fechaVencimiento.trim() === "") {
+                // Mostrar alerta personalizada
+                AlertMessage("Por favor, ingrese una fecha de vencimiento válida.", "error");
+                return;
+            }
+            
+            // Validar que la fecha de vencimiento no sea menor que la fecha actual
+            var fechaActual = new Date();
+            var fechaVencimientoDate = new Date(fechaVencimiento);
+            
+            if (fechaVencimientoDate < fechaActual) {
+                // Mostrar alerta personalizada
+                AlertMessage("La fecha de vencimiento no puede ser menor que la fecha actual.", "error");
+                return;
             }
 
-            // Actualizar la lista de productos en la vista
-            actualizarListaProductos();
+            // Calcular la diferencia en milisegundos entre la fecha de vencimiento y la fecha actual
+            var diferenciaFechas = fechaVencimientoDate - fechaActual;
+            
+            // Calcular el número de días enteros y el número de horas restantes
+            var diasRestantes = Math.floor(diferenciaFechas / (1000 * 60 * 60 * 24)); // Convertir la diferencia a días y redondear hacia abajo
+            var horasRestantes = Math.floor((diferenciaFechas % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); // Convertir el residuo a horas y redondear hacia abajo
 
-            // Calcular el monto total
-            calcularMontoTotal();
+            // Combinar días y horas en el mensaje de advertencia
+            var mensajeAdvertencia = "El producto se vence en " + diasRestantes + " día(s) y " + horasRestantes + " hora(s). ¿Aún desea agregarlo?";
+            
+            if (diasRestantes <= 7) {
+                // Mostrar la alerta de SweetAlert para confirmación
+                Swal.fire({
+                    title: 'Advertencia',
+                    text: mensajeAdvertencia,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sí, agregar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Si el usuario confirma, agregar el producto a la lista
+                        var subtotal = cantidad * precioUnitario;
+                        var productoExistente = listaProductos.find(function(producto) {
+                            return producto.productoId == productoId;
+                        });
+                        if (productoExistente) {
+                            productoExistente.cantidad += cantidad;
+                            productoExistente.subtotal += subtotal;
+                            productoExistente.precioUnitario = precioUnitario;
+                        } else {
+                            listaProductos.push({
+                                productoId: productoId,
+                                proveedorId: $('#proveedor_id').val(),
+                                nombre: productoNombre,
+                                cantidad: cantidad,
+                                precioUnitario: precioUnitario,
+                                subtotal: subtotal,
+                                numeroFactura: numeroFactura,
+                                fechaVencimiento: fechaVencimiento
+                            });
+                        }
+                        actualizarListaProductos();
+                        calcularMontoTotal();
+                        calcularIVA();
+                        calcularTotalMasIVA();
+                        $('#cantidad').val('');
+                        $('#precio_unitario').val('');
+                        $('#fecha_vencimiento').val('');
+                        habilitarDeshabilitarBotonFinalizar(); 
 
-            // Calcular el IVA
-            calcularIVA();
 
-            // Calcular el Total + IVA
-            calcularTotalMasIVA();
-
-            // Limpiar los campos de cantidad y precio unitario
-            $('#cantidad').val('');
-            $('#precio_unitario').val('');
-            $('#fecha_vencimiento').val('');
-
+                    }
+                });
+            } else {
+                // Agregar el producto a la lista sin mostrar alerta
+                var subtotal = cantidad * precioUnitario;
+                var productoExistente = listaProductos.find(function(producto) {
+                    return producto.productoId == productoId;
+                });
+                if (productoExistente) {
+                    productoExistente.cantidad += cantidad;
+                    productoExistente.subtotal += subtotal;
+                    productoExistente.precioUnitario = precioUnitario;
+                } else {
+                    listaProductos.push({
+                        productoId: productoId,
+                        proveedorId: $('#proveedor_id').val(),
+                        nombre: productoNombre,
+                        cantidad: cantidad,
+                        precioUnitario: precioUnitario,
+                        subtotal: subtotal,
+                        numeroFactura: numeroFactura,
+                        fechaVencimiento: fechaVencimiento
+                    });
+                }
+                actualizarListaProductos();
+                calcularMontoTotal();
+                calcularIVA();
+                calcularTotalMasIVA();
+                $('#cantidad').val('');
+                $('#precio_unitario').val('');
+                $('#fecha_vencimiento').val('');
+            }
         }
 
-        // Función para actualizar la lista de productos en la vista
-        function actualizarListaProductos() {
-            var listaHtml = '';
-            listaProductos.forEach(function(producto, index) {
-                listaHtml += '<tr>';
-                listaHtml += '<td>' + producto.nombre + '</td>';
-                listaHtml += '<td><input type="number" class="form-control cantidad-editable" value="' + producto.cantidad + '"></td>';
-                listaHtml += '<td><input type="number" class="form-control precio-unitario-editable" step="0.01" value="' + producto.precioUnitario.toFixed(2) + '"></td>';
-                listaHtml += '<td>' + producto.fechaVencimiento + '</td>';
-                listaHtml += '<td>' + producto.subtotal.toFixed(2) + '</td>';
-                listaHtml += '<td><button type="button" class="btn btn-danger eliminar-producto" data-index="' + index + '">Eliminar</button></td>';
-                listaHtml += '</tr>';
-            });
-            $('#lista-productos').html(listaHtml);
-        }
 
-        // Función para calcular el monto total
-        function calcularMontoTotal() {
-            montoTotal = 0;
-            listaProductos.forEach(function(producto) {
-                montoTotal += producto.subtotal;
-            });
-            $('#monto_totalShow').val(montoTotal.toFixed(2));
-        }
+            // Función para actualizar la lista de productos en la vista
+            function actualizarListaProductos() {
+                var listaHtml = '';
+                listaProductos.forEach(function(producto, index) {
+                    listaHtml += '<tr>';
+                    listaHtml += '<td>' + producto.nombre + '</td>';
+                    listaHtml += '<td><input type="number" class="form-control cantidad-editable" value="' +
+                        producto.cantidad + '"></td>';
+                    listaHtml +=
+                        '<td><input type="number" class="form-control precio-unitario-editable" step="0.01" value="' +
+                        producto.precioUnitario.toFixed(2) + '"></td>';
+                    listaHtml += '<td>' + producto.fechaVencimiento + '</td>';
+                    listaHtml += '<td>' + producto.subtotal.toFixed(2) + '</td>';
+                    listaHtml +=
+                        '<td><button type="button" class="btn btn-danger eliminar-producto" data-index="' +
+                        index + '">Eliminar</button></td>';
+                    listaHtml += '</tr>';
+                });
+                $('#lista-productos').html(listaHtml);
+            }
 
-        // Función para calcular el IVA
-        function calcularIVA() {
-            var ivaPorcentaje = 0.13; // Porcentaje de IVA (13% en este ejemplo)
-            var ivaTotal = montoTotal * ivaPorcentaje;
-            $('#ivaShow').val(ivaTotal.toFixed(2));
-        }
+            // Función para calcular el monto total
+            function calcularMontoTotal() {
+                montoTotal = 0;
+                listaProductos.forEach(function(producto) {
+                    montoTotal += producto.subtotal;
+                });
+                $('#monto_totalShow').val(montoTotal.toFixed(2));
+            }
 
-        // Función para calcular el Total + IVA
-        function calcularTotalMasIVA() {
-            var ivaPorcentaje = 0.13; // Porcentaje de IVA (13% en este ejemplo)
-            var totalMasIVA = montoTotal + (montoTotal * ivaPorcentaje);
-            $('#totalFinShow').val(totalMasIVA.toFixed(2));
-            $('#totalFin').val(totalMasIVA.toFixed(2));
-        }
+            // Función para calcular el IVA
+            function calcularIVA() {
+                var ivaPorcentaje = 0.13; // Porcentaje de IVA (13% en este ejemplo)
+                var ivaTotal = montoTotal * ivaPorcentaje;
+                $('#ivaShow').val(ivaTotal.toFixed(2));
+            }
+
+            // Función para calcular el Total + IVA
+            function calcularTotalMasIVA() {
+                var ivaPorcentaje = 0.13; // Porcentaje de IVA (13% en este ejemplo)
+                var totalMasIVA = montoTotal + (montoTotal * ivaPorcentaje);
+                $('#totalFinShow').val(totalMasIVA.toFixed(2));
+                $('#totalFin').val(totalMasIVA.toFixed(2));
+            }
 
         // Evento click para el botón "Agregar Producto"
         $('#agregar-producto').click(function() {
             agregarProducto();
+            habilitarDeshabilitarBotonFinalizar();
         });
 
         // Evento change para las cantidades de productos en la lista
         $('#lista-productos').on('change', '.cantidad-editable', function() {
             var index = $(this).closest('tr').index();
             var nuevaCantidad = parseInt($(this).val());
-            if (!isNaN(nuevaCantidad)) {
+
+            if (!isNaN(nuevaCantidad) && nuevaCantidad > 0) {
                 listaProductos[index].cantidad = nuevaCantidad;
                 listaProductos[index].subtotal = nuevaCantidad * listaProductos[index].precioUnitario;
                 actualizarListaProductos();
                 calcularMontoTotal();
                 calcularIVA();
                 calcularTotalMasIVA();
+            } else {
+                // Mostrar un mensaje de error o realizar alguna otra acción si la cantidad es inválida
+                // En este ejemplo, se mostrará una alerta
+                AlertMessage('La cantidad debe se un número mayor que cero', 'error');
+                // También puedes restablecer el valor a su estado anterior si es necesario
+                $(this).val(listaProductos[index].cantidad);
             }
         });
 
@@ -315,14 +394,21 @@
         $('#lista-productos').on('change', '.precio-unitario-editable', function() {
             var index = $(this).closest('tr').index();
             var nuevoPrecio = parseFloat($(this).val());
-            if (!isNaN(nuevoPrecio)) {
+
+            if (!isNaN(nuevoPrecio) && nuevoPrecio > 0) {
                 listaProductos[index].precioUnitario = nuevoPrecio;
                 listaProductos[index].subtotal = listaProductos[index].cantidad * nuevoPrecio;
                 actualizarListaProductos();
                 calcularMontoTotal();
                 calcularTotalMasIVA();
+            } else {
+                // En este ejemplo, se mostrará una alerta
+                AlertMessage("El precio unitario debe ser un número mayor que cero.", "error");
+                // También puedes restablecer el valor a su estado anterior si es necesario
+                $(this).val(listaProductos[index].precioUnitario.toFixed(2));
             }
         });
+
 
         // Evento click para eliminar un producto de la lista
         $('#lista-productos').on('click', '.eliminar-producto', function() {
@@ -332,21 +418,32 @@
             calcularMontoTotal();
             calcularIVA();
             calcularTotalMasIVA();
+            habilitarDeshabilitarBotonFinalizar(); // Verificar después de eliminar
+
         });
 
         // Evento click para finalizar la compra
-        $('#finalizar-compra').click(function() {
-             // Antes de enviar el formulario, actualizar los campos ocultos con los valores
-            $('#monto_total').val(montoTotal.toFixed(2));
-            $('#iva').val(ivaTotal.toFixed(2));
-            calcularTotalMasIVA()
+    $('#finalizar-compra').click(function() {
+        // Verificar que se haya ingresado un número de factura
+        var numeroFactura = $('#numerosfactura').val().trim();
+        if (!numeroFactura) {
+            // Mostrar alerta personalizada
+            AlertMessage("Por favor, ingrese un número de factura válido.", "error");
+            return;
+        }
 
-            // Antes de enviar el formulario, actualizar el campo oculto con la lista de productos
-            $('#lista_productos_input').val(JSON.stringify(listaProductos));
-            
-            $('form').submit();
+        // Antes de enviar el formulario, actualizar los campos ocultos con los valores
+        $('#monto_total').val(montoTotal.toFixed(2));
+        $('#ivaTotal').val(ivaTotal.toFixed(2));
+        $('#totalFin').val(totalMasIVA.toFixed(2));
 
-        });
+        // Convertir la lista de productos a JSON y actualizar el campo oculto
+        $('#lista_productos_input').val(JSON.stringify(listaProductos));
+
+        // Enviar el formulario
+        $('form').submit();
+    });
+
 
 
     });

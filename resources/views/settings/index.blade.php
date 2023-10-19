@@ -33,7 +33,7 @@
                             <p class="card-text">
                                 Personaliza el nombre de tu empresa fácilmente.
                             </p>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            <button type="button" class="btn btn-primary mt-3 mb-1" data-bs-toggle="modal"
                                 data-bs-target="#cambiarNombreModal">
                                 Cambiar nombre
                             </button>
