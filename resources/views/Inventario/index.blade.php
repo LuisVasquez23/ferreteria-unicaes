@@ -6,13 +6,14 @@
         <h5 class="card-header">Administración de inventario de productos</h5>
         <div class="card-body">
             <div class="col-md-4 mx-auto text-center mb-3">
-                <label class="mb-2" for="filtro-bloqueo">Filtrar por Periodo:</label>
-                <select id="filtro-bloqueo" class="form-select">
+                <label class="mb-2" for="filtro-periodo">Filtrar por Periodo:</label>
+                <select id="filtro-periodo" class="form-select">
                     <option>Seleccionar...</option>
-                    <option value="no-bloqueados">No Bloqueados</option>
-                    <option value="bloqueados">Bloqueados</option>
+                    @foreach ($periodos as $periodo)
+                        <option value="{{ $periodo->periodo_id }}">{{ $periodo->fecha_inicio->format('Y-m-d') }} - {{ $periodo->fecha_fin->format('Y-m-d') }}</option>
+                    @endforeach
                 </select>
-            </div>
+            </div>            
 
             @if($productos->contains(function ($producto) { return $producto->cantidad <= 10; }))
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -92,3 +93,32 @@
     </div>
 
 @endsection
+
+@section('AfterScript')
+
+    <script>
+        $(document).ready(function() {
+            // Obtén el valor del periodo seleccionado de la URL
+            var selectedPeriodo = "{{ request('periodo') }}";
+
+            // Establece el valor seleccionado en el filtro o deja "Seleccionar..." si no hay valor
+            $("#filtro-periodo").val(selectedPeriodo || "Seleccionar...");
+
+            // Maneja el cambio en el filtro de periodo
+            $("#filtro-periodo").on("change", function() {
+                var periodo = $(this).val();
+                var url = "{{ route('inventario.index') }}";
+                
+                // Agrega el parámetro de periodo solo si no es "Seleccionar..."
+                if (periodo !== "Seleccionar...") {
+                    url += "?periodo=" + periodo;
+                }
+
+                window.location.href = url;
+            });
+        });
+    </script>
+
+@endsection
+
+
