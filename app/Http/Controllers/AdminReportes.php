@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Periodo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Collection; // Importa la clase Collection
-use Dompdf\Dompdf;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminReportes extends Controller
@@ -40,13 +38,13 @@ class AdminReportes extends Controller
   public function pdf($num_factura)
   {
       $resultados1 = DB::table('compras')
-          ->select('compras.numerosfactura', 'compras.monto', 'usuarios.nombres', 'periodos.fecha_inicio', 'compras.creado_por')
+          ->select('compras.numerosfactura', 'compras.monto', 'usuarios.nombres','usuarios.apellidos', 'periodos.fecha_inicio', 'compras.creado_por')
           ->join('periodos', 'compras.periodo_id', '=', 'periodos.periodo_id')
           ->join('detalle_compras', 'compras.compra_id', '=', 'detalle_compras.compra_id')
           ->join('productos', 'detalle_compras.producto_id', '=', 'productos.producto_id')
           ->join('usuarios', 'compras.comprador_id', '=', 'usuarios.usuario_id')
           ->where('compras.numerosfactura', $num_factura)
-          ->groupBy('compras.numerosfactura', 'compras.monto', 'usuarios.nombres', 'periodos.fecha_inicio', 'compras.creado_por')
+          ->groupBy('compras.numerosfactura', 'compras.monto', 'usuarios.nombres', 'usuarios.apellidos','periodos.fecha_inicio', 'compras.creado_por')
           ->get();
   
           $resultados2 = DB::table('compras')
@@ -58,13 +56,33 @@ class AdminReportes extends Controller
           ->where('compras.numerosfactura', $num_factura)
           ->get();
       
-  
+          $resultados3 = DB::table('catalogos')
+          ->select('catalogos.valor')
+          ->where('catalogos.nombre', 'NOMBRE_EMPRESA')
+          ->get();
+      
+
+          $resultados4 = DB::table('catalogos')
+          ->select('catalogos.valor')
+          ->where('catalogos.nombre', 'LOGO_EMPRESA')
+          ->get();
+
+          $resultados5 = DB::table('compras')
+        ->selectRaw('SUM(detalle_compras.cantidad * detalle_compras.precioUnitario + (detalle_compras.cantidad * detalle_compras.precioUnitario * 0.13)) as totalMasIva')
+        ->join('detalle_compras', 'compras.compra_id', '=', 'detalle_compras.compra_id')
+        ->join('productos', 'detalle_compras.producto_id', '=', 'productos.producto_id')
+        ->where('compras.numerosfactura', $num_factura)
+        ->get();
+
       $data = [
           'resultados1' => $resultados1,
           'resultados2' => $resultados2,
+          'resultados3' => $resultados3,
+          'resultados4' => $resultados4,
+          'resultados5' => $resultados5,
       ];
   
-      $pdf = PDF::loadView('reportes.compraReporte', $data); // Reemplaza 'nombre_de_tu_vista' por el nombre de tu vista
+      $pdf = PDF::loadView('reportes.compraReporte', $data);
       return $pdf->stream();
   }
   
