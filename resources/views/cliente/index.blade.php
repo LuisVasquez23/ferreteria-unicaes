@@ -33,7 +33,7 @@
                                 <b>Teléfono</b>
                             </th>
                             <th class="border-bottom-0">
-                                <b>Locación</b>
+                                <b>Dirección</b>
                             </th>
 
                             @if ($filtro === 'bloqueados')
@@ -60,7 +60,7 @@
                                     +503 {{ $cliente->telefono }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    {{ $cliente->municipio }} , {{ $cliente->departamento }}
+                                    {{ $cliente->direccion }}
                                 </td>
 
 
