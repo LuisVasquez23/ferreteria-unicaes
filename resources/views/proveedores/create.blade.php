@@ -40,38 +40,7 @@
                     </div>
                 @endif
             </div>
-            <div class="col-md-6 mt-2">
-                <!-- Departamento -->
-                <div class="form-group">
-                    <label for="departamento">Departamento *</label>
-                    <select name="departamento" id="departamento" class="form-control {{ $errors->has('departamento') ? 'is-invalid' : '' }}" required>
-                        <option value="">Seleccionar ...</option>
-                        <!-- Opciones de departamentos aquí -->
-                    </select>
-                    @if ($errors->has('departamento'))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('departamento') }}
-                        </div>
-                    @endif
-                </div>
-            </div>
-
-            <div class="col-md-6 mt-2">
-                <!-- Municipio -->
-                <div class="form-group">
-                    <label for="municipio">Municipio *</label>
-                    <select name="municipio" id="municipio" class="form-control {{ $errors->has('municipio') ? 'is-invalid' : '' }}" required>
-                        <option value="">Seleccionar ...</option>
-                        <!-- Opciones de municipios aquí -->
-                    </select>
-                    @if ($errors->has('municipio'))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('municipio') }}
-                        </div>
-                    @endif
-                </div>
-            </div>
-
+       
             <div class="form-group col-md-6 mt-2">
                 <label for="direccion_opcion">Dirección:</label>
                 <input type="text" class="form-control"
@@ -157,20 +126,6 @@
         });
     });
 
-    $departamento.addEventListener('change', () => {
-        const selectedOption = $departamento.options[$departamento.selectedIndex];
-        const codigoDepartamento = selectedOption.getAttribute('data-iso2');
-        showLoadingModal('municipios');
-        ajaxCountries({
-            url: `https://api.countrystatecity.in/v1/countries/SV/states/${codigoDepartamento}/cities`,
-            cbSuccess: async (json) => {
-                await loadMunicipios({
-                    municipios: json,
-                    municipioAlmacenado: null
-                })
-                hideLoadingModal();
-            }
-        });
-    });
+
 </script>
 @endsection
