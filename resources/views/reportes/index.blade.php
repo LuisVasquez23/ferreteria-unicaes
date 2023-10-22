@@ -80,10 +80,6 @@
                                 <b>Acciones</b>
                             </th>
                             
-          
-
-                            
-
                         </tr>
                     </thead>
                     <tbody>
@@ -98,11 +94,10 @@
                             <td>{{ $resultado->creado_por }}</td>
                             <td class="d-flex gap-1 justify-content-center">
                         
-                                <a href="{{ route('reportes.pdf', ['num_factura' => $resultado->numerosfactura]) }}" class="btn btn-success" title="Generar PDF">
+                                <a href="{{ route('reportes.pdf', ['num_factura' => $resultado->numerosfactura]) }}" class="btn btn-danger" title="Generar PDF" target="_blank">
                                     <i class="fas fa-file-pdf"></i>
                                 </a>
                                 
-
 
                             </td>
                         </tr>

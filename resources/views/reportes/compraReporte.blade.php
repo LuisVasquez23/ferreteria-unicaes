@@ -27,8 +27,8 @@
 
     
     .position_img{
-        position: relative;
-        top: -45px;     
+        position: absolute;
+        top: -25px;     
     }
     .factura-position{
         position: relative;
@@ -84,20 +84,20 @@ th, td{
 </style>
 
 <body>
-   <div class="row" style="height: 65px">
-        <div class="text-start">
+    <div class="row align-items-center" style="height: 65px">
+        <div class="col text-start">
             @foreach ($resultados3 as $resultado3)           
-            <h2>{{ $resultado3->valor }}</h3>                
+            <h2>{{ $resultado3->valor }}</h2>                
             @endforeach
         </div>
-
-        <div class="position_img text-end">
-            @foreach ($resultados4 as $resultado4)       
-            <img src="{{ $resultado4->valor }}" alt="Imagen_logo" style="height: 50px; max-width: 220px;">                   
+    
+        <div class="col text-end d-flex justify-content-center position_img">
+            @foreach ($resultados4 as $resultado4)
+                <img src="{{ $resultado4->valor }}" alt="Imagen_logo" class="mx-auto" style="max-width: 250px; max-height: 100px;">
             @endforeach
         </div>
-
-   </div>
+    </div>
+    
    <hr class="mi-linea ">
    
    <div class="factura row">
@@ -105,7 +105,6 @@ th, td{
         <div class="col-md-6 datos postPosition">
             @foreach ($resultados1 as $resultado)
                 <p><strong>Proveedor:</strong> {{ $resultado->nombres }}  {{ $resultado->apellidos }} </p>
-                <p><strong>Compra:</strong> {{ date('F Y', strtotime($resultado->fecha_inicio)) }}</p>
                 <p><strong>Realizada por:</strong> {{ $resultado->creado_por }}</p>
             @endforeach
         </div>
