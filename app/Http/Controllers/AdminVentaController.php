@@ -34,11 +34,13 @@ class AdminVentaController extends Controller
                 $query->where('role', 'Proveedor');
             })->whereNull('bloqueado_por')
                 ->pluck('nombres', 'usuario_id');
-            //obtener los clientes
-            $clientes = Usuario::whereHas('detalle_roles.role', function ($query) {
-                $query->where('role', 'Cliente');
-            })->whereNull('bloqueado_por')
-                ->pluck('nombres', 'usuario_id');
+        
+            //Obtener clientes
+                $clientes = Usuario::whereHas('detalle_roles.role', function ($query) {
+                    $query->where('role', 'Cliente');
+                })->whereNull('bloqueado_por')
+                  ->pluck(DB::raw("CONCAT(nombres, ' ', apellidos)"), 'usuario_id');
+                
 
 
             // Obtener la lista de productos disponibles
@@ -50,7 +52,6 @@ class AdminVentaController extends Controller
 
             // Obtener la lista de periodos u otras necesidades si las tienes
             $periodos = Periodo::whereNull('bloqueado_por')->pluck('fecha_inicio', 'periodo_id');
-
 
             // Devolver vista de creación de venta
             return view('ventas.create', compact('proveedores', 'productos', 'periodos', 'categorias', 'clientes'));
@@ -133,26 +134,24 @@ class AdminVentaController extends Controller
         $lotesVendidos = [];
         // Si la cantidad solicitada es menor o igual a la cantidad disponible
         if ($cantidad <= $cantidadDisponible) {
-            $suficiente = true;
-                    // Consultar la disponibilidad de lotes teniendo en cuenta compras y ventas
-                    $lotesDisponibles = DB::table('detalle_compras AS dc')
-                    ->select('dc.numero_lote', DB::raw('SUM(dc.cantidad) - COALESCE(SUM(dv.cantidad), 0) AS cantidad_disponible'),'dc.precioUnitario')
-                    ->leftJoin('detalle_ventas AS dv', function ($join) use ($productoId) {
-                        $join->on('dc.numero_lote', '=', 'dv.numero_lote')
-                            ->where('dv.producto_id', '=', $productoId);
-                    })
-                    ->where('dc.producto_id', $productoId)
-                    ->groupBy('dc.numero_lote', 'dc.precioUnitario')
-                    ->havingRaw('cantidad_disponible > 0')
-                    ->orderBy('dc.numero_lote')
-                    ->get();
+            
+                $suficiente = true;
+                    
+                // Consultar la disponibilidad de lotes teniendo en cuenta compras y ventas
+                    $lotesDisponibles = DB::select('CALL OBTENER_CANTIDAD_DISPONIBLE(?)', array($productoId));
+                
                      // Calcular cuántos productos se venderán de cada lote
-                    $cantidadRestante = $cantidad;
+                    
+                     $cantidadRestante = $cantidad;
+
                     foreach ($lotesDisponibles as $lote) {
-                        $numeroLote = $lote->numero_lote;
-                        $cantidadDisponible = $lote->cantidad_disponible;
-                        $precioUnitario = $lote->precioUnitario; // Precio unitario
+                        
+                        $numeroLote = $lote->NUMERO_LOTE;
+                        $cantidadDisponible = $lote->CANTIDAD_DISPONIBLE;
+                        $precioUnitario = $lote->PRECIOUNITARIO; // Precio unitario
+
                         $cantidadAVender = min($cantidadDisponible, $cantidadRestante);
+
                         $lotesVendidos[] = [
                             'numero_lote' => $numeroLote,
                             'cantidad_disponible' => $cantidadDisponible,
@@ -160,6 +159,7 @@ class AdminVentaController extends Controller
                             'precio_unitario' => $precioUnitario, // Agregar precio unitario al array
 
                         ];
+
                         $cantidadRestante -= $cantidadAVender;
                         if ($cantidadRestante <= 0) {
                             break; // Detén el bucle si no se necesita más cantidad
@@ -167,7 +167,7 @@ class AdminVentaController extends Controller
                     }
         } else {
             // La cantidad solicitada es mayor que la cantidad disponible
-    
+            $lotesVendidos = $cantidadDisponible;
             // Obtener los lotes disponibles para el producto
     
     

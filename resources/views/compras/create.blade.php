@@ -423,26 +423,42 @@
         });
 
         // Evento click para finalizar la compra
-    $('#finalizar-compra').click(function() {
-        // Verificar que se haya ingresado un número de factura
-        var numeroFactura = $('#numerosfactura').val().trim();
-        if (!numeroFactura) {
-            // Mostrar alerta personalizada
-            AlertMessage("Por favor, ingrese un número de factura válido.", "error");
-            return;
-        }
+        $('#finalizar-compra').click(function() {
+            // Verificar que se haya ingresado un número de factura
+            var numeroFactura = $('#numerosfactura').val().trim();
+            if (!numeroFactura) {
+                // Mostrar alerta personalizada
+                AlertMessage("Por favor, ingrese un número de factura válido.", "error");
+                return;
+            }
 
-        // Antes de enviar el formulario, actualizar los campos ocultos con los valores
-        $('#monto_total').val(montoTotal.toFixed(2));
-        $('#ivaTotal').val(ivaTotal.toFixed(2));
-        $('#totalFin').val(totalMasIVA.toFixed(2));
+            // Mostrar cuadro de diálogo SweetAlert
+            Swal.fire({
+                title: 'Finalizar Compra',
+                text: '¿Desea finalizar la compra?',
+                icon: 'warning',
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                showCancelButton: true,
+                cancelButtonText: 'No',
+                confirmButtonText: 'Sí',
+                
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Si el usuario confirma, enviar el formulario
+                    // Antes de enviar el formulario, actualizar los campos ocultos con los valores
+                    $('#monto_total').val(montoTotal.toFixed(2));
+                    $('#ivaTotal').val(ivaTotal.toFixed(2));
+                    $('#totalFin').val(totalMasIVA.toFixed(2));
+                    // Convertir la lista de productos a JSON y actualizar el campo oculto
+                    $('#lista_productos_input').val(JSON.stringify(listaProductos));
+                    // Enviar el formulario
+                    $('form').submit();
+                }
+            });
+        });
 
-        // Convertir la lista de productos a JSON y actualizar el campo oculto
-        $('#lista_productos_input').val(JSON.stringify(listaProductos));
-
-        // Enviar el formulario
-        $('form').submit();
-    });
+    
 
 
 

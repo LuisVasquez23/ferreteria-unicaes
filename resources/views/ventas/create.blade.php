@@ -21,9 +21,9 @@
                     <div class="mb-3">
                         <label for="cliente_id" class="form-label">Cliente:</label>
                         <select class="form-select" id="cliente_id" name="cliente_id" required>
-                        @foreach ($clientes as $clienteId => $clienteNombre)
-                            <option value="{{ $clienteId }}">{{ $clienteNombre }} id: {{$clienteId}}</option>
-                        @endforeach
+                            @foreach ($clientes as $usuario_id => $nombreCompleto)
+                                <option value="{{ $usuario_id }}">{{ $nombreCompleto }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -268,18 +268,21 @@
                     cantidadNueva += parseInt(listaProductos[i].cantidad);
                 }
             }
+
             if (productoExistenteIndex !== -1) {
                 var cantidadTotal = cantidadNueva + cantidad;
-                alert(cantidadTotal);
                     $.ajax({
                     type: 'POST',
-                    url: '{{ route('verificar-cantidad') }}',
+                    url: "{{ route('verificar-cantidad') }}",
                     data: {
                         _token: '{{ csrf_token() }}',
                         producto_id: productoId,
                         cantidad: cantidadTotal
                     },
                     success: function(response) {
+
+                        console.log(response);
+
                         if (response.suficiente) {
 
                             // Limpia la tabla antes de agregar nuevos datos
@@ -309,7 +312,7 @@
                                 $('#jsonModal').modal('show');
                         }else {
                                 // Si no hay suficiente cantidad, muestra un mensaje al usuario
-                                AlertMessage('No hay suficiente cantidad de este producto.', 'error');
+                                AlertMessage(response.lotesDisponibles, 'error');
                         }
 
                     }
@@ -317,13 +320,14 @@
             }else{
                 $.ajax({
                     type: 'POST',
-                    url: '{{ route('verificar-cantidad') }}',
+                    url: "{{ route('verificar-cantidad') }}",
                     data: {
                         _token: '{{ csrf_token() }}',
                         producto_id: productoId,
                         cantidad: cantidad
                     },
                     success: function(response) {
+
                         if (response.suficiente) {
 
                             // Limpia la tabla antes de agregar nuevos datos
@@ -353,7 +357,7 @@
                                 $('#jsonModal').modal('show');
                         }else {
                                 // Si no hay suficiente cantidad, muestra un mensaje al usuario
-                                AlertMessage('No hay suficiente cantidad de este producto.', 'error');
+                                AlertMessage('No hay suficiente stock, la cantidad disponible es: ' + response.lotesDisponibles+' productos', 'error');
                         }
 
                     }
@@ -440,7 +444,7 @@
                 listaHtml += '<tr>';
                 listaHtml += '<td>' + producto.nombre + '</td>';
                 listaHtml +='<td>'+ producto.numeroLote +'</td>';
-                listaHtml += '<td><input type="number" class="form-control cantidad-editable" value="' + producto.cantidad + '"></td>';
+                listaHtml += '<td><input type="number" class="form-control cantidad-editable" value="' + producto.cantidad + '"readonly></td>';
                 listaHtml += '<td><input type="number" class="form-control precio-unitario-editable" step="0.01" value="' + producto.precioUnitario.toFixed(2) + '"></td>';
                 listaHtml += '<td>' + producto.subtotal.toFixed(2) + '</td>';
                 listaHtml += '<td><button type="button" class="btn btn-danger eliminar-producto" data-index="' + index + '">Eliminar</button></td>';
@@ -506,53 +510,63 @@
 
         });
 
-        // Evento change para las cantidades de productos en la lista
-        $('#lista-productos').on('change', '.cantidad-editable', function() {
-            var index = $(this).closest('tr').index();
-            var nuevaCantidad = parseInt($(this).val());
-            if (!isNaN(nuevaCantidad) && nuevaCantidad > 0) {
-                listaProductos[index].cantidad = nuevaCantidad;
-                listaProductos[index].subtotal = nuevaCantidad * listaProductos[index].precioUnitario;
-                actualizarListaProductos();
-                calcularMontoTotal();
-                calcularIVA();
-                calcularTotalMasIVA();
-            }else{
-                AlertMessage('La cantidad debe se un número mayor que cero', 'error');
-                // También puedes restablecer el valor a su estado anterior si es necesario
-                $(this).val(listaProductos[index].cantidad);
-            }
-        });
 
-        // Evento change para los precios unitarios de productos en la lista
-        $('#lista-productos').on('change', '.precio-unitario-editable', function() {
-            var index = $(this).closest('tr').index();
-            var nuevoPrecio = parseFloat($(this).val());
-            if (!isNaN(nuevoPrecio) && nuevoPrecio > 0) {
+    // Evento change para los precios unitarios de productos en la lista
+    $('#lista-productos').on('change', '.precio-unitario-editable', function() {
+        var index = $(this).closest('tr').index();
+        var nuevoPrecio = parseFloat($(this).val());
+        var precioOriginal = listaProductos[index].precioUnitario; // Precio original del producto
+
+        if (!isNaN(nuevoPrecio) && nuevoPrecio >= 0) {
+            if (nuevoPrecio < precioOriginal) {
+                // Si el nuevo precio es menor al precio original, mostrar un mensaje de error
+                AlertMessage("El precio unitario no puede ser menor al precio original (" + precioOriginal.toFixed(2) + ").", "error");
+                // Restablecer el valor al precio original
+                $(this).val(precioOriginal.toFixed(2));
+            } else {
                 listaProductos[index].precioUnitario = nuevoPrecio;
                 listaProductos[index].subtotal = listaProductos[index].cantidad * nuevoPrecio;
                 actualizarListaProductos();
                 calcularMontoTotal();
                 calcularIVA();
                 calcularTotalMasIVA();
-            }else{
-                AlertMessage("El precio unitario debe ser un número mayor que cero.", "error");
-                // También puedes restablecer el valor a su estado anterior si es necesario
-                $(this).val(listaProductos[index].precioUnitario.toFixed(2));
             }
-        });
+        } else {
+            AlertMessage("El precio unitario debe ser un número mayor o igual a cero.", "error");
+            // Restablecer el valor al precio original
+            $(this).val(precioOriginal.toFixed(2));
+        }
+    });
 
-        // Evento click para eliminar un producto de la lista
+
+      // Evento click para eliminar un producto de la lista
         $('#lista-productos').on('click', '.eliminar-producto', function() {
             var index = $(this).data('index');
-            listaProductos.splice(index, 1);
-            actualizarListaProductos();
-            calcularMontoTotal();
-            calcularIVA();
-            calcularTotalMasIVA();
-            habilitarDeshabilitarBotonFinalizar();
+            var producto = listaProductos[index]; // Obtener el producto a eliminar
 
+            // Mostrar cuadro de diálogo SweetAlert
+            Swal.fire({
+                title: 'Eliminar Producto',
+                text: '¿Desea eliminar el producto "' + producto.nombre + '" de la lista?',
+                icon: 'warning',
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                showCancelButton: true,
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Eliminar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Si el usuario confirma, eliminar el producto
+                    listaProductos.splice(index, 1);
+                    actualizarListaProductos();
+                    calcularMontoTotal();
+                    calcularIVA();
+                    calcularTotalMasIVA();
+                    habilitarDeshabilitarBotonFinalizar();
+                }
+            });
         });
+
 
 
 
@@ -627,18 +641,34 @@
 
 
 
-        // Evento click para finalizar la venta
         $('#finalizar-venta').click(function() {
-            // Antes de enviar el formulario, actualizar los campos ocultos con los valores
-            $('#monto_total').val(montoTotal.toFixed(2));
-            $('#ivaTotal').val(ivaTotal.toFixed(2));
-            $('#totalMasIVA').val(totalMasIVA.toFixed(2));
+            // Mostrar cuadro de diálogo SweetAlert
+            Swal.fire({
+                title: 'Finalizar Venta',
+                text: '¿Desea finalizar la venta?',
+                icon: 'warning',
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                showCancelButton: true,
+                cancelButtonText: 'No',
+                confirmButtonText: 'Sí'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Si el usuario confirma, continuar con el proceso
+                    // Antes de enviar el formulario, actualizar los campos ocultos con los valores
+                    $('#monto_total').val(montoTotal.toFixed(2));
+                    $('#ivaTotal').val(ivaTotal.toFixed(2));
+                    $('#totalMasIVA').val(totalMasIVA.toFixed(2));
 
-            // Antes de enviar el formulario, actualizar el campo oculto con la lista de productos
-            $('#lista_productos_input').val(JSON.stringify(listaProductos));
+                    // Antes de enviar el formulario, actualizar el campo oculto con la lista de productos
+                    $('#lista_productos_input').val(JSON.stringify(listaProductos));
 
-            $('form').submit();
+                    // Enviar el formulario
+                    $('form').submit();
+                }
+            });
         });
+
     });
 </script>
 @endsection
