@@ -102,18 +102,15 @@
                                 }
                             @endphp
                         
-                            <tr @if($producto->cantidad <= 10) style="outline: 2px solid #E07164;" @endif
-                                @if ($diasParaVencimiento !== null && $diasParaVencimiento <= 10) style="outline: 2px solid #E0BA79;" @endif>
-                                <td class="border-bottom-0" 
-                                    style="
-                                        @if($producto->cantidad <= 10) 
-                                            border-left: 2px solid #E07164;
-                                        @endif
-                                        @if($diasParaVencimiento !== null && $diasParaVencimiento <= 10)
-                                            border-left: 2px solid #E0BA79; /* Cambia el color a tu preferencia */
-                                        @endif
-                                    "
-                                >
+                            <tr 
+                                @if($producto->cantidad <= 10) 
+                                    class="baja-existencia"
+                                @endif
+                                @if ($diasParaVencimiento !== null && $diasParaVencimiento <= 10) 
+                                    class="vencimiento-cercano"
+                                @endif
+                            >
+                                <td class="border-bottom-0">
                                     {{ $producto->nombre }}
                                 </td>
                         
@@ -140,16 +137,7 @@
                                     {{ $producto->estante->estante }}
                                 </td>
                         
-                                <td class="border-bottom-0" 
-                                    style="
-                                        @if($producto->cantidad <= 10) 
-                                            border-right: 2px solid #E07164;
-                                        @endif
-                                        @if($diasParaVencimiento !== null && $diasParaVencimiento <= 10)
-                                            border-right: 2px solid #E0BA79; /* Cambia el color a tu preferencia */
-                                        @endif
-                                    "
-                                >
+                                <td class="border-bottom-0">
                                     {{ $producto->medida->nombre }}
                                 </td>
                             </tr>
@@ -159,11 +147,25 @@
                     
                     
                     
+                    
+                    
+                    
+                    
                 </table>
             </div>
         </div>
     </div>
 
+    <style>
+        .baja-existencia {
+            background-color: #FFE6E6 !important;
+        }
+    
+        .vencimiento-cercano {
+            outline: 2px solid #E0BA79;
+            background-color: #FFF3E6 !important;
+        }
+    </style>
 @endsection
 
 @section('AfterScript')
