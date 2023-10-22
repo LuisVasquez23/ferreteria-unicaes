@@ -13,10 +13,8 @@ return new class extends Migration
     public function up(): void
     {
         DB::unprepared("   
-                DROP PROCEDURE IF EXISTS OBTENER_CANTIDAD_DISPONIBLE;
                 CREATE PROCEDURE OBTENER_CANTIDAD_DISPONIBLE(IN idProducto INT)
                 BEGIN
-                    -- CONSULTA PRINCIPAL
                     SELECT
                         *
                     FROM
@@ -36,7 +34,7 @@ return new class extends Migration
                         GROUP BY
                             COMPRAS.PRODUCTO_ID, COMPRAS.NUMERO_LOTE
                         ORDER BY
-                            COMPRAS.PRODUCTO_ID, COMPRAS.NUMERO_LOTE
+                            COMPRAS.PRODUCTO_ID, COMPRAS.NUMERO_LOTE 
                     ) PRODUCTOS
                     WHERE PRODUCTOS.CANTIDAD_DISPONIBLE != 0;
                 END;
