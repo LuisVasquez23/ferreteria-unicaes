@@ -26,7 +26,7 @@ class UsuarioFactory extends Factory
             'municipio' => $this->faker->city,
             'direccion' => $this->faker->address,
             'fecha_nacimiento' => $this->faker->date('Y-m-d', '-18 years'), // Genera una fecha de nacimiento válida
-            'email' => $this->faker->unique()->safeEmail,
+            'email' => 'admin@admin.com',
             'password' => Hash::make('password'), // Cambia esto según tus necesidades de seguridad
         ];
     }
