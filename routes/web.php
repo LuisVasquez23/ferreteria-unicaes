@@ -56,3 +56,4 @@ require __DIR__ . '/AdminCompra/compra.php';
 require __DIR__ . '/AdminVenta/venta.php';
 require __DIR__ . '/Settings/settings.php';
 require __DIR__ . '/Inventario/inventario.php';
+require __DIR__ . '/AdminReportes/reportes.php';
