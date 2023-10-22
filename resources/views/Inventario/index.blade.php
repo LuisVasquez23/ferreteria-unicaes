@@ -96,46 +96,67 @@
                         @foreach ($productosFiltrados as $producto)
                             @php
                                 $diasParaVencimiento = null;
-                    
+                        
                                 if ($producto->fecha_vencimiento) {
                                     $diasParaVencimiento = now()->diffInDays($producto->fecha_vencimiento, false);
                                 }
                             @endphp
-                    
-                            <tr @if($producto->cantidad <= 10 || ($diasParaVencimiento !== null && $diasParaVencimiento <= 10)) style="outline: 2px solid #FFCCCC;" @endif>
-                                <td class="border-bottom-0" @if($producto->cantidad <= 10 || ($diasParaVencimiento !== null && $diasParaVencimiento <= 10)) style="border-left: 2px solid #FFCCCC;" @endif>
+                        
+                            <tr @if($producto->cantidad <= 10) style="outline: 2px solid #E07164;" @endif
+                                @if ($diasParaVencimiento !== null && $diasParaVencimiento <= 10) style="outline: 2px solid #E0BA79;" @endif>
+                                <td class="border-bottom-0" 
+                                    style="
+                                        @if($producto->cantidad <= 10) 
+                                            border-left: 2px solid #E07164;
+                                        @endif
+                                        @if($diasParaVencimiento !== null && $diasParaVencimiento <= 10)
+                                            border-left: 2px solid #E0BA79; /* Cambia el color a tu preferencia */
+                                        @endif
+                                    "
+                                >
                                     {{ $producto->nombre }}
                                 </td>
-                    
+                        
                                 <!-- Agrega esta celda para mostrar la imagen -->
                                 <td class="border-bottom-0">
                                     <img src="{{ asset('storage/upload/productos/' . $producto->img_path) }}" alt="{{ $producto->nombre }}" class="img-thumbnail" width="100">
                                 </td>
-                    
+                        
                                 <td class="border-bottom-0">
                                     {{ $producto->cantidad }}
                                 </td>
-                    
+                        
                                 <td class="border-bottom-0">
                                     {{ $producto->periodo->fecha_inicio->format('Y-m-d') }} - {{ $producto->periodo->fecha_fin->format('Y-m-d') }}
                                 </td>
-                    
+                        
                                 <td class="border-bottom-0">
                                     @if($producto->fecha_vencimiento)
                                         {{ date('d/m/Y', strtotime($producto->fecha_vencimiento)) }}
                                     @endif
                                 </td>
-                    
+                        
                                 <td class="border-bottom-0">
                                     {{ $producto->estante->estante }}
                                 </td>
-                    
-                                <td class="border-bottom-0" @if($producto->cantidad <= 10 || ($diasParaVencimiento !== null && $diasParaVencimiento <= 10)) style="border-right: 2px solid #FFCCCC;" @endif>
+                        
+                                <td class="border-bottom-0" 
+                                    style="
+                                        @if($producto->cantidad <= 10) 
+                                            border-right: 2px solid #E07164;
+                                        @endif
+                                        @if($diasParaVencimiento !== null && $diasParaVencimiento <= 10)
+                                            border-right: 2px solid #E0BA79; /* Cambia el color a tu preferencia */
+                                        @endif
+                                    "
+                                >
                                     {{ $producto->medida->nombre }}
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
+                    
+                    
                     
                     
                 </table>
