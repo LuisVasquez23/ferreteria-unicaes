@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Periodo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Barryvdh\DomPDF\Facade\pdf;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminReportes extends Controller
 {
@@ -81,7 +81,7 @@ class AdminReportes extends Controller
             'resultados5' => $resultados5,
         ];
 
-        $pdf = pdf::loadView('reportes.compraReporte', $data);
+        $pdf = Pdf::loadView('reportes.compraReporte', $data);
         return $pdf->stream();
     }
 }
