@@ -36,9 +36,6 @@
                                 <b>Teléfono</b>
                             </th>
                             <th class="border-bottom-0">
-                                <b>Locación</b>
-                            </th>
-                            <th class="border-bottom-0">
                                 <b>Dirección</b>
                             </th>
                             <th class="border-bottom-0">
@@ -67,10 +64,7 @@
                                     {{ \Carbon\Carbon::parse($empleado->fecha_nacimiento)->age }} años
                                 </td>
                                 <td class="border-bottom-0">
-                                    +503 {{ $empleado->telefono }}
-                                </td>
-                                <td class="border-bottom-0">
-                                    {{ $empleado->municipio }} , {{ $empleado->departamento }}
+                                    {{ $empleado->telefono }}
                                 </td>
                                 <td class="border-bottom-0">
                                     {{ $empleado->direccion }}

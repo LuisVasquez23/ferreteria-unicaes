@@ -56,40 +56,6 @@
             @endif
         </div>
 
-        <div class="col-md-4 mt-2">
-            <!-- Departamento -->
-            <div class="form-group">
-                <label for="departamento">Departamento *</label>
-                <select name="departamento" id="departamento" class="form-control" required>
-                    <option value=""></option>
-                    <!-- Opciones de departamentos aquí -->
-                </select>
-                @if ($errors->has('departamento'))
-                <div class="invalid-feedback">
-                    {{ $errors->first('departamento') }}
-                </div>
-                @endif
-            </div>
-        </div>
-
-        <div class="col-md-4 mt-2">
-            <!-- Municipio -->
-            <div class="form-group">
-                <label for="municipio">Municipio *</label>
-                <select name="municipio" id="municipio" class="form-control" required>
-                    <option value="">Seleccionar ...</option>
-                    <!-- Opciones de municipios aquí -->
-                </select>
-                @if ($errors->has('municipio'))
-                <div class="invalid-feedback">
-                    {{ $errors->first('municipio') }}
-                </div>
-                @endif
-            </div>
-        </div>
-
-
-
 
         <div class="form-group col-md-4 mt-2">
             <label for="direccion_opcion">Dirección:</label>
@@ -116,8 +82,8 @@
                 name="fecha_nacimiento" id="fecha_nacimiento" required>
         </div>
 
-        <div class="form-group col-md-6">
-            <label for="password">Contraseña: </label>
+        <div class="form-group col-md-4 mt-2">
+            <label for="password">Contraseña: *</label>
             <input type="password" class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}"
                 name="password" id="password">
             @if ($errors->has('password'))
@@ -127,8 +93,8 @@
             @endif
         </div>
 
-        <div class="form-group col-md-6">
-            <label for="confirm_password">Confirmar contraseña: </label>
+        <div class="form-group col-md-4 mt-2">
+            <label for="confirm_password">Confirmar contraseña: *</label>
             <input type="password" class="form-control {{ $errors->has('confirm_password') ? 'is-invalid' : '' }}"
                 name="confirm_password" id="confirm_password">
             @if ($errors->has('confirm_password'))
@@ -178,49 +144,6 @@ $(document).ready(function() {
         $(this).val(telefono);
     });
 });
-
-
-
-
-
-const $departamento = document.getElementById('departamento');
-        const $municipio = document.getElementById('municipio');
-        document.addEventListener('DOMContentLoaded', () => {
-            showLoadingModal('departamentos');
-            // Cargar los departamentos
-            ajaxCountries({
-                url: 'https://api.countrystatecity.in/v1/countries/SV/states',
-                cbSuccess: async (json) => {
-                    await loadDepartamentos({
-                        departamentos: json,
-                        departamentoAlmacenado: null
-                    });
-                    hideLoadingModal();
-                }
-            });
-
-
-        });
-
-        $departamento.addEventListener('change', () => {
-
-            const selectedOption = $departamento.options[$departamento.selectedIndex];
-            const codigoDepartamento = selectedOption.getAttribute('data-iso2');
-
-            showLoadingModal('municipios');
-
-            ajaxCountries({
-                url: `https://api.countrystatecity.in/v1/countries/SV/states/${codigoDepartamento}/cities`,
-                cbSuccess: async (json) => {
-                    await loadMunicipios({
-                        municipios: json,
-                        municipioAlmacenado: null
-                    })
-                    hideLoadingModal();
-                }
-            });
-
-        })
 
     </script>
 @endsection

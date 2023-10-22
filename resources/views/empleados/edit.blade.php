@@ -50,42 +50,14 @@
                 @endif
             </div>
 
-
-            <div class="col-md-4 mt-2">
-                <!-- Departamento -->
-                <div class="form-group">
-                    <label for="departamento">Departamento</label>
-                    <select name="departamento" id="departamento" class="form-control">
-                    </select>
-
-                    <input type="hidden" name="departamento_antiguo" id="departamento_antiguo"
-                        class="form-control" value="{{ $empleados->departamento }}">
-
-                </div>
-            </div>
-
-            <div class="col-md-4 mt-2">
-                <!-- Municipio -->
-                <div class="form-group">
-                    <label for="municipio">Municipio</label>
-                    <select name="municipio" id="municipio" class="form-control">
-                        <option value="{{ $empleados->municipio }}" hidden></option>
-                    </select>
-
-                    <input type="hidden" name="municipio_antiguo" id="municipio_antiguo"
-                        class="form-control" value="{{ $empleados->municipio }}">
-                </div>
-            </div>
-
-
-            <div class="form-group col-md-6 mt-2">
+            <div class="form-group col-md-4 mt-2">
                 <label for="direccion_opcion">Dirección:</label>
                 <input type="text" class="form-control"
                     name="direccion_opcion" id="direccion_opcion" value="{{$empleados->direccion}}">
             </div>
     
     
-            <div class="form-group col-md-6 mt-2">
+            <div class="form-group col-md-4 mt-2">
                 <label for="email_opcion">Email: *</label>
                 <input type="text" class="form-control {{ $errors->has('email_opcion') ? 'is-invalid' : '' }}"
                     name="email_opcion" id="email_opcion" value="{{$empleados->email}}"
@@ -158,71 +130,6 @@ $(document).ready(function() {
         $(this).val(telefono);
     });
 });
-
-
-        const $departamento = document.getElementById('departamento');
-        const $municipio = document.getElementById('municipio');
-        const departamentoAlmacenado = document.getElementById('departamento_antiguo').value;
-        const municipioAlmacenado = document.getElementById('municipio_antiguo').value;
-
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            showLoadingModal('datos');
-
-            // Cargar los departamentos
-            await ajaxCountries({
-                url: 'https://api.countrystatecity.in/v1/countries/SV/states',
-                cbSuccess: async (json) => {
-                    await loadDepartamentos({
-                        departamentos: json,
-                        departamentoGuardado: departamentoAlmacenado ?? null
-                    });
-
-                    // Verificar si hay una opción seleccionada en el select de departamentos
-                    if ($departamento.selectedIndex !== -1) {
-                        // Obtener el atributo 'data-iso2' del departamento seleccionado previamente
-                        const selectedOption = $departamento.options[$departamento.selectedIndex];
-                        const codigoDepartamento = selectedOption.getAttribute('data-iso2');
-
-                        // Cargar los municipios del departamento seleccionado previamente
-                        ajaxCountries({
-                            url: `https://api.countrystatecity.in/v1/countries/SV/states/${codigoDepartamento}/cities`,
-                            cbSuccess: async (json) => {
-                                await loadMunicipios({
-                                    municipios: json,
-                                    municipioAlmacenado: municipioAlmacenado ??
-                                        null
-                                });
-                                hideLoadingModal();
-                            }
-                        });
-                    }
-
-                    hideLoadingModal();
-                }
-            });
-        });
-
-
-        $departamento.addEventListener('change', () => {
-
-            const selectedOption = $departamento.options[$departamento.selectedIndex];
-            const codigoDepartamento = selectedOption.getAttribute('data-iso2');
-
-            showLoadingModal('municipios');
-
-            ajaxCountries({
-                url: `https://api.countrystatecity.in/v1/countries/SV/states/${codigoDepartamento}/cities`,
-                cbSuccess: async (json) => {
-                    await loadMunicipios({
-                        municipios: json,
-                        municipioAlmacenado: municipioAlmacenado ?? null
-                    })
-                    hideLoadingModal();
-                }
-            });
-
-        });
-
+ 
     </script>
 @endsection

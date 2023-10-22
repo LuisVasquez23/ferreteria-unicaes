@@ -131,8 +131,6 @@ class AdminEmpleadosController extends Controller
             $empleado->nombres = $request->input('nombre_opcion');
             $empleado->apellidos = $request->input('apellido_opcion');
             $empleado->telefono = $request->input('telefono_opcion');
-            $empleado->departamento = $request->input('departamento');
-            $empleado->municipio = $request->input('municipio');
             $empleado->direccion = $request->input('direccion_opcion');
             $empleado->email = $request->input('email_opcion');
             $fechaNacimiento = Carbon::createFromFormat('Y-m-d', $request->input('fecha_nacimiento'));
@@ -278,23 +276,6 @@ class AdminEmpleadosController extends Controller
             $empleado->apellidos = $request->input('apellido_opcion');
             $empleado->telefono = $request->input('telefono_opcion');
     
-            $departamentoSeleccionado = $request->input('departamento');
-            $municipioSeleccionado = $request->input('municipio');
-    
-            // Verificar si se seleccionó "Seleccionar..." en el campo "departamento"
-    if ($departamentoSeleccionado === 'Seleccionar ...') {
-        return redirect()->route('empleados.index')->with('error', 'Debes seleccionar un departamento válido.');         
-    
-    }
-    
-    // Verificar si se seleccionó "Seleccionar..." en el campo "municipio"
-    if ($municipioSeleccionado === 'Seleccionar ...') {
-        return redirect()->route('empleados.index')->with('error', 'Debes seleccionar un municipio válido.');         
-    
-    }
-    
-            $empleado->departamento = $departamentoSeleccionado;
-            $empleado->municipio = $municipioSeleccionado;
             $empleado->direccion = $request->input('direccion_opcion');
             $empleado->email = $request->input('email_opcion');
 
