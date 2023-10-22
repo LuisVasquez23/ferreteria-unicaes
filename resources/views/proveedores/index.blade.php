@@ -65,8 +65,7 @@
                                     +503 {{ $proveedor->telefono }}
                                 </td>
                                 <td class="border-bottom-0">
-                                    {{ $proveedor->municipio }} ,
-                                    {{ $proveedor->departamento }}, {{ $proveedor->direccion }}
+                                    {{ $proveedor->direccion }}
                                 </td>
                                 @if ($filtro === 'bloqueados')
                                     <td class="border-bottom-0">

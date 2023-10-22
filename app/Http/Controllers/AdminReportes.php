@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Periodo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Barryvdh\DomPDF\Facade\pdf;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminReportes extends Controller
 {
@@ -64,7 +64,7 @@ class AdminReportes extends Controller
         $resultados4 = DB::table('catalogos')
             ->select('catalogos.valor')
             ->where('catalogos.nombre', 'LOGO_EMPRESA')
-            ->get();
+            ->first();
 
         $resultados5 = DB::table('compras')
             ->selectRaw('SUM(detalle_compras.cantidad * detalle_compras.precioUnitario + (detalle_compras.cantidad * detalle_compras.precioUnitario * 0.13)) as totalMasIva')
@@ -73,15 +73,20 @@ class AdminReportes extends Controller
             ->where('compras.numerosfactura', $num_factura)
             ->get();
 
+        $imagePath = public_path('storage/upload/' . $resultados4->valor);
+        $imageData = file_get_contents($imagePath);
+        $base64Image = base64_encode($imageData);
+
         $data = [
             'resultados1' => $resultados1,
             'resultados2' => $resultados2,
             'resultados3' => $resultados3,
-            'resultados4' => $resultados4,
+            'resultados4' => $base64Image,
             'resultados5' => $resultados5,
         ];
 
-        $pdf = pdf::loadView('reportes.compraReporte', $data);
+        $pdf = Pdf::loadView('reportes.compraReporte', $data);
+
         return $pdf->stream();
     }
 }

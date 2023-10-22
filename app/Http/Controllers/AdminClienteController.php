@@ -80,7 +80,7 @@ class AdminClienteController extends Controller
             'nombre_opcion' => 'required',
             'apellido_opcion' => 'required',
             'telefono_opcion' => 'required|regex:/^\d{4}-\d{4}$/|unique:usuarios,telefono',
-            'direccion_opcion' => 'nullable',
+            'direccion_opcion' => 'required',
             'email_opcion' => 'required|email|unique:usuarios,email',
         ];
 
@@ -93,9 +93,11 @@ class AdminClienteController extends Controller
             'telefono_opcion.required' => 'El campo "Teléfono" es obligatorio.',
             'telefono_opcion.unique' => 'Este teléfono ya está registrado, intentelo de nuevo.',
             'telefono_opcion.regex' => 'El campo "Teléfono" debe tener el formato correcto (por ejemplo, 7889-1256).',
+            'direccion_opcion.required' => 'Debes registrar una direccion',
             'email_opcion.required' => 'El email es requerido',
             'email_opcion.unique' => 'El email ya está registrado, intentelo de nuevo',
             'email_opcion.email' => 'El campo "Email" debe ser una dirección de correo electrónico válida.',
+           
 
         ];
 
@@ -109,25 +111,14 @@ class AdminClienteController extends Controller
         }
 
 
-        // Verificar si se seleccionó "Seleccionar..." en el campo "departamento"
-        if ($request->input('departamento') === 'Seleccionar ...') {
-            return redirect()->route('cliente.create')->with('error', 'Departamento no seleccionado');         
-        }             
-
-        // Verificar si se seleccionó "Seleccionar..." en el campo "municipio"
-        if ($request->input('municipio') === 'Seleccionar ...') {
-            return redirect()->route('clientes')->with('error', 'Municipio no seleccionado');        
-        }    
-
-
+        
         $cliente = new Usuario();
 
         $cliente->dui = $request->input('dui_opcion');
         $cliente->nombres = $request->input('nombre_opcion');
         $cliente->apellidos = $request->input('apellido_opcion');
         $cliente->telefono = $request->input('telefono_opcion');
-        $cliente->departamento = $request->input('departamento');
-        $cliente->municipio = $request->input('municipio');
+
         $cliente->direccion = $request->input('direccion_opcion');
         $cliente->email = $request->input('email_opcion');
 
@@ -217,6 +208,11 @@ class AdminClienteController extends Controller
             return redirect()->route('clientes')->with('error', 'El correo electrónico ya está registrado.');         
         }
 
+        if($request->input('direccion_opcion') == null){
+            return redirect()->route('clientes')->with('error', 'Dejaste el campo direccion vacio, intenta de nuevo');         
+
+        }
+
           // Definimos las reglas de validación
           $rules = [
 
@@ -225,7 +221,7 @@ class AdminClienteController extends Controller
 
             'telefono_opcion' => 'required|regex:/^\d{4}-\d{4}$/|unique:usuarios,telefono,'.$id.',usuario_id',
 
-            'direccion_opcion' => 'nullable',
+            'direccion_opcion' => 'required',
 
             'email_opcion' => 'required|email|unique:usuarios,email,'.$id.',usuario_id',
         ];
@@ -239,6 +235,9 @@ class AdminClienteController extends Controller
             'telefono_opcion.required' => 'El campo "Teléfono" es obligatorio.',
             'telefono_opcion.unique' => 'Este teléfono ya está registrado, intenta de nuevo.',
             'telefono_opcion.regex' => 'El campo "Teléfono" debe tener el formato correcto (por ejemplo, 7889-1256).',
+
+            'direccion_opcion.required' => 'El campo "Direccion" es obligatorio.',
+
 
             'email_opcion.unique' => 'El email ya está registrado, intenta de nuevo',
             'email_opcion.required' => 'El email es requerido',
@@ -263,24 +262,10 @@ class AdminClienteController extends Controller
         $cliente->apellidos = $request->input('apellido_opcion');
         $cliente->telefono = $request->input('telefono_opcion');
 
-        $departamentoSeleccionado = $request->input('departamento');
-        $municipioSeleccionado = $request->input('municipio');
-
-        // Verificar si se seleccionó "Seleccionar..." en el campo "departamento"
-if ($departamentoSeleccionado === 'Seleccionar ...') {
-    return redirect()->route('clientes')->with('error', 'Debes seleccionar un departamento válido.');         
-
-}
-
-// Verificar si se seleccionó "Seleccionar..." en el campo "municipio"
-if ($municipioSeleccionado === 'Seleccionar ...') {
-    return redirect()->route('clientes')->with('error', 'Debes seleccionar un municipio válido.');         
-
-}
-
-        $cliente->departamento = $departamentoSeleccionado;
-        $cliente->municipio = $municipioSeleccionado;
+      
         $cliente->direccion = $request->input('direccion_opcion');
+
+
         $cliente->email = $request->input('email_opcion');
         
         $cliente->save();
