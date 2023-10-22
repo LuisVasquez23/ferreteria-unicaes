@@ -1,36 +1,37 @@
-# Utiliza una imagen base de PHP
+# Utiliza la imagen oficial de PHP 8.1 con PHP-FPM
 FROM php:8.1-fpm
 
-# Establece el directorio de trabajo en la raíz de Laravel
+# Instala las dependencias necesarias
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
+    zip \
+    unzip \
+    && docker-php-ext-configure zip \
+    && docker-php-ext-install zip \
+    && docker-php-ext-install pdo pdo_mysql
+
+# Instala Composer globalmente
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Configura el directorio de trabajo en el contenedor
 WORKDIR /var/www/html
 
-# Copia los archivos de tu proyecto Laravel al contenedor
-COPY . .
+# Copia el código de tu aplicación Laravel al contenedor
+COPY . /var/www/html
 
-# Instala las dependencias de Laravel y Composer
-RUN apt-get update && \
-    apt-get install -y libpng-dev libjpeg-dev zip unzip && \
-    docker-php-ext-configure gd --with-jpeg && \
-    docker-php-ext-install gd pdo pdo_mysql && \
-    pecl install xdebug && \
-    docker-php-ext-enable xdebug && \
-    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
-    composer install
+# Instala las dependencias de Laravel utilizando Composer
+RUN composer install
 
-# Copia el archivo .env de ejemplo y configura la clave de aplicación
-COPY .env.example .env
-RUN php artisan key:generate
+# Inicia MySQL
+CMD ["mysqld"]
 
-# Configura la base de datos MySQL (puede variar según tu entorno)
-ENV DB_CONNECTION=mysql
-ENV DB_HOST=mysql
-ENV DB_PORT=3306
-ENV DB_DATABASE=ferreteria-unicaes
-ENV DB_USERNAME=root
-ENV DB_PASSWORD=
+# Configura MySQL
+ENV MYSQL_ROOT_PASSWORD='admin'
+ENV MYSQL_DATABASE=ferreteria_unicaes
 
-# Expone el puerto 9000 para PHP-FPM (ajusta según sea necesario)
+# Exponer el puerto 9000 para PHP-FPM y el puerto 3306 para MySQL
 EXPOSE 9000
+EXPOSE 3306
 
-# Define el comando para ejecutar PHP-FPM
+# Inicia PHP-FPM
 CMD ["php-fpm"]

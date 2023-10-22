@@ -76,8 +76,7 @@ class AdminProveedoresController extends Controller
                 'telefono_opcion' => 'required|regex:/^\d{4}-\d{4}$/|unique:usuarios,telefono',
                 'direccion_opcion' => 'nullable',
                 'email_opcion' => 'required|unique:usuarios,email',
-                'departamento' => 'required|not_in:Seleccionar ...', // Validación para el campo "departamento"
-                 'municipio' => 'required|not_in:Seleccionar ...'// Validación para el campo "municipio"
+
             ];
 
             $messages = [
@@ -89,10 +88,6 @@ class AdminProveedoresController extends Controller
                 'telefono_opcion.regex' => 'El campo "Teléfono" debe tener el formato correcto (por ejemplo, 7889-1256).',
                 'email_opcion.required' => 'El email es requerido.',
                 'email_opcion.unique' => 'El email ya está registrado, intenta de nuevo.',
-                'departamento.required' => 'Debes seleccionar un departamento.',
-                'departamento.not_in' => 'Debes seleccionar un departamento.',
-                'municipio.required' => 'Debes seleccionar un municipio.',
-                'municipio.not_in' => 'Debes seleccionar un municipio.'
             ];
 
             $validator = Validator::make($request->all(), $rules, $messages);
@@ -111,8 +106,6 @@ class AdminProveedoresController extends Controller
             $proveedor->nit = $request->input('nit_opcion');
             $proveedor->nombres = $request->input('nombre_opcion');
             $proveedor->telefono = $request->input('telefono_opcion');
-            $proveedor->departamento = $request->input('departamento');
-            $proveedor->municipio = $request->input('municipio');
             $proveedor->direccion = $request->input('direccion_opcion');
             $proveedor->email = $request->input('email_opcion');
             $proveedor->creado_por = Auth::user()->nombres;
@@ -201,8 +194,6 @@ class AdminProveedoresController extends Controller
                 'telefono_opcion' => 'required|regex:/^\d{4}-\d{4}$/|unique:usuarios,telefono,' . $id . ',usuario_id',
                 'direccion_opcion' => 'nullable',
                 'email_opcion' => 'required|email|unique:usuarios,email,' . $id . ',usuario_id',
-                'departamento' => 'required|not_in:Seleccionar ...',
-                'municipio' => 'required|not_in:Seleccionar ...',
             ];
     
             $messages = [
@@ -215,10 +206,6 @@ class AdminProveedoresController extends Controller
                 'email_opcion.required' => 'El email es requerido.',
                 'email_opcion.unique' => 'El email ya está registrado en la base de datos, intenta de nuevo.',
                 'email_opcion.email' => 'El campo "Email" debe ser una dirección de correo electrónico válida.',
-                'departamento.required' => 'Debes seleccionar un departamento.',
-                'departamento.not_in' => 'Debes seleccionar un departamento.',
-                'municipio.required' => 'Debes seleccionar un municipio.',
-                'municipio.not_in' => 'Debes seleccionar un municipio.',
             ];
     
             $validator = Validator::make($request->all(), $rules, $messages);
@@ -234,8 +221,6 @@ class AdminProveedoresController extends Controller
             $proveedor->nombres = $request->input('nombre_opcion');
             $proveedor->telefono = $request->input('telefono_opcion');
             $proveedor->departamento = $request->input('departamento');
-            $proveedor->municipio = $request->input('municipio');
-            $proveedor->direccion = $request->input('direccion_opcion');
             $proveedor->email = $request->input('email_opcion');
             $proveedor->creado_por = Auth::user()->nombres;
             $proveedor->fecha_creacion = now();
