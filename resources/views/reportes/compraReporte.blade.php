@@ -93,9 +93,13 @@ th, td{
     
         <div class="col text-end d-flex justify-content-center position_img">
             @foreach ($resultados4 as $resultado4)
-                <img src="{{ $resultado4->valor }}" alt="Imagen_logo" class="mx-auto" style="max-width: 250px; max-height: 100px;">
+                @php
+                    $ruta_completa = $ruta_actual . $resultado4->valor;
+                @endphp
+                <img src="{{ $ruta_completa }}" alt="Imagen_logo" class="mx-auto" style="max-width: 250px; max-height: 100px;">
             @endforeach
         </div>
+        
     </div>
     
    <hr class="mi-linea ">
