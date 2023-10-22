@@ -31,7 +31,7 @@ class CategoriaFactory extends Factory
         ];
 
         // Agregar el contador al final de la categoría
-        $categoria = $categorias[array_rand($categorias)];
+        $categoria = $categorias[array_rand($categorias)] . ' ' . self::$contador;
 
         self::$contador++; // Incrementar el contador para la siguiente categoría
 
