@@ -30,9 +30,9 @@ return new class extends Migration
                             DETALLE_COMPRAS COMPRAS
                         LEFT JOIN
                             DETALLE_VENTAS VENTAS ON COMPRAS.NUMERO_LOTE = VENTAS.NUMERO_LOTE AND COMPRAS.PRODUCTO_ID = VENTAS.PRODUCTO_ID
-                        WHERE COMPRAS.PRODUCTO_ID = idProducto -- Filtra por el idProducto proporcionado
+                        WHERE COMPRAS.PRODUCTO_ID = idProducto 
                         GROUP BY
-                            COMPRAS.PRODUCTO_ID, COMPRAS.NUMERO_LOTE
+                            COMPRAS.PRODUCTO_ID, COMPRAS.NUMERO_LOTE , COMPRAS.CANTIDAD , COMPRAS.PRECIOUNITARIO
                         ORDER BY
                             COMPRAS.PRODUCTO_ID, COMPRAS.NUMERO_LOTE 
                     ) PRODUCTOS
