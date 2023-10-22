@@ -59,10 +59,10 @@ public function pdf($num_factura)
         ->where('catalogos.nombre', 'NOMBRE_EMPRESA')
         ->get();
 
-    $resultados4 = DB::table('catalogos')
+        $resultados4 = DB::table('catalogos')
         ->select('catalogos.valor')
         ->where('catalogos.nombre', 'LOGO_EMPRESA')
-        ->get();
+        ->first();
 
     $resultados5 = DB::table('ventas')
     ->selectRaw('SUM(detalle_ventas.cantidad * detalle_ventas.precio + (detalle_ventas.cantidad * detalle_ventas.precio * 0.13)) as totalMasIva')
@@ -78,19 +78,22 @@ public function pdf($num_factura)
     ->first();
 
 
+    $imagePath = public_path('storage/upload/' . $resultados4->valor);
+    $imageData = file_get_contents($imagePath);
+    $base64Image = base64_encode($imageData);
     
 
     $data = [
         'resultados1' => $resultados1,
         'resultados2' => $resultados2,
         'resultados3' => $resultados3,
-        'resultados4' => $resultados4,
+        'resultados4' => $base64Image,
         'resultados5' => $resultados5,
         'totalVenta' => $totalVenta,
     ];
 
     $pdf = app('dompdf.wrapper')->loadView('reporteVenta.ventaReporte', $data);
-return $pdf->stream();
+    return $pdf->stream();
 }
 
 

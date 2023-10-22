@@ -84,9 +84,8 @@
         </div>
     
         <div class="col text-end d-flex justify-content-center position_img">
-            @foreach ($resultados4 as $resultado4)
-                <img src="{{ $resultado4->valor }}" alt="Imagen_logo" class="mx-auto" style="max-width: 250px; max-height: 100px;">
-            @endforeach
+            <img src="data:image/jpeg;base64, {{ $resultados4 }}" alt="Imagen_logo" class="mx-auto"
+                style="max-width: 250px; max-height: 100px;">
         </div>
     </div>
     
