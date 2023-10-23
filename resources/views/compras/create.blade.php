@@ -52,7 +52,7 @@
                             <input type="date" class="form-control @error('fecha_vencimiento') is-invalid @enderror" id="fecha_vencimiento" name="fecha_vencimiento">
                             <div class="input-group-text">
                                 <input type="checkbox" id="habilitar_fecha" class="form-check-input" aria-label="Habilitar Fecha" checked>
-                                <label class="form-check-label" for="habilitar_fecha">Habilitar Fecha</label>
+                                <label class="form-check-label ms-2" for="habilitar_fecha">Habilitar Fecha</label>
                             </div>
                         </div>
                         @error('fecha_vencimiento')
