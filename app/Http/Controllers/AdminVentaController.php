@@ -71,7 +71,12 @@ class AdminVentaController extends Controller
                 'totalMasIVA' => 'required|numeric',
                 'cliente_id' => 'required|numeric',
             ]);
-    
+            // Comprobar si ya existe una venta con el mismo número de factura
+            $ventaExistente = Venta::where('numerosfactura', $data['numero_factura'])->first();
+
+            if ($ventaExistente) {
+                return redirect()->route('ventas.create')->with('error', 'Ya existe una venta con el número de factura proporcionado. Por favor, ingrese un número de factura único.');
+            }
             // Recuperar la lista de productos desde el campo oculto
             $listaProductos = json_decode($request->input('lista_productos'), true);
     
