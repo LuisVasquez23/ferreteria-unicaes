@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Periodo;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 
 class InventarioController extends Controller
 {
@@ -58,5 +59,24 @@ class InventarioController extends Controller
             Log::error($e->getMessage());
             return redirect()->route('inventario')->with('error', 'Error al cargar la página de productos');
         }
+    }
+
+    public function validarCantidadProductos()
+    {
+        $productos = Producto::with('periodo')->get();
+        $advertenciaProductos = $productos->filter(function ($producto) {
+            return $producto->cantidad <= 10;
+        });
+
+        if ($advertenciaProductos->isNotEmpty()) {
+            return new JsonResponse([
+                'advertencia' => 'Hay productos con baja existencia en el inventario.',
+                'productosAdvertencia' => $advertenciaProductos
+            ], 200); // Usamos un código de respuesta 400 para indicar un error.
+        }
+
+        return new JsonResponse([
+            'mensaje' => 'Todos los productos están dentro de los límites adecuados.'
+        ], 200); // Usamos un código de respuesta 200 para indicar éxito.
     }
 }
