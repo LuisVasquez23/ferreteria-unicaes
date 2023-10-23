@@ -26,8 +26,7 @@ class AdminReporteDiario extends Controller
 
     }
 
-    public function pdf($fechaInicio)
-{
+    public function pdf($fechaInicio){
     $resultados = DB::table('detalle_ventas AS dv')
         ->select(
             DB::raw('DATE(dv.created_at) AS Fecha'),
@@ -63,16 +62,15 @@ class AdminReporteDiario extends Controller
         $base64Image = base64_encode($imageData);
     
 
-        // ...
 
-$fechaInicio = Carbon::createFromFormat('Y-m-d', $fechaInicio);
-    $data = [
-        'resultados' => $resultados, 
-        'resultados3' => $resultados3,
-        'resultados4' => $base64Image,
-        'fechaInicio' => $fechaInicio,
-        'totalMonto' => $totalMonto,
-    ];
+        $fechaInicio = Carbon::createFromFormat('Y-m-d', $fechaInicio);
+            $data = [
+                'resultados' => $resultados, 
+                'resultados3' => $resultados3,
+                'resultados4' => $base64Image,
+                'fechaInicio' => $fechaInicio,
+                'totalMonto' => $totalMonto,
+            ];
 
     $pdf = app('dompdf.wrapper')->loadView('reporteDiario.reporteDiario', $data);
     return $pdf->stream();
