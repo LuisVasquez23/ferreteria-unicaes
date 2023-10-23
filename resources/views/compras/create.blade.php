@@ -44,13 +44,20 @@
                 <!-- Columna para la fecha de vencimiento -->
                 <div class="col-md-4">
                     <div class="mb-3">
-                        <label for="fecha_vencimiento" class="form-label">Fecha de Vencimiento: *</label>
-                        <input type="date" class="form-control @error('fecha_vencimiento') is-invalid @enderror" id="fecha_vencimiento" name="fecha_vencimiento" required>
+                        <label for="fecha_vencimiento" class="form-label">Fecha de Vencimiento:</label>
+                        <div class="input-group">
+                            <input type="date" class="form-control @error('fecha_vencimiento') is-invalid @enderror" id="fecha_vencimiento" name="fecha_vencimiento">
+                            <div class="input-group-text">
+                                <input type="checkbox" id="habilitar_fecha" class="form-check-input" aria-label="Habilitar Fecha" checked>
+                                <label class="form-check-label" for="habilitar_fecha">Habilitar Fecha</label>
+                            </div>
+                        </div>
                         @error('fecha_vencimiento')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
+
 
             </div>
 
@@ -189,6 +196,17 @@
                 $('#finalizar-compra').prop('disabled', true);
             }
         }
+            // Función para habilitar o deshabilitar el campo de fecha de vencimiento
+            function habilitarFechaVencimiento() {
+                var checkbox = $('#habilitar_fecha');
+                var fechaVencimientoInput = $('#fecha_vencimiento');
+                fechaVencimientoInput.prop('disabled', !checkbox.is(':checked'));
+            }
+
+            // Evento para cambiar la habilitación del campo de fecha de vencimiento
+            $('#habilitar_fecha').change(function() {
+                habilitarFechaVencimiento();
+            });
        // Función para agregar producto a la lista
         function agregarProducto() {
             var productoId = $('#producto_id').val();
@@ -213,21 +231,25 @@
                 AlertMessage("El precio unitario debe ser un número mayor que cero.", "error");
                 return;
             }
-            if (!fechaVencimiento || fechaVencimiento.trim() === "") {
-                // Mostrar alerta personalizada
-                AlertMessage("Por favor, ingrese una fecha de vencimiento válida.", "error");
-                return;
-            }
-            
-            // Validar que la fecha de vencimiento no sea menor que la fecha actual
-            var fechaActual = new Date();
-            var fechaVencimientoDate = new Date(fechaVencimiento);
-            
-            if (fechaVencimientoDate < fechaActual) {
-                // Mostrar alerta personalizada
-                AlertMessage("La fecha de vencimiento no puede ser menor que la fecha actual.", "error");
-                return;
-            }
+              // Validar la fecha de vencimiento solo si el checkbox está seleccionado
+                var fechaVencimientoCheckbox = $('#habilitar_fecha');
+                if (fechaVencimientoCheckbox.is(':checked')) {
+                    if (!fechaVencimiento || fechaVencimiento.trim() === "") {
+                        // Mostrar alerta personalizada
+                        AlertMessage("Por favor, ingrese una fecha de vencimiento válida.", "error");
+                        return;
+                    }
+
+                    // Validar que la fecha de vencimiento no sea menor que la fecha actual
+                    var fechaActual = new Date();
+                    var fechaVencimientoDate = new Date(fechaVencimiento);
+
+                    if (fechaVencimientoDate < fechaActual) {
+                        // Mostrar alerta personalizada
+                        AlertMessage("La fecha de vencimiento no puede ser menor que la fecha actual.", "error");
+                        return;
+                    }
+                }
 
             // Calcular la diferencia en milisegundos entre la fecha de vencimiento y la fecha actual
             var diferenciaFechas = fechaVencimientoDate - fechaActual;
