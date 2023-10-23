@@ -11,72 +11,64 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Periodo;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 
 class InventarioController extends Controller
 {
     public function index(Request $request)
-    {
-        try {
-            $diasVencimiento = 0;
+{
+    try {
+        // Obtener todos los periodos
+        $periodos = Periodo::all();
 
-            // Obtener todos los periodos
-            $periodos = Periodo::all();
-            
-            // Obtener productos con relación a los periodos y detalles de compra
-            $productos = Producto::with(['periodo', 'detalle_compras']);
+        // Obtener una consulta base de productos con las relaciones necesarias
+        $productos = Producto::with(['periodo', 'detalle_compras', 'estante', 'medida']);
 
-            // Verificar si se ha enviado un filtro por periodo
-            if ($request->has('periodo') && $request->input('periodo') !== 'Seleccionar...') {
-                $periodoId = $request->input('periodo');
-                $productos = $productos->whereHas('periodo', function ($query) use ($periodoId) {
-                    $query->where('periodo_id', $periodoId);
-                });
-            }
-
-            // Verificar si se ha enviado un filtro por nombre
-            if ($request->has('nombre') && $request->input('nombre') !== 'Seleccionar...') {
-                $nombre = $request->input('nombre');
-                $productos = $productos->where('nombre', $nombre);
-            }
-
-            // Verificar si se ha enviado un filtro por fecha de vencimiento
-            if ($request->has('vencimiento') && $request->input('vencimiento') !== 'Seleccionar...') {
-                $vencimiento = $request->input('vencimiento');
-                $productos = $productos->whereHas('detalle_compras', function ($query) use ($vencimiento) {
-                    $query->whereDate('fecha_vencimiento', $vencimiento);
-                });
-            }
-
-            // Obtener todos los nombres de productos
-            $productosNombre = Producto::pluck('nombre')->unique();
-
-            // Obtener todas las fechas de vencimiento sin repetirse
-            $fechasVencimiento = DetalleCompra::whereNotNull('fecha_vencimiento')
-                ->pluck('fecha_vencimiento')
-                ->unique()
-                ->map(function ($fecha) {
-                    return Carbon::parse($fecha)->format('Y-m-d');
-                });
-
-            // Obtener los productos filtrados
-            $productosFiltrados = $productos->get();
-
-            $productosConPocaExistencia = $productosFiltrados->contains(function ($producto) {
-                return $producto->cantidad <= 10;
+        // Filtrar productos
+        $productosFiltrados = $productos->when($request->filled('periodo') && $request->input('periodo') !== 'MostrarTodos', function ($query) use ($request) {
+            return $query->whereHas('periodo', function ($subquery) use ($request) {
+                $subquery->where('periodo_id', $request->input('periodo'));
             });
-        
-            $productosConVencimientoCercano = $productosFiltrados->contains(function ($producto) {
-                // Verificar si algún detalle de compra cumple con la condición
-                return $producto->detalle_compras->contains(function ($detalle) {
-                    $diasVencimiento = $detalle->fecha_vencimiento ? now()->diffInDays($detalle->fecha_vencimiento, false) : null;
-                    return $diasVencimiento !== null && $diasVencimiento <= 10;
-                });
+        })->when($request->filled('nombre') && $request->input('nombre') !== 'MostrarTodos', function ($query) use ($request) {
+            return $query->where('nombre', $request->input('nombre'));
+        })->when($request->filled('vencimiento') && $request->input('vencimiento') !== 'MostrarTodos', function ($query) use ($request) {
+            return $query->whereHas('detalle_compras', function ($subquery) use ($request) {
+                $subquery->whereNotNull('fecha_vencimiento')->whereDate('fecha_vencimiento', $request->input('vencimiento'));
+            });
+        })->get();
+
+        // Obtener todos los nombres de productos
+        $productosNombre = Producto::pluck('nombre')->unique();
+
+        // Obtener todas las fechas de vencimiento sin repetirse
+        $fechasVencimiento = DetalleCompra::whereNotNull('fecha_vencimiento')
+            ->pluck('fecha_vencimiento')
+            ->unique()
+            ->map(function ($fecha) {
+                return Carbon::parse($fecha)->format('Y-m-d');
             });
 
-            return view('inventario.index', compact('periodos', 'productosNombre', 'productosFiltrados', 'productosConPocaExistencia', 'productosConVencimientoCercano', 'fechasVencimiento', 'diasVencimiento'));
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-            return redirect()->route('inventario')->with('error', 'Error al cargar la página de productos');
-        }
+        // Verificar existencia y vencimiento cercano
+        $productosConPocaExistencia = $productosFiltrados->contains(function ($producto) {
+            return $producto->detalle_compras->first()->cantidad <= 10;
+        });
+
+        $productosConVencimientoCercano = $productosFiltrados->contains(function ($producto) {
+            return $producto->detalle_compras->contains(function ($detalle) {
+                $diasVencimiento = optional($detalle->fecha_vencimiento)->diffInDays(now(), false);
+                return $diasVencimiento !== null && $diasVencimiento <= 10;
+            });
+        });
+
+        // Obtener todos los detalles de compras asociados a los productos filtrados
+        $detallesCompras = DetalleCompra::whereIn('producto_id', $productosFiltrados->pluck('producto_id'))->get();
+
+
+        return view('inventario.index', compact('periodos', 'productosNombre', 'productosFiltrados', 'productosConPocaExistencia', 'productosConVencimientoCercano', 'fechasVencimiento', 'detallesCompras'));
+    } catch (\Exception $e) {
+        Log::error($e->getMessage());
+        return redirect()->route('inventario')->with('error', 'Error al cargar la página de productos');
     }
+}
+
 }

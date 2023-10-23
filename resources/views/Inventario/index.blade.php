@@ -37,6 +37,7 @@
 @endsection
 
 @section('contenido')
+
     <div class="card mt-3">
         <h5 class="card-header">Administración de inventario de productos</h5>
         <div class="card-body">
@@ -118,58 +119,70 @@
                             <th class="border-bottom-0">
                                 <b>Unidad de medida</b>
                             </th>
+                            <th>
+                                <b>Acciones</b>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($productosFiltrados as $producto)
-                            @php
-                                $diasParaVencimiento = null;
+                        @php
+                            $diasParaVencimiento = null;
                         
-                                if ($producto->detalle_compras->first()->fecha_vencimiento) {
-                                    $diasParaVencimiento = now()->diffInDays($producto->detalle_compras->first()->fecha_vencimiento, false);
-                                }
-                            @endphp
-                        
-                            <tr 
-                                @if($producto->detalle_compras->first()->cantidad <= 10) 
-                                    class="baja-existencia"
+                            if ($producto->detalle_compras->first()->fecha_vencimiento) {
+                                $diasParaVencimiento = now()->diffInDays($producto->detalle_compras->first()->fecha_vencimiento, false);
+                            }
+                        @endphp
+                    
+                        <tr 
+                            @if($producto->detalle_compras->first()->cantidad <= 10) 
+                                class="baja-existencia"
+                            @endif
+                            @if ($diasParaVencimiento !== null && $diasParaVencimiento <= 10) 
+                                class="vencimiento-cercano"
+                            @endif
+                        >
+                            <td class="border-bottom-0">
+                                {{ $producto->nombre }}
+                            </td>
+                    
+                            <!-- Agrega esta celda para mostrar la imagen -->
+                            <td class="border-bottom-0">
+                                <img src="{{ asset('storage/upload/productos/' . $producto->first()->img_path) }}" alt="{{ $producto->nombre }}" class="img-thumbnail" width="100">
+                            </td>
+                    
+                            <td class="border-bottom-0">
+                                {{ $producto->cantidad }}
+                            </td>
+                    
+                            <td class="border-bottom-0">
+                                {{ $producto->periodo->fecha_inicio->format('Y-m-d') }} - {{ $producto->periodo->fecha_fin->format('Y-m-d') }}
+                            </td>
+                    
+                            <td class="border-bottom-0">
+                                @if($producto->detalle_compras->first()->fecha_vencimiento)
+                                    {{ date('d/m/Y', strtotime($producto->detalle_compras->first()->fecha_vencimiento)) }}
                                 @endif
-                                @if ($diasParaVencimiento !== null && $diasParaVencimiento <= 10) 
-                                    class="vencimiento-cercano"
-                                @endif
-                            >
-                                <td class="border-bottom-0">
-                                    {{ $producto->nombre }}
-                                </td>
-                        
-                                <!-- Agrega esta celda para mostrar la imagen -->
-                                <td class="border-bottom-0">
-                                    <img src="{{ asset('storage/upload/productos/' . $producto->first()->img_path) }}" alt="{{ $producto->nombre }}" class="img-thumbnail" width="100">
-                                </td>
-                        
-                                <td class="border-bottom-0">
-                                    {{ $producto->detalle_compras->first()->cantidad }}
-                                </td>
-                        
-                                <td class="border-bottom-0">
-                                    {{ $producto->periodo->fecha_inicio->format('Y-m-d') }} - {{ $producto->periodo->fecha_fin->format('Y-m-d') }}
-                                </td>
-                        
-                                <td class="border-bottom-0">
-                                    @if($producto->detalle_compras->first()->fecha_vencimiento)
-                                        {{ date('d/m/Y', strtotime($producto->detalle_compras->first()->fecha_vencimiento)) }}
-                                    @endif
-                                </td>
-                        
-                                <td class="border-bottom-0">
-                                    {{ $producto->estante->estante }}
-                                </td>
-                        
-                                <td class="border-bottom-0">
-                                    {{ $producto->medida->nombre }}
-                                </td>
-                            </tr>
-                        @endforeach
+                            </td>
+                    
+                            <td class="border-bottom-0">
+                                {{ $producto->estante->estante }}
+                            </td>
+                    
+                            <td class="border-bottom-0">
+                                {{ $producto->medida->nombre }}
+                            </td>
+                    
+                            <td style="height:auto !important;">
+                                <div class="d-flex gap-2">
+                                    <button type="button" class="btn btn-warning" onclick="openModal('{{ $producto->producto_id }}')">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
             </div>
@@ -189,10 +202,59 @@
             </div>
         </div>
     </div>
+
+
+
+    <!-- Modal para los lotes -->
+@foreach ($productosFiltrados as $producto)
+<div class="modal fade" id="lotesModal{{ $producto->producto_id }}" tabindex="-1" aria-labelledby="lotesModalLabel{{ $producto->producto_id  }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="lotesModalLabel{{ $producto->producto_id }}">Lotes de {{ $producto->nombre }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Número de Lote</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <!-- Agrega más columnas si es necesario -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($producto->detalle_compras as $detalleCompra)
+                            <tr>
+                                <td>{{ $detalleCompra->numero_lote }}</td>
+                                <td>{{ $detalleCompra->cantidad }}</td>
+                                <td>{{ number_format($detalleCompra->precioUnitario, 2) }}</td>
+                                <!-- Agrega más columnas si es necesario -->
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
+
+
 @endsection
 
 @section('AfterScript')
     <script>
+         function openModal(productId) {
+            var modalId = '#lotesModal' + productId;
+            $(modalId).modal('show');
+        }
+
         $(document).ready(function() {
             // Obtén el valor del periodo seleccionado de la URL
             var selectedPeriodo = "{{ request('periodo') }}";

@@ -107,7 +107,7 @@ class Producto extends Model
 
 	public function detalle_compras()
 	{
-		return $this->hasMany(DetalleCompra::class, 'detalle_compra_id');
+		return $this->hasMany(DetalleCompra::class, 'producto_id');
 	}
 
 	public function detalle_ventas()
