@@ -147,12 +147,14 @@
                 </div>
 
                 <!-- Columna para el botón "Finalizar Venta" -->
-                <div class="col-md-4">
-                    <div class="mb-3">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <div class="mb-3 mt-2">
                         <button type="button" class="btn btn-primary" id="finalizar-venta" disabled>Finalizar
                             Venta</button>
-                    </div>
+                        </div>
                 </div>
+
+
             </div>
         </div>
     </div>
@@ -167,7 +169,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Opciones:</label>
+                        <label class="mb-2">Opciones:</label>
                         <div class="form-check">
                             <input type="radio" class="form-check-input" id="cambiarManual" name="opcionPrecio"
                                 value="cambiarManual">
@@ -183,9 +185,9 @@
                                 value="mismoPrecio">
                             <label class="form-check-label" for="mismoPrecio">Vender al mismo precio</label>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mt-3 mb-2">
                             <label for="porcentajeGanancia">Porcentaje de Ganancia:</label>
-                            <select class="form-control" id="porcentajeGanancia" name="porcentajeGanancia" disabled>
+                            <select class="form-control mt-1" id="porcentajeGanancia" name="porcentajeGanancia" disabled>
                                 <option value="0.10">10%</option>
                                 <option value="0.20">20%</option>
                                 <option value="0.30">30%</option>
@@ -217,8 +219,8 @@
                     </table>
                 </div>
                 <div class="pb-5 text-center">
-                    <button type="button" id="agregar-lista" class="btn btn-primary">Agregar a la Lista</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" id="agregar-lista" class="btn btn-primary me-2">Agregar a la lista</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
 
                 </div>
             </div>
