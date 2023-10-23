@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use App\Models\Producto;
+use Illuminate\Support\Facades\DB;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -40,6 +41,8 @@ class AuthenticatedSessionController extends Controller
             $request->session()->put('productosAdvertencia', $advertenciaProductos);
         }
 
+        DB::statement('CALL SP_VALIDAR_FECHA_VENCIMIENTO()');
+
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 
@@ -56,6 +59,4 @@ class AuthenticatedSessionController extends Controller
 
         return redirect('/');
     }
-
-
 }

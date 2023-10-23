@@ -4,8 +4,8 @@
 @section('afterCss')
     <style>
         .pocos_productos>* {
-            --bs-table-accent-bg: rgb(255, 97, 97) !important;
-            color: white !important;
+            --bs-table-accent-bg: rgb(255, 185, 185) !important;
+            color: rgb(45, 45, 45) !important;
         }
     </style>
 @endsection
