@@ -49,7 +49,7 @@
                     <!-- Columna para la fecha de vencimiento -->
                     <div class="col-md-4">
                         <div class="mb-3">
-                            <label for="fecha_vencimiento" class="form-label">Fecha de Vencimiento:</label>
+                            <label for="fecha_vencimiento" class="form-label">Fecha de vencimiento:</label>
                             <div class="input-group">
                                 <input type="date" class="form-control @error('fecha_vencimiento') is-invalid @enderror"
                                     id="fecha_vencimiento" name="fecha_vencimiento" disabled>
