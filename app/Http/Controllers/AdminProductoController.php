@@ -155,7 +155,6 @@ class AdminProductoController extends Controller
 
         try {
 
-
             //Proveedores de la db
             $proveedores = Usuario::whereHas('detalle_roles', function ($query) {
                 $query->where('role_id', 5);
@@ -202,9 +201,9 @@ class AdminProductoController extends Controller
                 return redirect()->route('productos')->with('error', 'Producto no encontrado');
             }
 
-            // Define las reglas de validación
+            // // Define las reglas de validación
             $rules = [
-                'nombre_opcion' => 'required|unique:productos,nombre,' . $id,
+                'nombre_opcion' => 'required|unique:productos,nombre,' . $id . ',producto_id',
                 'descripcion_opcion' => 'required',
                 'imagenProducto' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Ajusta las reglas de validación según tus necesidades
             ];
@@ -257,7 +256,7 @@ class AdminProductoController extends Controller
 
             return redirect()->route('productos')->with('success', 'Producto actualizado con éxito.');
         } catch (\Throwable $th) {
-            return redirect()->route('productos')->with('error', 'Sucedio un error al actualizar el producto, todos los campos deben ser correctos');
+            return redirect()->route('productos')->with('error', 'Sucedio un error al actualizar el producto, todos los campos deben ser correctos' . $th->getMessage());
         }
     }
 
