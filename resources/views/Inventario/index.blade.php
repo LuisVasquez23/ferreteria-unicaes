@@ -97,8 +97,8 @@
                             @php
                                 $diasParaVencimiento = null;
                         
-                                if ($producto->fecha_vencimiento) {
-                                    $diasParaVencimiento = now()->diffInDays($producto->fecha_vencimiento, false);
+                                if ($producto->detalle_compras->fecha_vencimiento) {
+                                    $diasParaVencimiento = now()->diffInDays($producto->detalle_compras->fecha_vencimiento, false);
                                 }
                             @endphp
                         
@@ -128,8 +128,8 @@
                                 </td>
                         
                                 <td class="border-bottom-0">
-                                    @if($producto->fecha_vencimiento)
-                                        {{ date('d/m/Y', strtotime($producto->fecha_vencimiento)) }}
+                                    @if($producto->detalle_compras->fecha_vencimiento)
+                                        {{ date('d/m/Y', strtotime($producto->detalle_compras->fecha_vencimiento)) }}
                                     @endif
                                 </td>
                         
@@ -143,10 +143,6 @@
                             </tr>
                         @endforeach
                     </tbody>
-                    
-                    
-                    
-                    
                     
                     
                     

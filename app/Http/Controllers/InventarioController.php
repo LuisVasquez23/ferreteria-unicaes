@@ -20,7 +20,7 @@ class InventarioController extends Controller
             $periodos = Periodo::all();
 
             // Obtener productos con relación a los periodos
-            $productos = Producto::with('periodo');
+            $productos = Producto::with(['periodo' , 'detalle_compras']);
 
             // Verificar si se ha enviado un filtro por periodo
             if ($request->has('periodo') && $request->input('periodo') !== 'Seleccionar...') {
@@ -32,8 +32,8 @@ class InventarioController extends Controller
             $productosNombre = Producto::pluck('nombre')->unique();
 
             // Obtener todas las fechas de vencimiento sin repetirse
-            $fechasVencimiento = Producto::whereNotNull('fecha_vencimiento')
-                ->pluck('fecha_vencimiento')
+            $fechasVencimiento = Producto::whereNotNull('detalle_compras.fecha_vencimiento')
+                ->pluck('detalle_compras.fecha_vencimiento')
                 ->unique()
                 ->map(function ($fecha) {
                     return Carbon::parse($fecha)->format('Y-m-d');
