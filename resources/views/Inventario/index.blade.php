@@ -3,11 +3,13 @@
 
 @section('afterCss')
     <style>
-        .vencimiento-cercano > * , .baja-existencia > *{
-            background-color: #ffece6 !important;
-            --bs-table-accent-bg: #ffd8d8 !important;
+        .vencimiento-cercano>*,
+        {
+        background-color: #ffece6 !important;
+        --bs-table-accent-bg: #ffd8d8 !important;
         }
-        .vencimiento-cercano > *{
+
+        .baja-existencia>* {
             background-color: #FFF3E6 !important;
             --bs-table-accent-bg: #FFF3E6 !important;
         }
@@ -25,14 +27,13 @@
             vertical-align: middle;
         }
 
-        .card-content{
+        .card-content {
             display: flex;
             justify-content: start;
             align-items: center;
             margin: 10px;
             margin-bottom: 20px
         }
-
     </style>
 @endsection
 
@@ -47,7 +48,8 @@
                     <select id="filtro-periodo" class="form-select">
                         <option value="MostrarTodos">Mostrar todos</option>
                         @foreach ($periodos as $periodo)
-                            <option value="{{ $periodo->periodo_id }}">{{ $periodo->fecha_inicio->format('Y-m-d') }} - {{ $periodo->fecha_fin->format('Y-m-d') }}</option>
+                            <option value="{{ $periodo->periodo_id }}">{{ $periodo->fecha_inicio->format('Y-m-d') }} -
+                                {{ $periodo->fecha_fin->format('Y-m-d') }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -57,7 +59,8 @@
                     <select id="filtro-nombre" class="form-select">
                         <option value="MostrarTodos">Mostrar todos</option>
                         @foreach ($productosNombre as $nombre)
-                            <option value="{{ $nombre }}" @if(request('nombre') == $nombre) selected @endif>{{ $nombre }}</option>
+                            <option value="{{ $nombre }}" @if (request('nombre') == $nombre) selected @endif>
+                                {{ $nombre }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -67,7 +70,8 @@
                     <select id="filtro-vencimiento" class="form-select">
                         <option value="MostrarTodos">Mostrar todos</option>
                         @foreach ($fechasVencimiento as $fecha)
-                            <option value="{{ $fecha }}" @if(request('vencimiento') == $fecha) selected @endif>{{ $fecha }}</option>
+                            <option value="{{ $fecha }}" @if (request('vencimiento') == $fecha) selected @endif>
+                                {{ $fecha }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -76,19 +80,19 @@
             @if ($productosConPocaExistencia || $productosConVencimientoCercano)
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
                     <strong>¡Advertencia!</strong>
-                    
+
                     @if ($productosConPocaExistencia)
                         Hay productos con existencia baja.
                     @endif
-            
+
                     @if ($productosConPocaExistencia && $productosConVencimientoCercano)
                         Además,
                     @endif
-            
+
                     @if ($productosConVencimientoCercano)
                         Hay productos con fecha de vencimiento cercana.
                     @endif
-            
+
                     <a href="/compras" class="btn btn-warning btn-sm ml-2 ms-1">Ir a Compras</a>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
@@ -126,63 +130,61 @@
                     </thead>
                     <tbody>
                         @foreach ($productosFiltrados as $producto)
-                        @php
-                            $diasParaVencimiento = null;
-                        
-                            if ($producto->detalle_compras->first()->fecha_vencimiento) {
-                                $diasParaVencimiento = now()->diffInDays($producto->detalle_compras->first()->fecha_vencimiento, false);
-                            }
-                        @endphp
-                    
-                        <tr 
-                            @if($producto->detalle_compras->first()->cantidad <= 10) 
-                                class="baja-existencia"
-                            @endif
-                            @if ($diasParaVencimiento !== null && $diasParaVencimiento <= 10) 
-                                class="vencimiento-cercano"
-                            @endif
-                        >
-                            <td class="border-bottom-0">
-                                {{ $producto->nombre }}
-                            </td>
-                    
-                            <!-- Agrega esta celda para mostrar la imagen -->
-                            <td class="border-bottom-0">
-                                <img src="{{ asset('storage/upload/productos/' . $producto->first()->img_path) }}" alt="{{ $producto->nombre }}" class="img-thumbnail" width="100">
-                            </td>
-                    
-                            <td class="border-bottom-0">
-                                {{ $producto->cantidad }}
-                            </td>
-                    
-                            <td class="border-bottom-0">
-                                {{ $producto->periodo->fecha_inicio->format('Y-m-d') }} - {{ $producto->periodo->fecha_fin->format('Y-m-d') }}
-                            </td>
-                    
-                            <td class="border-bottom-0">
-                                @if($producto->detalle_compras->first()->fecha_vencimiento)
-                                    {{ date('d/m/Y', strtotime($producto->detalle_compras->first()->fecha_vencimiento)) }}
-                                @endif
-                            </td>
-                    
-                            <td class="border-bottom-0">
-                                {{ $producto->estante->estante }}
-                            </td>
-                    
-                            <td class="border-bottom-0">
-                                {{ $producto->medida->nombre }}
-                            </td>
-                    
-                            <td style="height:auto !important;">
-                                <div class="d-flex gap-2">
-                                    <button type="button" class="btn btn-warning" onclick="openModal('{{ $producto->producto_id }}')">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </button>
-                                    
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
+                            @php
+                                $diasParaVencimiento = null;
+
+                                if ($producto->detalle_compras->first()->fecha_vencimiento) {
+                                    $diasParaVencimiento = now()->diffInDays($producto->detalle_compras->first()->fecha_vencimiento, false);
+                                }
+                            @endphp
+
+                            <tr @if ($producto->cantidad <= 10) class="baja-existencia" @endif
+                                @if ($diasParaVencimiento !== null && $diasParaVencimiento <= 10) class="vencimiento-cercano" @endif>
+
+                                <td class="border-bottom-0">
+                                    {{ $producto->nombre }}
+                                </td>
+
+                                <!-- Agrega esta celda para mostrar la imagen -->
+                                <td class="border-bottom-0">
+                                    <img src="{{ asset('storage/upload/productos/' . $producto->first()->img_path) }}"
+                                        alt="{{ $producto->nombre }}" class="img-thumbnail" width="100">
+                                </td>
+
+                                <td class="border-bottom-0">
+                                    {{ $producto->cantidad }}
+                                </td>
+
+                                <td class="border-bottom-0">
+                                    {{ $producto->periodo->fecha_inicio->format('Y-m-d') }} -
+                                    {{ $producto->periodo->fecha_fin->format('Y-m-d') }}
+                                </td>
+
+                                <td class="border-bottom-0">
+                                    @if ($producto->detalle_compras->first()->fecha_vencimiento)
+                                        {{ date('d/m/Y', strtotime($producto->detalle_compras->first()->fecha_vencimiento)) }}
+                                    @endif
+                                </td>
+
+                                <td class="border-bottom-0">
+                                    {{ $producto->estante->estante }}
+                                </td>
+
+                                <td class="border-bottom-0">
+                                    {{ $producto->medida->nombre }}
+                                </td>
+
+                                <td style="height:auto !important;">
+                                    <div class="d-flex gap-2">
+                                        <button type="button" class="btn btn-warning"
+                                            onclick="openModal('{{ $producto->producto_id }}')">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </button>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -193,7 +195,7 @@
                         <div class="color-box" style="background-color: #ffd8d8;"></div>
                         <span class="description">Vencimiento cercano</span>
                     </div>
-                    
+
                     <div class="card-content">
                         <div class="color-box" style="background-color: #FFF3E6;"></div>
                         <span class="description">Poca cantidad de producto</span>
@@ -206,43 +208,45 @@
 
 
     <!-- Modal para los lotes -->
-@foreach ($productosFiltrados as $producto)
-<div class="modal fade" id="lotesModal{{ $producto->producto_id }}" tabindex="-1" aria-labelledby="lotesModalLabel{{ $producto->producto_id  }}" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="lotesModalLabel{{ $producto->producto_id }}">Lotes de {{ $producto->nombre }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Número de Lote</th>
-                            <th>Cantidad</th>
-                            <th>Precio Unitario</th>
-                            <!-- Agrega más columnas si es necesario -->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($producto->detalle_compras as $detalleCompra)
-                            <tr>
-                                <td>{{ $detalleCompra->numero_lote }}</td>
-                                <td>{{ $detalleCompra->cantidad }}</td>
-                                <td>{{ number_format($detalleCompra->precioUnitario, 2) }}</td>
-                                <!-- Agrega más columnas si es necesario -->
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+    @foreach ($productosFiltrados as $producto)
+        <div class="modal fade" id="lotesModal{{ $producto->producto_id }}" tabindex="-1"
+            aria-labelledby="lotesModalLabel{{ $producto->producto_id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="lotesModalLabel{{ $producto->producto_id }}">Lotes de
+                            {{ $producto->nombre }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Número de Lote</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio Unitario</th>
+                                    <!-- Agrega más columnas si es necesario -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($producto->detalle_compras as $detalleCompra)
+                                    <tr>
+                                        <td>{{ $detalleCompra->numero_lote }}</td>
+                                        <td>{{ $detalleCompra->cantidad }}</td>
+                                        <td>{{ number_format($detalleCompra->precioUnitario, 2) }}</td>
+                                        <!-- Agrega más columnas si es necesario -->
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-@endforeach
+    @endforeach
 
 
 
@@ -250,7 +254,7 @@
 
 @section('AfterScript')
     <script>
-         function openModal(productId) {
+        function openModal(productId) {
             var modalId = '#lotesModal' + productId;
             $(modalId).modal('show');
         }
@@ -306,7 +310,8 @@
 
                 // Agrega el parámetro de fecha de vencimiento solo si no es "MostrarTodos"
                 if (vencimiento !== "MostrarTodos") {
-                    url += ((periodo !== "MostrarTodos" || nombre !== "MostrarTodos") ? "&" : "?") + "vencimiento=" + vencimiento;
+                    url += ((periodo !== "MostrarTodos" || nombre !== "MostrarTodos") ? "&" : "?") +
+                        "vencimiento=" + vencimiento;
                 }
 
                 window.location.href = url;
