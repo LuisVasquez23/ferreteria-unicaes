@@ -6,7 +6,7 @@
     <div class="card mt-3">
         <h5 class="card-header">Administración de Reportes de Ventas</h5>
         <div class="card-body">
-            <form method="POST" action="{{ route('reportes.index') }}">
+            <form method="POST" action="{{ route('reporteVenta.index') }}">
                 @csrf
             
                 <div class="row mb-4">
