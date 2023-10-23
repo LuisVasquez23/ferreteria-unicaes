@@ -1,16 +1,50 @@
-@extends('layouts/dashboard')
+@extends('layouts.dashboard')
 @section('title', 'Inventario de productos')
-@section('contenido')
 
+@section('afterCss')
+    <style>
+        .vencimiento-cercano > * , .baja-existencia > *{
+            background-color: #ffece6 !important;
+            --bs-table-accent-bg: #ffd8d8 !important;
+        }
+        .vencimiento-cercano > *{
+            background-color: #FFF3E6 !important;
+            --bs-table-accent-bg: #FFF3E6 !important;
+        }
+
+        .color-box {
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        /* Estilos para los textos de descripción */
+        .description {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .card-content{
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            margin: 10px;
+            margin-bottom: 20px
+        }
+
+    </style>
+@endsection
+
+@section('contenido')
     <div class="card mt-3">
         <h5 class="card-header">Administración de inventario de productos</h5>
         <div class="card-body">
-
             <div class="row">
                 <div class="col-md-4 mx-auto text-center mb-3">
                     <label class="mb-2" for="filtro-periodo">Filtrar por Periodo:</label>
                     <select id="filtro-periodo" class="form-select">
-                        <option>Seleccionar...</option>
+                        <option value="MostrarTodos">Mostrar todos</option>
                         @foreach ($periodos as $periodo)
                             <option value="{{ $periodo->periodo_id }}">{{ $periodo->fecha_inicio->format('Y-m-d') }} - {{ $periodo->fecha_fin->format('Y-m-d') }}</option>
                         @endforeach
@@ -20,7 +54,7 @@
                 <div class="col-md-4 mx-auto text-center mb-3">
                     <label class="mb-2" for="filtro-nombre">Filtrar por Nombre:</label>
                     <select id="filtro-nombre" class="form-select">
-                        <option>Seleccionar...</option>
+                        <option value="MostrarTodos">Mostrar todos</option>
                         @foreach ($productosNombre as $nombre)
                             <option value="{{ $nombre }}" @if(request('nombre') == $nombre) selected @endif>{{ $nombre }}</option>
                         @endforeach
@@ -30,40 +64,34 @@
                 <div class="col-md-4 mx-auto text-center mb-3">
                     <label class="mb-2" for="filtro-vencimiento">Filtrar por Fecha de Vencimiento:</label>
                     <select id="filtro-vencimiento" class="form-select">
-                        <option>Seleccionar...</option>
+                        <option value="MostrarTodos">Mostrar todos</option>
                         @foreach ($fechasVencimiento as $fecha)
                             <option value="{{ $fecha }}" @if(request('vencimiento') == $fecha) selected @endif>{{ $fecha }}</option>
                         @endforeach
                     </select>
                 </div>
-                
             </div>
 
-            @if($productosFiltrados->contains(function ($producto) { 
-                $diasParaVencimiento = $producto->fecha_vencimiento ? now()->diffInDays($producto->fecha_vencimiento, false) : null;
-                return $producto->cantidad <= 10 || ($diasParaVencimiento !== null && $diasParaVencimiento <= 10);
-            }))
+            @if ($productosConPocaExistencia || $productosConVencimientoCercano)
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
                     <strong>¡Advertencia!</strong>
-                    @if($productosFiltrados->contains(function ($producto) { return $producto->cantidad <= 10; }))
+                    
+                    @if ($productosConPocaExistencia)
                         Hay productos con existencia baja.
                     @endif
             
-                    @if($productosFiltrados->contains(function ($producto) { 
-                        $diasParaVencimiento = $producto->fecha_vencimiento ? now()->diffInDays($producto->fecha_vencimiento, false) : null;
-                        return $diasParaVencimiento !== null && $diasParaVencimiento <= 10;
-                    }))
-                        @if($productosFiltrados->contains(function ($producto) { return $producto->cantidad <= 10; })) 
-                            Además,
-                        @endif
-                        hay productos con fecha de vencimiento cercana.
+                    @if ($productosConPocaExistencia && $productosConVencimientoCercano)
+                        Además,
+                    @endif
+            
+                    @if ($productosConVencimientoCercano)
+                        Hay productos con fecha de vencimiento cercana.
                     @endif
             
                     <a href="/compras" class="btn btn-warning btn-sm ml-2 ms-1">Ir a Compras</a>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
-            
 
             <div class="table-responsive">
                 <table id="miTabla" class="table text-nowrap mb-0 align-middle table-striped table-bordered">
@@ -97,13 +125,13 @@
                             @php
                                 $diasParaVencimiento = null;
                         
-                                if ($producto->detalle_compras->fecha_vencimiento) {
-                                    $diasParaVencimiento = now()->diffInDays($producto->detalle_compras->fecha_vencimiento, false);
+                                if ($producto->detalle_compras->first()->fecha_vencimiento) {
+                                    $diasParaVencimiento = now()->diffInDays($producto->detalle_compras->first()->fecha_vencimiento, false);
                                 }
                             @endphp
                         
                             <tr 
-                                @if($producto->cantidad <= 10) 
+                                @if($producto->detalle_compras->first()->cantidad <= 10) 
                                     class="baja-existencia"
                                 @endif
                                 @if ($diasParaVencimiento !== null && $diasParaVencimiento <= 10) 
@@ -116,11 +144,11 @@
                         
                                 <!-- Agrega esta celda para mostrar la imagen -->
                                 <td class="border-bottom-0">
-                                    <img src="{{ asset('storage/upload/productos/' . $producto->img_path) }}" alt="{{ $producto->nombre }}" class="img-thumbnail" width="100">
+                                    <img src="{{ asset('storage/upload/productos/' . $producto->first()->img_path) }}" alt="{{ $producto->nombre }}" class="img-thumbnail" width="100">
                                 </td>
                         
                                 <td class="border-bottom-0">
-                                    {{ $producto->cantidad }}
+                                    {{ $producto->detalle_compras->first()->cantidad }}
                                 </td>
                         
                                 <td class="border-bottom-0">
@@ -128,8 +156,8 @@
                                 </td>
                         
                                 <td class="border-bottom-0">
-                                    @if($producto->detalle_compras->fecha_vencimiento)
-                                        {{ date('d/m/Y', strtotime($producto->detalle_compras->fecha_vencimiento)) }}
+                                    @if($producto->detalle_compras->first()->fecha_vencimiento)
+                                        {{ date('d/m/Y', strtotime($producto->detalle_compras->first()->fecha_vencimiento)) }}
                                     @endif
                                 </td>
                         
@@ -143,89 +171,84 @@
                             </tr>
                         @endforeach
                     </tbody>
-                    
-                    
-                    
-                    
                 </table>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 d-flex ">
+                    <div class="card-content">
+                        <div class="color-box" style="background-color: #ffd8d8;"></div>
+                        <span class="description">Vencimiento cercano</span>
+                    </div>
+                    
+                    <div class="card-content">
+                        <div class="color-box" style="background-color: #FFF3E6;"></div>
+                        <span class="description">Poca cantidad de producto</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-    <style>
-        .baja-existencia {
-            background-color: #FFE6E6 !important;
-        }
-    
-        .vencimiento-cercano {
-            outline: 2px solid #E0BA79;
-            background-color: #FFF3E6 !important;
-        }
-    </style>
 @endsection
 
 @section('AfterScript')
-
     <script>
- $(document).ready(function() {
-    // Obtén el valor del periodo seleccionado de la URL
-    var selectedPeriodo = "{{ request('periodo') }}";
-    // Obtén el valor del nombre de producto seleccionado de la URL
-    var selectedNombre = "{{ request('nombre') }}";
-    // Obtén el valor de la fecha de vencimiento seleccionada de la URL
-    var selectedVencimiento = "{{ request('vencimiento') }}";
+        $(document).ready(function() {
+            // Obtén el valor del periodo seleccionado de la URL
+            var selectedPeriodo = "{{ request('periodo') }}";
+            // Obtén el valor del nombre de producto seleccionado de la URL
+            var selectedNombre = "{{ request('nombre') }}";
+            // Obtén el valor de la fecha de vencimiento seleccionada de la URL
+            var selectedVencimiento = "{{ request('vencimiento') }}";
 
-    // Establece el valor seleccionado en el filtro de periodo o deja "Seleccionar..." si no hay valor
-    $("#filtro-periodo").val(selectedPeriodo || "Seleccionar...");
+            // Establece el valor seleccionado en el filtro de periodo o deja "Seleccionar..." si no hay valor
+            $("#filtro-periodo").val(selectedPeriodo || "MostrarTodos");
 
-    // Establece el valor seleccionado en el filtro de nombre o deja "Seleccionar..." si no hay valor
-    $("#filtro-nombre").val(selectedNombre || "Seleccionar...");
+            // Establece el valor seleccionado en el filtro de nombre o deja "Seleccionar..." si no hay valor
+            $("#filtro-nombre").val(selectedNombre || "MostrarTodos");
 
-    // Establece el valor seleccionado en el filtro de fecha de vencimiento o deja "Seleccionar..." si no hay valor
-    $("#filtro-vencimiento").val(selectedVencimiento || "Seleccionar...");
+            // Establece el valor seleccionado en el filtro de fecha de vencimiento o deja "Seleccionar..." si no hay valor
+            $("#filtro-vencimiento").val(selectedVencimiento || "MostrarTodos");
 
-    // Maneja el cambio en el filtro de periodo
-    $("#filtro-periodo").on("change", function() {
-        updateUrlAndRedirect();
-    });
+            // Maneja el cambio en el filtro de periodo
+            $("#filtro-periodo").on("change", function() {
+                updateUrlAndRedirect();
+            });
 
-    // Maneja el cambio en el filtro de nombre
-    $("#filtro-nombre").on("change", function() {
-        updateUrlAndRedirect();
-    });
+            // Maneja el cambio en el filtro de nombre
+            $("#filtro-nombre").on("change", function() {
+                updateUrlAndRedirect();
+            });
 
-    // Maneja el cambio en el filtro de fecha de vencimiento
-    $("#filtro-vencimiento").on("change", function() {
-        updateUrlAndRedirect();
-    });
+            // Maneja el cambio en el filtro de fecha de vencimiento
+            $("#filtro-vencimiento").on("change", function() {
+                updateUrlAndRedirect();
+            });
 
-    // Función para construir la URL con los parámetros y redirigir
-    function updateUrlAndRedirect() {
-        var periodo = $("#filtro-periodo").val();
-        var nombre = $("#filtro-nombre").val();
-        var vencimiento = $("#filtro-vencimiento").val();
-        var url = "{{ route('inventario.index') }}";
+            // Función para construir la URL con los parámetros y redirigir
+            function updateUrlAndRedirect() {
+                var periodo = $("#filtro-periodo").val();
+                var nombre = $("#filtro-nombre").val();
+                var vencimiento = $("#filtro-vencimiento").val();
+                var url = "{{ route('inventario.index') }}";
 
-        // Agrega el parámetro de periodo solo si no es "Seleccionar..."
-        if (periodo !== "Seleccionar...") {
-            url += "?periodo=" + periodo;
-        }
+                // Agrega el parámetro de periodo solo si no es "MostrarTodos"
+                if (periodo !== "MostrarTodos") {
+                    url += "?periodo=" + periodo;
+                }
 
-        // Agrega el parámetro de nombre solo si no es "Seleccionar..."
-        if (nombre !== "Seleccionar...") {
-            url += (periodo !== "Seleccionar..." ? "&" : "?") + "nombre=" + nombre;
-        }
+                // Agrega el parámetro de nombre solo si no es "MostrarTodos"
+                if (nombre !== "MostrarTodos") {
+                    url += (periodo !== "MostrarTodos" ? "&" : "?") + "nombre=" + nombre;
+                }
 
-        // Agrega el parámetro de fecha de vencimiento solo si no es "Seleccionar..."
-        if (vencimiento !== "Seleccionar...") {
-            url += ((periodo !== "Seleccionar..." || nombre !== "Seleccionar...") ? "&" : "?") + "vencimiento=" + vencimiento;
-        }
+                // Agrega el parámetro de fecha de vencimiento solo si no es "MostrarTodos"
+                if (vencimiento !== "MostrarTodos") {
+                    url += ((periodo !== "MostrarTodos" || nombre !== "MostrarTodos") ? "&" : "?") + "vencimiento=" + vencimiento;
+                }
 
-        window.location.href = url;
-    }
-});
-
+                window.location.href = url;
+            }
+        });
     </script>
-
 @endsection
-

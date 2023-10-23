@@ -30,6 +30,8 @@
         crossorigin="anonymous"
         referrerpolicy="no-referrer" />
 
+        @yield('afterCss')
+
 </head>
 
 <body>

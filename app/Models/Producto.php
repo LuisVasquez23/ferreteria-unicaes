@@ -73,7 +73,6 @@ class Producto extends Model
 		'unidad_medida_id',
 		'periodo_id',
 		'creado_por',
-		'fecha_vencimiento',
 		'fecha_creacion',
 		'actualizado_por',
 		'fecha_actualizacion',
