@@ -33,7 +33,7 @@
 
     .factura-position {
         position: relative;
-        top: -100px; 
+        top: -85px; 
         left: 420px
     }
 

@@ -22,6 +22,8 @@ class DetalleCompra extends Model
         'fecha_creacion' => 'datetime',
         'fecha_actualizacion' => 'datetime',
         'fecha_bloqueo' => 'datetime',
+        'created_at' => 'datetime', // Agregar esta línea
+        'updated_at' => 'datetime'
     ];
 
     protected $fillable = [
@@ -37,6 +39,8 @@ class DetalleCompra extends Model
         'fecha_actualizacion',
         'bloqueado_por',
         'fecha_bloqueo',
+        'created_at', // Agregar esta línea
+        'updated_at'
     ];
 
     public function compra()

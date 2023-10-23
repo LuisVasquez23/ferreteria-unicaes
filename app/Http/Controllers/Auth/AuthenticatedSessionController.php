@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use App\Models\Producto;
+use Illuminate\Support\Facades\DB;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -30,15 +31,8 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-        $productos = Producto::with('periodo')->get();
-        $advertenciaProductos = $productos->filter(function ($producto) {
-            return $producto->cantidad <= 10;
-        });
 
-        if ($advertenciaProductos->isNotEmpty()) {
-            $request->session()->put('advertencia', 'Hay productos con baja existancia en el inventario.');
-            $request->session()->put('productosAdvertencia', $advertenciaProductos);
-        }
+        DB::statement('CALL SP_VALIDAR_FECHA_VENCIMIENTO()');
 
         return redirect()->intended(RouteServiceProvider::HOME);
     }
@@ -56,6 +50,4 @@ class AuthenticatedSessionController extends Controller
 
         return redirect('/');
     }
-
-
 }

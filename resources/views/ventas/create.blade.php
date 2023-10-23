@@ -11,14 +11,16 @@
 
                 <div class="row">
                     <!-- Columna para el número de factura -->
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="mb-3">
                             <label for="numero_factura" class="form-label">Número de Factura:</label>
                             <input type="number" class="form-control" id="numero_factura" name="numero_factura" required
                                 value="{{ old('numero_factura') }}">
+                                <div id="mensaje_errorF" style="color: red;"></div>
+
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="mb-3">
                             <label for="cliente_id" class="form-label">Cliente:</label>
                             <select class="form-select" id="cliente_id" name="cliente_id" required>
@@ -28,28 +30,31 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="mb-3">
-                            <label for="periodo_id" class="form-label">Período: *</label>
-                            <select name="periodo_id" id="periodo_id" class="form-select">
-                                @if ($periodos->isEmpty())
-                                    <option value="" disabled selected>No se encontraron períodos</option>
-                                @else
-                                    @foreach ($periodos as $periodo_id => $fecha_inicio)
-                                        <option value="{{ $periodo_id }}">
-                                            {{ \Carbon\Carbon::parse($fecha_inicio)->format('Y/m/d') }}
-                                        </option>
-                                    @endforeach
-                                @endif
-                            </select>
-                        </div>
-                    </div>
+                  
 
 
                 </div>
 
                 <div class="row">
                     <!-- Columna para seleccionar el producto -->
+                             <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="periodo_id" class="form-label">Período: *</label>
+                                    <select name="periodo_id" id="periodo_id" class="form-select">
+                                        @if ($periodos->isEmpty())
+                                            <option value="" disabled selected>No se encontraron períodos</option>
+                                        @else
+                                            @foreach ($periodos as $periodo_id => $fecha_inicio)
+                                                <option value="{{ $periodo_id }}">
+                                                    {{ \Carbon\Carbon::parse($fecha_inicio)->format('Y/m/d') }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+
+
                     <div class="col-md-4">
                         <div class="mb-3">
                             <label for="producto_id" class="form-label">Producto:</label>
@@ -68,20 +73,24 @@
                             <label for="cantidad" class="form-label">Cantidad:</label>
                             <input type="number" class="form-control" id="cantidad" name="cantidad" step="1"
                                 required min="1">
-                            <div class="invalid-feedback" id="error-cantidad"></div>
+                                <div id="mensaje_errorC" style="color: red;"></div>
                             <!-- Agregado para mostrar el mensaje de error -->
                         </div>
                     </div>
 
-                    <!-- Columna para el precio unitario -->
-                    <div class="col-md-4">
-                        <div class="mb-3 pt-4">
-                            <button type="button" class="btn btn-success" id="agregar-producto">Agregar Producto</button>
-                        </div>
-                    </div>
                 </div>
 
+                    <div class="row">
+                        <!-- Columna para el botón "Agregar Producto" -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <div class="mb-3 mt-2">
 
+                            <button type="button" class="btn btn-success" id="agregar-producto">Agregar Producto</button>
+                            <a href="{{ route('ventas') }}" class="btn btn-dark me-1 ms-2">Regresar</a>
+
+                            </div>
+                        </div>
+                    </div>      
 
                 <!-- Campo oculto para la lista de productos -->
                 <input type="hidden" name="lista_productos" id="lista_productos_input" value="">
@@ -149,16 +158,12 @@
     </div>
     <!-- HTML para el modal Bootstrap -->
     <div class="modal fade" id="jsonModal" tabindex="-1" role="dialog" aria-labelledby="jsonModalLabel"
-        aria-hidden="true">
+        aria-hidden="true" data-bs-backdrop="static" >
         <div class="modal-dialog modal-lg" role="document"> <!-- Agregando la clase modal-lg para hacerlo ancho -->
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="jsonModalLabel">Seleccion precio</h5>
-                    <button type="button" class="close" aria-label="Close" data-bs-dismiss="modal">
-                        <span aria-hidden="true">&times;</span>
-
-                    </button>
-
+        
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
@@ -213,6 +218,7 @@
                 </div>
                 <div class="pb-5 text-center">
                     <button type="button" id="agregar-lista" class="btn btn-primary">Agregar a la Lista</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
 
                 </div>
             </div>
@@ -233,6 +239,19 @@
             var montoTotal = 0;
             var ivaTotal = 0;
             var totalMasIVA = 0;
+
+            $('#jsonModal').on('hidden.bs.modal', function () {
+                // Vaciar la tabla
+                $('#jsonTable tbody').empty();
+                
+                // Seleccionar la opción por defecto en el grupo de radio buttons
+                $('#mantenerFijo').prop('checked', true);
+                
+                // Restablecer el valor del select a la primera opción
+                $('#porcentajeGanancia').val('0.10');
+
+            });
+
             //desahbilitar finalizar compra:
             function habilitarDeshabilitarBotonFinalizar() {
                 if (listaProductos.length > 0) {
@@ -252,19 +271,30 @@
                 var numeroFactura = $('#numero_factura').val();
                 var cantidadNueva = 0;
 
-
-                // Validación de número de factura no vacío
-                if (isNaN(cantidad) || cantidad <= 0) {
-                    // Mostrar alerta personalizada
-                    AlertMessage('La cantidad debe ser un número mayor que cero', 'error');
-                    return;
-                }
+            
 
                 // Validación de cantidad no vacía
                 if (isNaN(cantidad) || cantidad <= 0) {
                     // Mostrar alerta personalizada
                     AlertMessage('La cantidad debe ser un número mayor que cero', 'error');
+                    $('#cantidad').css('border', '1px solid red');
+                    $('#mensaje_errorC').text('Ingresa un valor valida para cantidad.');
+
+
                     return;
+                }else{
+                    $('#cantidad').css('border', '1px solid #ccc');
+                    $('#mensaje_errorC').text('');
+                }
+                if(isNaN(numeroFactura) || numeroFactura<=0){
+                        AlertMessage("El numero de factura debe ser valido es decir no vacio o mayor que cero", "error");                    $('.precio-sugerido').css('opacity', 0.2);
+                        $('#numero_factura').css('border', '1px solid red');
+                        $('#mensaje_errorF').text('Este no es un valor valido para la factura.');
+
+                        return; // mostrar alerta
+                }else{
+                    $('#numero_factura').css('border', '1px solid #ccc');
+                    $('#mensaje_errorF').text('');
                 }
 
 
@@ -381,8 +411,8 @@
                                 $('#jsonModal').modal('show');
                             } else {
                                 // Si no hay suficiente cantidad, muestra un mensaje al usuario
-                                AlertMessage('No hay suficiente stock, la cantidad disponible es: ' +
-                                    response.lotesDisponibles + ' productos', 'error');
+                                AlertMessage('No hay suficiente stock, la cantidad disponible es de: ' +
+                                    response.lotesDisponibles, 'error');
                             }
 
                         }
@@ -407,7 +437,6 @@
                     var productoNombre = $('#producto_id option:selected').text().split(' - Proveedor')[0];
 
                     var numeroFactura = $('#numero_factura').val();
-
                     // Validar los valores
                     if (isNaN(cantidad) || cantidad <= 0) {
                         AlertMessage('La cantidad debe ser un número mayor que cero', 'error');
@@ -418,7 +447,10 @@
                         AlertMessage("El precio unitario debe ser un número mayor que cero.", "error");
                         continue; // Salta a la siguiente iteración del bucle
                     }
-
+                    if(isNaN(numeroFactura) || numeroFactura <=0){
+                        AlertMessage("El numero de factura debe ser valido es decir no vacio o mayor que cero", "error");
+                        continue; // Salta a la siguiente iteración del bucle
+                    }
                     // Calcular el subtotal
                     var subtotal = cantidad * precioUnitario;
 
@@ -458,6 +490,13 @@
                 // Limpiar los campos de cantidad y precio unitario
                 $('#cantidad').val('');
                 $('#precio_unitario').val('');
+                $('#numero_factura').css('border', '1px solid #ccc');
+                $('#cantidad').css('border', '1px solid #ccc');
+                $('#mensaje_errorF').text('');
+                $('#mensaje_errorC').text('');
+
+
+
             }
 
 
@@ -660,18 +699,79 @@
                 });
             });
 
-            $('.precio-sugerido').on('change', '.precio-unitario', function() {
-                alert("llegue a validar precio sugerido")
-                var precioSugerido = parseFloat($(this).val());
-                var precioCompra = parseFloat($(this).closest('tr').find('.precio-unitario')
-                    .text()); // Ajusta según tu estructura HTML
+         
+                // Agregar un evento change a los elementos input con clase "precio-sugerido"
+          // Agregar un evento change a los elementos input con clase "precio-sugerido"
+            $('#jsonModal').on('change', 'input.precio-sugerido', function() {
+                var $input = $(this);
+                var precioSugerido = parseFloat($input.val());
+                var precioCompra = parseFloat($input.closest('tr').find('.precio-unitario').text());
 
-                if (precioSugerido < precioCompra) {
-                    // El precio sugerido es menor que el precio de compra, restablecerlo al precio de compra
-                    $(this).val(precioCompra.toFixed(2));
-                    AlertMessage('El precio no puede ser menor al que se compró', 'error');
+                if (precioSugerido < 0) {
+                    Swal.fire({
+                        title: 'Precio inválido',
+                        text: 'El precio no puede ser menor que cero. Por favor, ingresa un valor válido.',
+                        icon: 'error',
+                    });
+                    $input.val(precioCompra.toFixed(2)); // Restablecer al precio de compra
+                } else if (precioSugerido < precioCompra) {
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: 'El precio sugerido es menor que el precio de compra. ¿Deseas continuar?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí, continuar',
+                        cancelButtonText: 'No, corregir',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // El usuario confirmó, actualizar el valor del input
+                            var nuevoPrecioSugerido = parseFloat(Swal.getInput().value);
+                            $input.val(nuevoPrecioSugerido.toFixed(2));
+                        } else {
+                            // El usuario canceló, restablece el precio sugerido al precio de compra
+                            $input.val(precioCompra.toFixed(2));
+                        }
+                    });
                 }
             });
+
+              // Agregar un evento change a los elementos input con clase "precio-sugerido"
+              $('#jsonModal').on('focus', 'input.precio-sugerido', function() {
+                var $input = $(this);
+                var precioSugerido = parseFloat($input.val());
+                var precioCompra = parseFloat($input.closest('tr').find('.precio-unitario').text());
+
+                if (precioSugerido < 0) {
+                    Swal.fire({
+                        title: 'Precio inválido',
+                        html: 'El precio no puede ser menor que cero. El precio de compra es ' + precioCompra.toFixed(2) + '.<br>Por favor, ingresa un valor válido.',
+                        icon: 'error',
+                    });
+                    $input.val(precioCompra.toFixed(2)); // Restablecer al precio de compra
+                } else if (precioSugerido < precioCompra) {
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: 'El precio sugerido es menor que el precio de compra. ¿Deseas continuar?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí, continuar',
+                        cancelButtonText: 'No, corregir',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // El usuario confirmó, actualizar el valor del input
+                            var nuevoPrecioSugerido = parseFloat(Swal.getInput().value);
+                            $input.val(nuevoPrecioSugerido.toFixed(2));
+                        } else {
+                            // El usuario canceló, restablece el precio sugerido al precio de compra
+                            $input.val(precioCompra.toFixed(2));
+                        }
+                    });
+                }
+            });
+
+          
+
+
 
 
 

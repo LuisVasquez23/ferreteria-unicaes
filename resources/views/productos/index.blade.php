@@ -1,5 +1,18 @@
 @extends('layouts/dashboard')
 @section('title', 'Administrar productos')
+<<<<<<< HEAD
+=======
+
+@section('afterCss')
+    <style>
+        .pocos_productos>* {
+            --bs-table-accent-bg: rgb(255, 185, 185) !important;
+            color: rgb(45, 45, 45) !important;
+        }
+    </style>
+@endsection
+
+>>>>>>> 6d5e5a1b0f160ae221680ebd987a9dd374d11c05
 @section('contenido')
 
     <div class="card mt-3">

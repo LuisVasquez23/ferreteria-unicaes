@@ -43,8 +43,8 @@
                                 <td class="d-flex gap-1 justify-content-center">
                                     <!-- Botón para ver el detalle de la venta con modal -->
                                     <button type="button" class="btn btn-info" data-bs-toggle="modal"
-                                        data-bs-target="#detalleVentaModal{{ $venta->venta_id }}">
-                                        <i class="fas fa-eye"></i> Ver detalle
+                                        data-bs-target="#detalleVentaModal{{ $venta->venta_id }} " title="Ver detalle" >
+                                        <i class="fas fa-eye"></i> 
                                     </button>
                                 </td>
                             </tr>
@@ -58,12 +58,11 @@
     <!-- Modal para el detalle de venta -->
     @foreach ($ventas as $venta)
         <div class="modal fade" id="detalleVentaModal{{ $venta->venta_id }}" tabindex="-1" role="dialog"
-            aria-labelledby="detalleVentaModalLabel{{ $venta->venta_id }}" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            aria-labelledby="detalleVentaModalLabel{{ $venta->venta_id }}" aria-hidden="true" data-bs-backdrop="static">
+            <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="detalleVentaModalLabel{{ $venta->venta_id }}">Detalle de Venta</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <table id="miTabla" class="table text-nowrap mb-0 align-middle table-striped table-bordered">
@@ -81,6 +80,12 @@
                                     <th class="border-bottom-0">
                                         <b>Total</b>
                                     </th>
+                                    <th class="border-bottom-0">
+                                        <b>IVA (13%)</b>
+                                    </th>
+                                    <th class="border-bottom-0">
+                                        <b>Total con IVA</b>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -95,22 +100,21 @@
                                         <td class="border-bottom-0">
                                             <h6 class="mb-0">${{ $detalle->precio }}</h6>
                                         </td>
-                                        <td class="border-botteom-0">
+                                        <td class="border-bottom-0 text-center">
                                             <h6 class="mb-0">${{ $detalle->precio * $detalle->cantidad }}</h6>
+                                        </td>
+                                        <td class="border-bottom-0 text-center">
+                                            <h6 class="mb-0">${{ $detalle->precio * $detalle->cantidad * 0.13 }}</h6>
+                                        </td>
+                                        <td class="border-bottom-0 text-center">
+                                            <h6 class="mb-0">${{ $detalle->precio * $detalle->cantidad * 1.13 }}</h6>
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
-                        <div class="row">
-                            <div class="justify-contentend end">
-                                <h4>IVA: ${{ $detalle->precio * $detalle->cantidad * 0.13 }}</h4>
-                            </div>
-
-                            <div class="justify-contentend end">
-                                <h4>Total con IVA: ${{ $venta->monto }}</h4>
-                            </div>
-                        </div>
+                     
+                        
                     </div>
                     <div class="modal-footer">
                         <a href="{{ route('reporteVenta.pdf', ['num_factura' => $venta->numerosfactura]) }}" class="btn btn-danger" title="Generar PDF" target="_blank">

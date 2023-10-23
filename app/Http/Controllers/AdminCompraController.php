@@ -144,8 +144,13 @@ class AdminCompraController extends Controller
                 $detalleCompra->precioUnitario = $producto['precioUnitario'];
                 $detalleCompra->producto_id = $producto['productoId'];
                 $detalleCompra->compra_id = $compraId;
-                $detalleCompra->fecha_vencimiento = $producto['fechaVencimiento'];
-                $detalleCompra->save();
+                // Verificar si la fecha está vacía
+                if (!empty($producto['fechaVencimiento'])) {
+                    $detalleCompra->fecha_vencimiento = $producto['fechaVencimiento'];
+                } else {
+                    $detalleCompra->fecha_vencimiento = null;
+                }               
+                 $detalleCompra->save();
             }
 
            
