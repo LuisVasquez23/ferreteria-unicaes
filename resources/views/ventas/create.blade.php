@@ -11,7 +11,7 @@
 
                 <div class="row">
                     <!-- Columna para el número de factura -->
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="mb-3">
                             <label for="numero_factura" class="form-label">Número de Factura:</label>
                             <input type="number" class="form-control" id="numero_factura" name="numero_factura" required
@@ -20,7 +20,7 @@
 
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="mb-3">
                             <label for="cliente_id" class="form-label">Cliente:</label>
                             <select class="form-select" id="cliente_id" name="cliente_id" required>
@@ -30,28 +30,31 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="mb-3">
-                            <label for="periodo_id" class="form-label">Período: *</label>
-                            <select name="periodo_id" id="periodo_id" class="form-select">
-                                @if ($periodos->isEmpty())
-                                    <option value="" disabled selected>No se encontraron períodos</option>
-                                @else
-                                    @foreach ($periodos as $periodo_id => $fecha_inicio)
-                                        <option value="{{ $periodo_id }}">
-                                            {{ \Carbon\Carbon::parse($fecha_inicio)->format('Y/m/d') }}
-                                        </option>
-                                    @endforeach
-                                @endif
-                            </select>
-                        </div>
-                    </div>
+                  
 
 
                 </div>
 
                 <div class="row">
                     <!-- Columna para seleccionar el producto -->
+                             <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="periodo_id" class="form-label">Período: *</label>
+                                    <select name="periodo_id" id="periodo_id" class="form-select">
+                                        @if ($periodos->isEmpty())
+                                            <option value="" disabled selected>No se encontraron períodos</option>
+                                        @else
+                                            @foreach ($periodos as $periodo_id => $fecha_inicio)
+                                                <option value="{{ $periodo_id }}">
+                                                    {{ \Carbon\Carbon::parse($fecha_inicio)->format('Y/m/d') }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+
+
                     <div class="col-md-4">
                         <div class="mb-3">
                             <label for="producto_id" class="form-label">Producto:</label>
@@ -75,15 +78,19 @@
                         </div>
                     </div>
 
-                    <!-- Columna para el precio unitario -->
-                    <div class="col-md-4">
-                        <div class="mb-3 pt-4">
-                            <button type="button" class="btn btn-success" id="agregar-producto">Agregar Producto</button>
-                        </div>
-                    </div>
                 </div>
 
+                    <div class="row">
+                        <!-- Columna para el botón "Agregar Producto" -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <div class="mb-3 mt-2">
 
+                            <button type="button" class="btn btn-success" id="agregar-producto">Agregar Producto</button>
+                            <a href="{{ route('ventas') }}" class="btn btn-dark me-1 ms-2">Regresar</a>
+
+                            </div>
+                        </div>
+                    </div>      
 
                 <!-- Campo oculto para la lista de productos -->
                 <input type="hidden" name="lista_productos" id="lista_productos_input" value="">
@@ -404,8 +411,8 @@
                                 $('#jsonModal').modal('show');
                             } else {
                                 // Si no hay suficiente cantidad, muestra un mensaje al usuario
-                                AlertMessage('No hay suficiente stock, la cantidad disponible es: ' +
-                                    response.lotesDisponibles + ' productos', 'error');
+                                AlertMessage('No hay suficiente stock, la cantidad disponible es de: ' +
+                                    response.lotesDisponibles, 'error');
                             }
 
                         }

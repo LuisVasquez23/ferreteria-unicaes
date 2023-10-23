@@ -114,11 +114,7 @@
                             </tbody>
                         </table>
                      
-                        <div class="row justify-content-end align-items-end">
-                            <div class="text-end">
-                                <h5>Total de la venta con IVA: ${{ $venta->monto }}</h5>
-                            </div>
-                        </div>
+                        
                     </div>
                     <div class="modal-footer">
                         <a href="{{ route('reporteVenta.pdf', ['num_factura' => $venta->numerosfactura]) }}" class="btn btn-danger" title="Generar PDF" target="_blank">

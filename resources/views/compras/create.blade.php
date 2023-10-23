@@ -19,7 +19,6 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                             <div id="mensaje_errorF" style="color: red;"></div>
-
                         </div>
                     </div>
 
@@ -79,7 +78,8 @@
                                 name="producto_id" required>
                                 @foreach ($productos as $producto)
                                     <option value="{{ $producto->producto_id }}" data-precio="{{ $producto->precio }}">
-                                        {{ $producto->nombre }} - Proveedor: {{ $producto->usuario->nombres }}</option>
+                                        {{ $producto->nombre }} - Proveedor: {{ $producto->usuario->nombres }}
+                                    </option>
                                 @endforeach
                             </select>
                             @error('producto_id')
@@ -123,7 +123,8 @@
                     <!-- Columna para el botón "Agregar Producto" -->
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <div class="mb-3 mt-2">
-                            <button type="button" class="btn btn-success" id="agregar-producto">Agregar Producto</button>
+                            <button type="button" class="btn btn-success" id="agregar-producto">Agregar
+                                Producto</button>
                             <a href="{{ route('compras') }}" class="btn btn-dark me-1 ms-2">Regresar</a>
 
                         </div>
