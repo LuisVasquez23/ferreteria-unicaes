@@ -64,7 +64,7 @@ class InventarioController extends Controller
             // Obtener todos los detalles de compras asociados a los productos filtrados
             $detallesCompras = DetalleCompra::whereIn('producto_id', $productosFiltrados->pluck('producto_id'))->get();
 
-
+            // Comenntario 
             return view('inventario.index', compact('periodos', 'productosNombre', 'productosFiltrados', 'productosConPocaExistencia', 'productosConVencimientoCercano', 'fechasVencimiento', 'detallesCompras'));
         } catch (\Exception $e) {
             Log::error($e->getMessage());
