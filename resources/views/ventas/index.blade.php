@@ -113,6 +113,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <a href="{{ route('reporteVenta.pdf', ['num_factura' => $venta->numerosfactura]) }}" class="btn btn-danger" title="Generar PDF" target="_blank">
+                            <i class="fas fa-file-pdf"></i>
+                        </a>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
