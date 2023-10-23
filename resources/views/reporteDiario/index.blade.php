@@ -3,10 +3,10 @@
 @section('contenido')
 
     <div class="card mt-3">
-        <h5 class="card-header">Administración de Reportes Diarios</h5>
+        <h5 class="card-header">Administración de Reportes Diarios de Ventas</h5>
         <div class="card-body">
 
-            <div class="table-responsive">
+            <div class="table-responsive mt-4">
                 <table id="miTabla" class="table text-nowrap mb-0 align-middle table-striped table-bordered">
                     <thead class="text-dark fs-4">
                         <tr>
@@ -37,6 +37,8 @@
                     </tbody>
                 </table>
             </div>
+
+            
             
             
             
