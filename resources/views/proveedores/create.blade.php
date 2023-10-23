@@ -109,22 +109,6 @@
         });
     });
 
-    const $departamento = document.getElementById('departamento');
-    const $municipio = document.getElementById('municipio');
-    document.addEventListener('DOMContentLoaded', () => {
-        showLoadingModal('departamentos');
-        // Cargar los departamentos
-        ajaxCountries({
-            url: 'https://api.countrystatecity.in/v1/countries/SV/states',
-            cbSuccess: async (json) => {
-                await loadDepartamentos({
-                    departamentos: json,
-                    departamentoAlmacenado: null
-                });
-                hideLoadingModal();
-            }
-        });
-    });
 
 
 </script>

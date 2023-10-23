@@ -17,6 +17,8 @@
                         @error('numerosfactura')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+                        <div id="mensaje_errorF" style="color: red;"></div>
+
                     </div>
                 </div>
 
@@ -38,19 +40,29 @@
                         @error('periodo_id')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+
                     </div>
                 </div>
 
                 <!-- Columna para la fecha de vencimiento -->
                 <div class="col-md-4">
                     <div class="mb-3">
-                        <label for="fecha_vencimiento" class="form-label">Fecha de Vencimiento: *</label>
-                        <input type="date" class="form-control @error('fecha_vencimiento') is-invalid @enderror" id="fecha_vencimiento" name="fecha_vencimiento" required>
+                        <label for="fecha_vencimiento" class="form-label">Fecha de Vencimiento:</label>
+                        <div class="input-group">
+                            <input type="date" class="form-control @error('fecha_vencimiento') is-invalid @enderror" id="fecha_vencimiento" name="fecha_vencimiento">
+                            <div class="input-group-text">
+                                <input type="checkbox" id="habilitar_fecha" class="form-check-input" aria-label="Habilitar Fecha" checked>
+                                <label class="form-check-label" for="habilitar_fecha">Habilitar Fecha</label>
+                            </div>
+                        </div>
                         @error('fecha_vencimiento')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+                        <div id="mensaje_errorFe"  style="color: red;"></div>
+
                     </div>
                 </div>
+
 
             </div>
 
@@ -78,6 +90,8 @@
                         @error('cantidad')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+                        <div id="mensaje_errorC" style="color: red;"></div>
+
                     </div>
                 </div>
 
@@ -89,6 +103,8 @@
                         @error('precio_unitario')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+                        <div id="mensaje_errorP"  style="color: red;"></div>
+
                     </div>
                 </div>
 
@@ -189,6 +205,17 @@
                 $('#finalizar-compra').prop('disabled', true);
             }
         }
+            // Función para habilitar o deshabilitar el campo de fecha de vencimiento
+            function habilitarFechaVencimiento() {
+                var checkbox = $('#habilitar_fecha');
+                var fechaVencimientoInput = $('#fecha_vencimiento');
+                fechaVencimientoInput.prop('disabled', !checkbox.is(':checked'));
+            }
+
+            // Evento para cambiar la habilitación del campo de fecha de vencimiento
+            $('#habilitar_fecha').change(function() {
+                habilitarFechaVencimiento();
+            });
        // Función para agregar producto a la lista
         function agregarProducto() {
             var productoId = $('#producto_id').val();
@@ -201,33 +228,63 @@
             if (!numeroFactura || numeroFactura.trim() === "") {
                 // Mostrar alerta personalizada
                 AlertMessage("Por favor, ingrese un número de factura válido.", "error");
+                $('#numerosfactura').css('border', '1px solid red');
+                $('#mensaje_errorF').text('Este no es un valor valido para la factura.');
+
                 return;
+            }else{
+                $('#numerosfactura').css('border', '1px solid #ccc');
+                $('#mensaje_errorF').text('');
             }
             if (isNaN(cantidad) || cantidad <= 0) {
                 // Mostrar alerta personalizada
                 AlertMessage('La cantidad debe ser un número mayor que cero', 'error');
+                $('#cantidad').css('border', '1px solid red');
+                $('#mensaje_errorC').text('Ingresa un valor valida para cantidad.');
+
                 return;
+            }else{
+                $('#cantidad').css('border', '1px solid #ccc');
+                $('#mensaje_errorC').text('');
             }
             if (isNaN(precioUnitario) || precioUnitario <= 0) {
                 // Mostrar alerta personalizada
                 AlertMessage("El precio unitario debe ser un número mayor que cero.", "error");
+                $('#precio_unitario').css('border', '1px solid red');
+                $('#mensaje_errorP').text('Ingrese un valor valido para el precio unitario.');
+
                 return;
+            }else{
+                $('#precio_unitario').css('border', '1px solid #ccc');
+                $('#mensaje_errorP').text('');
             }
-            if (!fechaVencimiento || fechaVencimiento.trim() === "") {
-                // Mostrar alerta personalizada
-                AlertMessage("Por favor, ingrese una fecha de vencimiento válida.", "error");
-                return;
-            }
-            
-            // Validar que la fecha de vencimiento no sea menor que la fecha actual
-            var fechaActual = new Date();
-            var fechaVencimientoDate = new Date(fechaVencimiento);
-            
-            if (fechaVencimientoDate < fechaActual) {
-                // Mostrar alerta personalizada
-                AlertMessage("La fecha de vencimiento no puede ser menor que la fecha actual.", "error");
-                return;
-            }
+              // Validar la fecha de vencimiento solo si el checkbox está seleccionado
+                var fechaVencimientoCheckbox = $('#habilitar_fecha');
+                if (fechaVencimientoCheckbox.is(':checked')) {
+                    if (!fechaVencimiento || fechaVencimiento.trim() === "") {
+                        // Mostrar alerta personalizada
+                        AlertMessage("Por favor, ingrese una fecha de vencimiento válida.", "error");
+                        $('#mensaje_errorFe').text('Ingrese una fecha');
+
+                        return;
+                    }else{
+                        $('#mensaje_errorFe').text('');
+                    }
+
+                    // Validar que la fecha de vencimiento no sea menor que la fecha actual
+                    var fechaActual = new Date();
+                    var fechaVencimientoDate = new Date(fechaVencimiento);
+
+                    if (fechaVencimientoDate < fechaActual) {
+                        // Mostrar alerta personalizada
+                        AlertMessage("La fecha de vencimiento no puede ser menor que la fecha actual.", "error");
+                        $('#mensaje_errorFe').text('Ingrese una fecha mayor a hoy');
+
+                        return;
+                    }else{
+                        $('#mensaje_errorFe').text('');
+                    }
+                }
 
             // Calcular la diferencia en milisegundos entre la fecha de vencimiento y la fecha actual
             var diferenciaFechas = fechaVencimientoDate - fechaActual;
@@ -280,6 +337,14 @@
                         $('#cantidad').val('');
                         $('#precio_unitario').val('');
                         $('#fecha_vencimiento').val('');
+                        $('#cantidad').css('border', '1px solid #ccc');
+                        $('#precio_unitario').css('border', '1px solid #ccc');
+                        $('#cantidad').css('border', '1px solid #ccc');
+                        $('#numerosfactura').css('border', '1px solid #ccc');
+                        $('#mensaje_errorF').text('');
+                        $('#mensaje_errorC').text('');
+                        $('#mensaje_errorP').text('');
+                        $('#mensaje_errorFe').text('');
                         habilitarDeshabilitarBotonFinalizar(); 
 
 
@@ -314,6 +379,19 @@
                 $('#cantidad').val('');
                 $('#precio_unitario').val('');
                 $('#fecha_vencimiento').val('');
+                $('#cantidad').css('border', '1px solid #ccc');
+                $('#precio_unitario').css('border', '1px solid #ccc');
+                $('#cantidad').css('border', '1px solid #ccc');
+                $('#numerosfactura').css('border', '1px solid #ccc');
+                $('#mensaje_errorF').text('');
+                $('#mensaje_errorC').text('');
+                $('#mensaje_errorP').text('');
+                $('#mensaje_errorFe').text('');
+
+
+
+
+
             }
         }
 

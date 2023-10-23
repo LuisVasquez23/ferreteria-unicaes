@@ -141,6 +141,11 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        <div class="row justify-content-end align-items-end">
+                            <div class="text-end">
+                                <h5>Total de la compra con IVA: ${{ $compra->monto }}</h5>
+                            </div>
+                        </div>
                         </div>
                     </div>
                     
