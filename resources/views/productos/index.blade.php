@@ -1,15 +1,5 @@
 @extends('layouts/dashboard')
 @section('title', 'Administrar productos')
-
-@section('afterCss')
-    <style>
-        .pocos_productos>* {
-            --bs-table-accent-bg: rgb(255, 97, 97) !important;
-            color: white !important;
-        }
-    </style>
-@endsection
-
 @section('contenido')
 
     <div class="card mt-3">
@@ -63,8 +53,8 @@
                     </thead>
                     <tbody>
                         @foreach ($productos as $producto)
-                            <tr class=" {{ $producto->cantidad <= 10 ? 'pocos_productos' : '' }} ">
-                                <td class=" border-bottom-0">
+                            <tr>
+                                <td class="border-bottom-0">
                                     {{ $producto->nombre }}
                                 </td>
 
