@@ -147,7 +147,7 @@
 
                                 <!-- Agrega esta celda para mostrar la imagen -->
                                 <td class="border-bottom-0">
-                                    <img src="{{ asset('storage/upload/productos/' . $producto->first()->img_path) }}"
+                                    <img src="{{ asset('storage/upload/productos/' . $producto->img_path) }}"
                                         alt="{{ $producto->nombre }}" class="img-thumbnail" width="100">
                                 </td>
 

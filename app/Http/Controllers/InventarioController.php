@@ -68,6 +68,7 @@ class InventarioController extends Controller
             return view('inventario.index', compact('periodos', 'productosNombre', 'productosFiltrados', 'productosConPocaExistencia', 'productosConVencimientoCercano', 'fechasVencimiento', 'detallesCompras'));
         } catch (\Exception $e) {
             Log::error($e->getMessage());
+            dd($e->getMessage());
             return redirect()->route('inventario')->with('error', 'Error al cargar la página de productos');
         }
     }
