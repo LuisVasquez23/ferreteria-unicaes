@@ -253,7 +253,6 @@
                                             {{ $detalleCompra->cantidad - $cantidadVenta }}
                                         </td>
                                         <td>{{ number_format($detalleCompra->precioUnitario, 2) }}</td>
-                                        <!-- Agrega más columnas si es necesario -->
                                     </tr>
                                 @endforeach
                             </tbody>
