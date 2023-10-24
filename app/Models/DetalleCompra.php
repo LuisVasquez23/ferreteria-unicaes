@@ -52,8 +52,9 @@ class DetalleCompra extends Model
     {
         return $this->belongsTo(Producto::class, 'producto_id');
     }
-	public function usuario()
-	{
-		return $this->belongsTo(Usuario::class, 'coprador_id');
-	}
+
+    public function usuario()
+    {
+        return $this->belongsTo(Usuario::class, 'coprador_id');
+    }
 }

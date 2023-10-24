@@ -133,9 +133,16 @@
                             @php
                                 $diasParaVencimiento = null;
 
-                                if ($producto->detalle_compras->first()->fecha_vencimiento) {
-                                    $diasParaVencimiento = now()->diffInDays($producto->detalle_compras->first()->fecha_vencimiento, false);
+                                $primerDetalleCompra = $producto->detalle_compras->first();
+
+                                if ($primerDetalleCompra) {
+                                    $fechaVencimiento = $primerDetalleCompra->fecha_vencimiento;
+
+                                    if ($fechaVencimiento) {
+                                        $diasParaVencimiento = now()->diffInDays($fechaVencimiento, false);
+                                    }
                                 }
+
                             @endphp
 
                             <tr @if ($producto->cantidad <= 10) class="baja-existencia" @endif
@@ -161,9 +168,16 @@
                                 </td>
 
                                 <td class="border-bottom-0">
-                                    @if ($producto->detalle_compras->first()->fecha_vencimiento)
-                                        {{ date('d/m/Y', strtotime($producto->detalle_compras->first()->fecha_vencimiento)) }}
-                                    @endif
+                                    @isset($producto->detalle_compras)
+                                        @php
+                                            $primerDetalleCompra = $producto->detalle_compras->first();
+                                        @endphp
+
+                                        @if ($primerDetalleCompra && $primerDetalleCompra->fecha_vencimiento)
+                                            {{ date('d/m/Y', strtotime($primerDetalleCompra->fecha_vencimiento)) }}
+                                        @endif
+                                    @endisset
+
                                 </td>
 
                                 <td class="border-bottom-0">
@@ -230,9 +244,14 @@
                             </thead>
                             <tbody>
                                 @foreach ($producto->detalle_compras as $detalleCompra)
+                                    @php
+                                        $cantidadVenta = $detalleCompra->producto->detalle_ventas->where('numero_lote', $detalleCompra->numero_lote)->sum('cantidad');
+                                    @endphp
                                     <tr>
                                         <td>{{ $detalleCompra->numero_lote }}</td>
-                                        <td>{{ $detalleCompra->cantidad }}</td>
+                                        <td>
+                                            {{ $detalleCompra->cantidad - $cantidadVenta }}
+                                        </td>
                                         <td>{{ number_format($detalleCompra->precioUnitario, 2) }}</td>
                                         <!-- Agrega más columnas si es necesario -->
                                     </tr>

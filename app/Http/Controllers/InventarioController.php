@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DetalleCompra;
+use App\Models\DetalleVenta;
 use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +24,7 @@ class InventarioController extends Controller
             $periodos = Periodo::all();
 
             // Obtener una consulta base de productos con las relaciones necesarias
-            $productos = Producto::with(['periodo', 'detalle_compras', 'estante', 'medida']);
+            $productos = Producto::with(['periodo', 'detalle_compras', 'estante', 'medida', 'detalle_ventas']);
 
             // Filtrar productos
             $productosFiltrados = $productos->when($request->filled('periodo') && $request->input('periodo') !== 'MostrarTodos', function ($query) use ($request) {
@@ -51,7 +52,7 @@ class InventarioController extends Controller
 
             // Verificar existencia y vencimiento cercano
             $productosConPocaExistencia = $productosFiltrados->contains(function ($producto) {
-                return $producto->detalle_compras->first()->cantidad <= 10;
+                return $producto->cantidad <= 10;
             });
 
             $productosConVencimientoCercano = $productosFiltrados->contains(function ($producto) {
@@ -63,9 +64,10 @@ class InventarioController extends Controller
 
             // Obtener todos los detalles de compras asociados a los productos filtrados
             $detallesCompras = DetalleCompra::whereIn('producto_id', $productosFiltrados->pluck('producto_id'))->get();
+            $detalleVentas = DetalleVenta::whereIn('producto_id', $productosFiltrados->pluck('producto_id'))->get();
 
             // Comenntario 
-            return view('inventario.index', compact('periodos', 'productosNombre', 'productosFiltrados', 'productosConPocaExistencia', 'productosConVencimientoCercano', 'fechasVencimiento', 'detallesCompras'));
+            return view('inventario.index', compact('periodos', 'productosNombre', 'productosFiltrados', 'productosConPocaExistencia', 'productosConVencimientoCercano', 'fechasVencimiento', 'detallesCompras', 'detalleVentas'));
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             dd($e->getMessage());
