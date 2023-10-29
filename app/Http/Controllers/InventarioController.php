@@ -67,11 +67,11 @@ class InventarioController extends Controller
             $detalleVentas = DetalleVenta::whereIn('producto_id', $productosFiltrados->pluck('producto_id'))->get();
 
             // Comenntario 
-            return view('inventario.index', compact('periodos', 'productosNombre', 'productosFiltrados', 'productosConPocaExistencia', 'productosConVencimientoCercano', 'fechasVencimiento', 'detallesCompras', 'detalleVentas'));
+            return view('Inventario.index', compact('periodos', 'productosNombre', 'productosFiltrados', 'productosConPocaExistencia', 'productosConVencimientoCercano', 'fechasVencimiento', 'detallesCompras', 'detalleVentas'));
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             dd($e->getMessage());
-            return redirect()->route('inventario')->with('error', 'Error al cargar la página de productos');
+            return redirect()->route('Inventario')->with('error', 'Error al cargar la página de productos');
         }
     }
 
