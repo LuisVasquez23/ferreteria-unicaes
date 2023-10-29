@@ -15,7 +15,7 @@
             <p>No se encontraron roles para este usuario.</p>
         @endif
 
-        @auth
+        @if (Auth::user()->role === 'admin' || Auth::user()->role === 'empleado')
             <div class="row">
                 <div class="col-md-12">
                     <div class="alert alert-warning mt-3" id="advertencia" style="display: none;">
@@ -32,7 +32,7 @@
                     </div>
                 </div>
             </div>
-        @endauth
+        @endif
 
     </div>
 @endsection
