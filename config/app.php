@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://ferreteria-unicaes-production.up.railway.app'),
 
     'asset_url' => env('ASSET_URL'),
 
