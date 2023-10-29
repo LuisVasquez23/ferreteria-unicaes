@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Ferreteria | @yield('title')</title>
-    <link rel="shortcut icon" type="image/png" href="{{ $urlLogoEmpresa }}" />
+    <link rel="shortcut icon" href="{{ $urlLogoEmpresa }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ secure_asset('css/styles.min.css') }}" />
     <link rel="stylesheet" href="{{ secure_asset('css/dashboard.css') }}" />
 
