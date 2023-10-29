@@ -15,41 +15,25 @@
             <p>No se encontraron roles para este usuario.</p>
         @endif
 
-        <div class="row">
-            <div class="col-md-12">
-                <div class="alert alert-warning mt-3" id="advertencia" style="display: none;">
-                    <span id="advertenciaMensaje"></span>
+        @auth
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-warning mt-3" id="advertencia" style="display: none;">
+                        <span id="advertenciaMensaje"></span>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-12">
-                <div class="card mt-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Productos con existencias bajas</h5>
-                        <ul class="list-group list-group-flush" id="listaProductos">
-                        </ul>
+                <div class="col-md-12">
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Productos con existencias bajas</h5>
+                            <ul class="list-group list-group-flush" id="listaProductos">
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endauth
 
-        {{-- @if (session('advertencia'))
-            <div class="alert alert-warning mt-3">
-                {{ session('advertencia') }}
-            </div>
-        @endif
-
-        @if (session('productosAdvertencia'))
-            <div class="card mt-3">
-                <div class="card-body">
-                    <h5 class="card-title">Productos con existencias bajas</h5>
-                    <ul class="list-group list-group-flush">
-                        @foreach (session('productosAdvertencia') as $producto)
-                            <li class="list-group-item">{{ $producto->nombre }} - Cantidad: {{ $producto->cantidad }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        @endif --}}
     </div>
 @endsection
 @section('AfterScript')
