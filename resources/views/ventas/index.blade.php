@@ -55,7 +55,7 @@
         </div>
     </div>
 
-    <!-- Modal para el detalle de venta -->
+    {{-- <!-- Modal para el detalle de venta -->
     @foreach ($ventas as $venta)
         <div class="modal fade" id="detalleVentaModal{{ $venta->venta_id }}" tabindex="-1" role="dialog"
             aria-labelledby="detalleVentaModalLabel{{ $venta->venta_id }}" aria-hidden="true" data-bs-backdrop="static">
@@ -114,7 +114,7 @@
                 </div>
             </div>
         </div>
-    @endforeach
+    @endforeach --}}
 
 @endsection
 
