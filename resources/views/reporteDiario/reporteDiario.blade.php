@@ -104,17 +104,17 @@
     <table id="miTabla" class="table text-nowrap mb-0 align-middle table-striped table-bordered text-center">
         <thead class="text-dark fs-4 table-header">
             <tr>
-                <th class="border-bottom-0 text-uppercase font-weight-bold">
+                <th class="border-bottom-0 text-uppercase font-weight-bold" style="width: 20%">
                     Producto
                 </th>
                 <th class="border-bottom-0 text-uppercase font-weight-bold">
                     Vendidos
                 </th>
                 <th class="border-bottom-0 text-uppercase font-weight-bold">
-                    Precio Unitario
+                    P Unitario
                 </th>
                 <th class="border-bottom-0 text-uppercase font-weight-bold">
-                    Total de Venta
+                    Total Venta
                 </th>
                 <th class="border-bottom-0 text-uppercase font-weight-bold">
                    Disponible
