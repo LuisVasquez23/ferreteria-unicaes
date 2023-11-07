@@ -141,6 +141,16 @@
                                 @endforeach
                             </tbody>
                         </table>
+
+                        <div class="row">
+                            <!-- Columna para el botón "Agregar Producto" -->
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <div class="mb-1 mt-4 me-2">
+                                  <h5>Total de la compra + IVA: $ {{ $compra->monto * 1.13 }} </h5>
+        
+                                </div>
+                            </div>
+                        </div>
     
                         </div>
                     </div>

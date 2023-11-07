@@ -69,52 +69,40 @@
                             <table id="miTabla" class="table text-nowrap mb-0 align-middle table-striped table-bordered">
                                 <thead class="text-dark fs-4">
                                     <tr>
-                                        <th class="border-bottom-0">
-                                            <b>Producto</b>
-                                        </th>
-                                        <th class="border-bottom-0">
-                                            <b>Cantidad</b>
-                                        </th>
-                                        <th class="border-bottom-0">
-                                            <b>Precio Unitario</b>
-                                        </th>
-                                        <th class="border-bottom-0">
-                                            <b>Total</b>
-                                        </th>
-                                        <th class="border-bottom-0">
-                                            <b>IVA (13%)</b>
-                                        </th>
-                                        <th class="border-bottom-0">
-                                            <b>Total con IVA</b>
-                                        </th>
+                                        <td class="border-bottom-0">
+                                            <h6 class="mb-0">{{ $detalle->producto->nombre }}</h6>
+                                        </td>
+                                        <td class="border-bottom-0">
+                                            <h6 class="mb-0">{{ $detalle->cantidad }}</h6>
+                                        </td>
+                                        <td class="border-bottom-0">
+                                            <h6 class="mb-0">${{ $detalle->precio }}</h6>
+                                        </td>
+                                        <td class="border-bottom-0 text-center">
+                                            <h6 class="mb-0">${{ $detalle->precio * $detalle->cantidad }}</h6>
+                                        </td>
+                                        <td class="border-bottom-0 text-center">
+                                            <h6 class="mb-0">${{ number_format($detalle->precio * $detalle->cantidad * 0.13, 2) }}</h6>
+                                        </td>
+                                        <td class="border-bottom-0 text-center">
+                                            <h6 class="mb-0">${{ number_format($detalle->precio * $detalle->cantidad * 1.13, 2) }}</h6>
+                                        </td>
+                                        
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($venta->detalle_ventas as $detalle)
-                                        <tr>
-                                            <td class="border-bottom-0">
-                                                <h6 class="mb-0">{{ $detalle->producto->nombre }}</h6>
-                                            </td>
-                                            <td class="border-bottom-0">
-                                                <h6 class="mb-0">{{ $detalle->cantidad }}</h6>
-                                            </td>
-                                            <td class="border-bottom-0">
-                                                <h6 class="mb-0">${{ $detalle->precio }}</h6>
-                                            </td>
-                                            <td class="border-bottom-0 text-center">
-                                                <h6 class="mb-0">${{ $detalle->precio * $detalle->cantidad }}</h6>
-                                            </td>
-                                            <td class="border-bottom-0 text-center">
-                                                <h6 class="mb-0">${{ $detalle->precio * $detalle->cantidad * 0.13 }}</h6>
-                                            </td>
-                                            <td class="border-bottom-0 text-center">
-                                                <h6 class="mb-0">${{ $detalle->precio * $detalle->cantidad * 1.13 }}</h6>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                        <div class="row">
+                           
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <div class="mb-1 mt-4 me-2">
+                                  <h5>Total de la venta + IVA: $ {{ $venta->monto}} </h5>
+        
+                                </div>
+                            </div>
                         </div>
+
                     </div>
                     <div class="modal-footer">
                         <a href="{{ route('reporteVenta.pdf', ['num_factura' => $venta->numerosfactura]) }}"
