@@ -2,7 +2,7 @@
 @section('title', 'Login')
 @section('contenido')
     <a href="{{ route('login') }}" class="text-nowrap logo-img text-center d-block py-3 w-100">
-        <img src="{{ secure_asset('images/logos/unicaes.jpg') }}" width="180" alt="Logo sistema" />
+        <img src="{{ asset('images/logos/unicaes.jpg') }}" width="180" alt="Logo sistema" />
     </a>
     <form method="POST" action="{{ route('login') }}">
         @csrf
