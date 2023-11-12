@@ -36,7 +36,7 @@
                     </thead>
                     <tbody>
                         @foreach ($compras as $compra)
-                            @if ($compra->numerosfactura != 1)
+                            @if ($compra->numerosfactura > 0)
                                 <tr>
                                     <td class="border-bottom-0">
                                         {{ $compra->numerosfactura }}

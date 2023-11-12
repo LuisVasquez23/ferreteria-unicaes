@@ -114,14 +114,14 @@
         <table id="miTabla" class="table text-nowrap mb-0 align-middle table-striped table-bordered text-center">
             <thead class="text-dark fs-4 table-header">
                 <tr>
-                    <th class="border-bottom-0 text-uppercase font-weight-bold">
-                        Nombre
+                    <th class="border-bottom-0 text-uppercase font-weight-bold" style="width: 20%">
+                        Producto
                     </th>
                     <th class "border-bottom-0 text-uppercase font-weight-bold">
-                        Cantidad vendida
+                        Cantidad
                     </th>
                     <th class "border-bottom-0 text-uppercase font-weight-bold">
-                        Precio Unitario
+                        P Unitario
                     </th>
                     <th class "border-bottom-0 text-uppercase font-weight-bold">
                         Total
@@ -130,7 +130,7 @@
                         Iva
                     </th>
                     <th class "border-bottom-0 text-uppercase font-weight-bold">
-                        Total con Iva
+                        Total + Iva
                     </th>
                 </tr>
             </thead>
@@ -138,8 +138,9 @@
             <tbody>
                 @foreach ($resultados2 as $resultado)
                 <tr>
-                    <td>
-                        {{ ucfirst($resultado->nombre) }}
+                
+                    <td class="border-bottom-0">
+                        {{ mb_strimwidth(ucfirst($resultado->nombre), 0, 20, '...') }}
                     </td>
                     
                     <td>{{ $resultado->cantidad }}</td>

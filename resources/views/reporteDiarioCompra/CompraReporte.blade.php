@@ -103,14 +103,15 @@
     <table id="miTabla" class="table text-nowrap mb-0 align-middle table-striped table-bordered text-center">
         <thead class="text-dark fs-4 table-header">
             <tr>
-                <th class="border-bottom-0 text-uppercase font-weight-bold">
+                <th class="border-bottom-0 text-uppercase font-weight-bold" style="width: 20%">
                     Producto
                 </th>
+                
                 <th class="border-bottom-0 text-uppercase font-weight-bold">
                     Comprados
                 </th>
                 <th class="border-bottom-0 text-uppercase font-weight-bold">
-                    Precio Unitario
+                    P Unitario
                 </th>
                 <th class="border-bottom-0 text-uppercase font-weight-bold">
                    Total Compra
@@ -124,7 +125,7 @@
             @foreach ($resultados as $resultado)
                 <tr >
                     <td class="border-bottom-0">
-                        {{ ucfirst($resultado->Nombre_Producto) }}
+                        {{ mb_strimwidth(ucfirst($resultado->Nombre_Producto), 0, 20, '...') }}
                     </td>
                     <td class="border-bottom-0">
                         {{ $resultado->Cantidad_Productos_Comprados }}
