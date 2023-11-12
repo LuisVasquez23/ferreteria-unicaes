@@ -62,6 +62,7 @@
         }
     </style>
 
+
     <!-- Modal para el detalle de venta -->
     @foreach ($ventas as $venta)
         <div class="modal fade" id="detalleVentaModal{{ $venta->venta_id }}" tabindex="-1" role="dialog"
@@ -72,9 +73,31 @@
                         <h5 class="modal-title" id="detalleVentaModalLabel{{ $venta->venta_id }}">Detalle de Venta</h5>
                     </div>
                     <div class="modal-body">
-                        <div class="table-responsive">
-                            <table id="miTabla" class="table text-nowrap mb-0 align-middle table-striped table-bordered">
-                                <thead class="text-dark fs-4">
+                        <table id="miTabla" class="table text-nowrap mb-0 align-middle table-striped table-bordered">
+                            <thead class="text-dark fs-4">
+                                <tr>
+                                    <th class="border-bottom-0">
+                                        <b>Producto</b>
+                                    </th>
+                                    <th class="border-bottom-0">
+                                        <b>Cantidad</b>
+                                    </th>
+                                    <th class="border-bottom-0">
+                                        <b>Precio Unitario</b>
+                                    </th>
+                                    <th class="border-bottom-0">
+                                        <b>Total</b>
+                                    </th>
+                                    <th class="border-bottom-0">
+                                        <b>IVA (13%)</b>
+                                    </th>
+                                    <th class="border-bottom-0">
+                                        <b>Total con IVA</b>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($venta->detalle_ventas as $detalle)
                                     <tr>
                                         <td class="border-bottom-0">
                                             <h6 class="mb-0">{{ $detalle->producto->nombre }}</h6>
@@ -89,26 +112,16 @@
                                             <h6 class="mb-0">${{ $detalle->precio * $detalle->cantidad }}</h6>
                                         </td>
                                         <td class="border-bottom-0 text-center">
-                                            <h6 class="mb-0">${{ number_format($detalle->precio * $detalle->cantidad * 0.13, 2) }}</h6>
+                                            <h6 class="mb-0">${{ $detalle->precio * $detalle->cantidad * 0.13 }}</h6>
                                         </td>
                                         <td class="border-bottom-0 text-center">
-                                            <h6 class="mb-0">${{ number_format($detalle->precio * $detalle->cantidad * 1.13, 2) }}</h6>
+                                            <h6 class="mb-0">${{ $detalle->precio * $detalle->cantidad * 1.13 }}</h6>
                                         </td>
-                                        
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
 
-                        <div class="row">
-                           
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <div class="mb-1 mt-4 me-2">
-                                  <h5>Total de la venta + IVA: $ {{ $venta->monto}} </h5>
-        
-                                </div>
-                            </div>
-                        </div>
 
                     </div>
                     <div class="modal-footer">
