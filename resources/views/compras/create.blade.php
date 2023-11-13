@@ -74,8 +74,9 @@
                     <div class="col-md-4">
                         <div class="mb-3">
                             <label for="producto_id" class="form-label">Producto: *</label>
-                            <select class="form-select @error('producto_id') is-invalid @enderror" id="producto_id"
+                            <select class="form-control @error('producto_id') is-invalid @enderror" id="producto_id"
                                 name="producto_id" required>
+                                <option value="" disabled selected>Seleccione un producto</option> <!-- Placeholder -->
                                 @foreach ($productos as $producto)
                                     <option value="{{ $producto->producto_id }}" data-precio="{{ $producto->precio }}">
                                         {{ $producto->nombre }} - Proveedor: {{ $producto->usuario->nombres }}
@@ -85,8 +86,10 @@
                             @error('producto_id')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
+                            <div id="mensaje_errorPructoI" style="color: red;"></div>
                         </div>
                     </div>
+
 
                     <!-- Columna para la cantidad de producto -->
                     <div class="col-md-4">
@@ -268,6 +271,16 @@
                     $('#precio_unitario').css('border', '1px solid #ccc');
                     $('#mensaje_errorP').text('');
                 }
+                if(isNaN(productoId) || productoId <=0  ){
+                    AlertMessage("Debes seleccionar un producto valido.", "error");
+                    $('#producto_id').css('border', '1px solid red');
+                    $('#mensaje_errorPructoI').text('Debes seleccionar un producto valido.');
+
+                    return;
+                } else{
+                    $('#producto_id').css('border', '1px solid #ccc');
+                    $('#mensaje_errorPructoI').text('');
+                }
                 // Validar la fecha de vencimiento solo si el checkbox está seleccionado
                 var fechaVencimientoCheckbox = $('#habilitar_fecha');
 
@@ -296,19 +309,27 @@
                         $('#mensaje_errorFe').text('');
                     }
                 }
+                console.log("Fecha actual:", fechaActual.toString());
+                console.log("Fecha de vencimiento:", fechaVencimientoDate.toString());
 
-                // Calcular la diferencia en milisegundos entre la fecha de vencimiento y la fecha actual
-                var diferenciaFechas = fechaVencimientoDate - fechaActual;
+                    // Calcular la diferencia en milisegundos entre la fecha de vencimiento y la fecha actual
+                    var diferenciaFechas = fechaVencimientoDate - fechaActual;
+                    console.log("Fecha de vencimiento:", diferenciaFechas.toString());
 
-                // Calcular el número de días enteros y el número de horas restantes
-                var diasRestantes = Math.floor(diferenciaFechas / (1000 * 60 * 60 *
-                    24)); // Convertir la diferencia a días y redondear hacia abajo
-                var horasRestantes = Math.floor((diferenciaFechas % (1000 * 60 * 60 * 24)) / (1000 * 60 *
-                    60)); // Convertir el residuo a horas y redondear hacia abajo
+                    // Calcular el número total de segundos restantes
+                    var segundosRestantes = Math.floor(diferenciaFechas / 1000);
 
-                // Combinar días y horas en el mensaje de advertencia
-                var mensajeAdvertencia = "El producto se vence en " + diasRestantes + " día(s) y " +
-                    horasRestantes + " hora(s). ¿Aún desea agregarlo?";
+                    // Calcular el número de días, horas, minutos y segundos restantes
+                    var diasRestantes = Math.floor(segundosRestantes / (24 * 60 * 60));
+                    var horasRestantes = Math.floor((segundosRestantes % (24 * 60 * 60)) / (60 * 60));
+
+                    // Combinar días y horas en el mensaje de advertencia
+                    var mensajeAdvertencia = "El producto se vence en " + diasRestantes + " día(s) y " +
+                        horasRestantes + " hora(s). ¿Aún desea agregarlo?";
+
+
+
+
 
                 if (diasRestantes <= 7) {
                     // Mostrar la alerta de SweetAlert para confirmación
@@ -355,10 +376,12 @@
                             $('#precio_unitario').css('border', '1px solid #ccc');
                             $('#cantidad').css('border', '1px solid #ccc');
                             $('#numerosfactura').css('border', '1px solid #ccc');
+                            $('#producto_id').css('border', '1px solid #ccc');
                             $('#mensaje_errorF').text('');
                             $('#mensaje_errorC').text('');
                             $('#mensaje_errorP').text('');
                             $('#mensaje_errorFe').text('');
+                             $('#mensaje_errorPructoI').text('');
                             habilitarDeshabilitarBotonFinalizar();
 
 
@@ -556,4 +579,11 @@
 
         });
     </script>
+    <script>
+        $(document).ready(function() {
+            // Inicializa Selectize
+            initSearchSelect('producto_id')
+        });
+    </script>
+
 @endsection
