@@ -294,7 +294,7 @@
                     } else {
                         $('#mensaje_errorFe').text('');
                     }
-
+                    fechaVencimiento += 'T00:00'
                     // Validar que la fecha de vencimiento no sea menor que la fecha actual
                     var fechaActual = new Date();
                     var fechaVencimientoDate = new Date(fechaVencimiento);
@@ -309,23 +309,24 @@
                         $('#mensaje_errorFe').text('');
                     }
                 }
-                console.log("Fecha actual:", fechaActual.toString());
-                console.log("Fecha de vencimiento:", fechaVencimientoDate.toString());
 
-                    // Calcular la diferencia en milisegundos entre la fecha de vencimiento y la fecha actual
-                    var diferenciaFechas = fechaVencimientoDate - fechaActual;
-                    console.log("Fecha de vencimiento:", diferenciaFechas.toString());
+                alert(fechaActual);
+                alert(fechaVencimientoDate);
 
-                    // Calcular el número total de segundos restantes
-                    var segundosRestantes = Math.floor(diferenciaFechas / 1000);
+                // Calcular la diferencia en milisegundos entre la fecha de vencimiento y la fecha actual
+                var diferenciaFechas = fechaVencimientoDate - fechaActual;
 
-                    // Calcular el número de días, horas, minutos y segundos restantes
-                    var diasRestantes = Math.floor(segundosRestantes / (24 * 60 * 60));
-                    var horasRestantes = Math.floor((segundosRestantes % (24 * 60 * 60)) / (60 * 60));
+                // Calcular el número total de segundos restantes
+                var segundosRestantes = Math.floor(diferenciaFechas / 1000);
 
-                    // Combinar días y horas en el mensaje de advertencia
-                    var mensajeAdvertencia = "El producto se vence en " + diasRestantes + " día(s) y " +
-                        horasRestantes + " hora(s). ¿Aún desea agregarlo?";
+                // Calcular el número de días, horas, minutos y segundos restantes
+                var diasRestantes = Math.floor(segundosRestantes / (24 * 60 * 60));
+                var horasRestantes = Math.floor((segundosRestantes % (24 * 60 * 60)) / (60 * 60));
+                var minutosRestantes = Math.floor((segundosRestantes % (60 * 60)) / 60);
+
+                // Combinar días, horas y minutos en el mensaje de advertencia
+                var mensajeAdvertencia = "El producto se vence en " + diasRestantes + " día(s), " +
+                    horasRestantes + " hora(s) y " + minutosRestantes + " minuto(s). ¿Aún desea agregarlo?";
 
 
 
