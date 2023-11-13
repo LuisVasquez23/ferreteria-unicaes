@@ -12,7 +12,7 @@
 
                     <div class="form-group">
                         <label for="rol_input">Rol: *</label>
-                        <select name="rol_input" id="rol_input" class="form-control">
+                        <select name="rol_input" id="rol_input" class="form-control" required>
                             @foreach($roles as $rolId => $rolNombre)
                                 <option value="{{ $rolId }}">
                                     {{ $rolNombre }}
@@ -28,7 +28,7 @@
 
                     <div class="form-group">
                         <label for="usuario_input">Nombre del usuario: *</label>
-                        <select name="usuario_input" id="usuario_input" class="form-control">
+                        <select name="usuario_input" id="usuario_input" class="form-control" required>
                             @foreach($usuarios as $usuarioId => $nombre_completo)
                                 <option value="{{ $usuarioId }}">
                                     {{ $nombre_completo }}

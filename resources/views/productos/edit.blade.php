@@ -38,7 +38,7 @@
                 <div class="col-md-6 mt-2">
                     <div class="form-group">
                         <label for="usuario_id">Proveedor:</label>
-                        <select name="usuario_id" id="usuario_id" class="form-control">
+                        <select name="usuario_id" id="usuario_id" class="form-control" required>
                             @foreach ($proveedores as $usuario_id => $nombres)
                                 <option value="{{ $usuario_id }}"
                                     {{ $producto->proveedor_id == $usuario_id ? 'selected' : '' }}>
@@ -53,7 +53,7 @@
                 <div class="col-md-6 mt-2">
                     <div class="form-group">
                         <label for="categoria_id">Categoria:</label>
-                        <select name="categoria_id" id="categoria_id" class="form-control">
+                        <select name="categoria_id" id="categoria_id" class="form-control" required>
                             @foreach ($categorias as $categoria_id => $nombres)
                                 <option value="{{ $categoria_id }}"
                                     {{ $producto->categoria_id == $categoria_id ? 'selected' : '' }}>
@@ -68,7 +68,7 @@
                 <div class="col-md-6 mt-2">
                     <div class="form-group">
                         <label for="estante_id">Estante:</label>
-                        <select name="estante_id" id="estante_id" class="form-control">
+                        <select name="estante_id" id="estante_id" class="form-control" required>
                             @foreach ($estantes as $estante_id => $estante)
                                 <option value="{{ $estante_id }}"
                                     {{ $producto->estante_id == $estante_id ? 'selected' : '' }}>
@@ -82,7 +82,7 @@
                 <div class="col-md-6 mt-2">
                     <div class="form-group">
                         <label for="unidad_medida_id">Unidad de Medida:</label>
-                        <select name="unidad_medida_id" id="unidad_medida_id" class="form-control">
+                        <select name="unidad_medida_id" id="unidad_medida_id" class="form-control" required>
                             @foreach ($unidades as $unidad_medida_id => $nombreUnidad)
                                 <option value="{{ $unidad_medida_id }}"
                                     {{ $producto->unidad_medida_id == $unidad_medida_id ? 'selected' : '' }}>
@@ -96,7 +96,7 @@
                 <div class="col-md-6 mt-2">
                     <div class="form-group">
                         <label for="periodo_id">Período:</label>
-                        <select name="periodo_id" id="periodo_id" class="form-control">
+                        <select name="periodo_id" id="periodo_id" class="form-control" required>
                             @foreach ($periodos as $periodo_id => $fecha)
                                 <option value="{{ $periodo_id }}"
                                     {{ $producto->periodo_id == $periodo_id ? 'selected' : '' }}>
@@ -117,4 +117,20 @@
         </div>
     </div>
 
+@endsection
+@section('AfterScript')
+
+<script>
+    $(document).ready(function() {
+        // Inicializa Selectize
+        initSearchSelect('usuario_id');
+        initSearchSelect('categoria_id');
+        initSearchSelect('categoria_id');
+        initSearchSelect('estante_id');
+        initSearchSelect('unidad_medida_id');
+        initSearchSelect('periodo_id');
+
+
+    });
+</script>
 @endsection

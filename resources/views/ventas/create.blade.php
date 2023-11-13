@@ -40,7 +40,7 @@
                              <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="periodo_id" class="form-label">Período: *</label>
-                                    <select name="periodo_id" id="periodo_id" class="form-control">
+                                    <select name="periodo_id" id="periodo_id" class="form-control" required>
                                         @if ($periodos->isEmpty())
                                             <option value="" disabled selected>No se encontraron períodos</option>
                                         @else

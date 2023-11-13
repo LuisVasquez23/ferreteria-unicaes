@@ -12,7 +12,7 @@
                 <div class="row mb-4">
                     <div class="col-md-4">
                         <label for="periodo_id_inicio" class="form-label">Período de Inicio: *</label>
-                        <select name="periodo_id_inicio" id="periodo_id_inicio" class="form-select @error('periodo_id_inicio') is-invalid @enderror">
+                        <select name="periodo_id_inicio" id="periodo_id_inicio" class="form-select @error('periodo_id_inicio') is-invalid @enderror" required>
                             @if($periodos->isEmpty())
                                 <option value="" disabled selected>No se encontraron períodos</option>
                             @else
@@ -30,7 +30,7 @@
 
                     <div class="col-md-4">
                         <label for "periodo_id_fin" class="form-label">Período de Fin: *</label>
-                        <select name="periodo_id_fin" id="periodo_id_fin" class="form-select @error('periodo_id_fin') is-invalid @enderror">
+                        <select name="periodo_id_fin" id="periodo_id_fin" class="form-select @error('periodo_id_fin') is-invalid @enderror" required>
                             @if($periodos->isEmpty())
                                 <option value="" disabled selected>No se encontraron períodos</option>
                             @else

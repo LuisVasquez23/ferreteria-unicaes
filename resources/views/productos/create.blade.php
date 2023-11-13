@@ -50,7 +50,7 @@
                 <div class="col-md-6 mt-2">
                     <div class="form-group">
                         <label for="usuario_id">Proveedor: *</label>
-                        <select name="usuario_id" id="usuario_id" class="form-control">
+                        <select name="usuario_id" id="usuario_id" class="form-control" required>
                             @if ($proveedores->isEmpty())
                                 <option value="" disabled selected>
                                     No se encontraron proveedores
@@ -68,9 +68,9 @@
 
                 <!-- CATEGORIA DEL PRODUCTO -->
                 <div class="col-md-6 mt-2">
-                    <div class="form-group">
+                    <div class="form-group @error('categoria_id') is-invalid @enderror">
                         <label for="categoria_id">Categoria: *</label>
-                        <select name="categoria_id" id="categoria_id" class="form-control">
+                        <select name="categoria_id" id="categoria_id" class="form-control" required>
                             @if ($categorias->isEmpty())
                                 <option value="" disabled selected>
                                     No se encontraron categorías
@@ -83,14 +83,18 @@
                                 @endforeach
                             @endif
                         </select>
+                        @error('categoria_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
+
 
                 <!-- ESTANTE DEL PRODUCTO -->
                 <div class="col-md-6 mt-2">
                     <div class="form-group">
                         <label for="estante_id">Estante: *</label>
-                        <select name="estante_id" id="estante_id" class="form-control">
+                        <select name="estante_id" id="estante_id" class="form-control" required>
                             @if ($estantes->isEmpty())
                                 <option value="" disabled selected>
                                     No se encontraron estantes
@@ -110,7 +114,7 @@
                 <div class="col-md-6 mt-2">
                     <div class="form-group">
                         <label for="unidad_medida_id">Unidad de Medida: *</label>
-                        <select name="unidad_medida_id" id="unidad_medida_id" class="form-control">
+                        <select name="unidad_medida_id" id="unidad_medida_id" class="form-control" required>
                             @if ($unidades->isEmpty())
                                 <option value="" disabled selected>
                                     No se encontraron unidades de medida
@@ -130,7 +134,7 @@
                 <div class="col-md-6 mt-2">
                     <div class="form-group">
                         <label for="periodo_id">Período: *</label>
-                        <select name="periodo_id" id="periodo_id" class="form-control">
+                        <select name="periodo_id" id="periodo_id" class="form-control" required>
                             @if ($periodos->isEmpty())
                                 <option value="" disabled selected>
                                     No se encontraron períodos
@@ -154,7 +158,8 @@
         </div>
     </div>
 
-    @endsection @section('AfterScript')
+    @endsection
+    @section('AfterScript')
     <script>
         // DECLARACION DE VARIABLES
         const d = document;

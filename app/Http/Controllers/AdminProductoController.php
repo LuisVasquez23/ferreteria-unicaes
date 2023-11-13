@@ -88,14 +88,26 @@ class AdminProductoController extends Controller
             $rules = [
                 'nombre_opcion' => 'required|unique:productos,nombre',
                 'descripcion_opcion' => 'required',
-                'imagenProducto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Ajusta las reglas de validación según tus necesidades
+                'imagenProducto' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+                'usuario_id'=> 'required',
+                'categoria_id'=> 'required',
+                'periodo_id' => 'required',
+                'estante_id' =>'required',
+                'unidad_medida_id' => 'required',// Ajusta las reglas de validación según tus necesidades
             ];
 
             $messages = [
                 'nombre_opcion.required' => 'El campo "nombre" es obligatorio.',
                 'nombre_opcion.unique' => 'El producto ingresado ya está registrado, intentelo de nuevo.',
                 'descripcion_opcion.required' => 'El campo "descripción" es obligatorio.',
-                'imagenProducto.required' => 'El campo "imagen" es obligatorio.',
+                'usuario_id.required' => 'El campo del proveedor es obligatorio',
+                'categoria_id.required' => 'El campo del categoria es obligatorio',
+                'periodo_id.required' => 'El campo del periodo es obligatorio',
+                'estante_id.required' => 'El campo del estante es obligatorio',
+                'unidad_medida_id' => 'El campo del unidad de medida es obligatorio',
+
+
+
             ];
 
             $validator = Validator::make($request->all(), $rules, $messages);

@@ -67,7 +67,7 @@
     <script>
         $(document).ready(function() {
             // Inicializa Selectize
-            initSearchSelect('parent_id')
+            initSearchSelect('parent_id');
             initSearchSelect('role_id')
 
         });

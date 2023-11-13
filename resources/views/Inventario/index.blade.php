@@ -45,7 +45,7 @@
             <div class="row">
                 <div class="col-md-4 mx-auto text-center mb-3">
                     <label class="mb-2" for="filtro-periodo">Filtrar por Periodo:</label>
-                    <select id="filtro-periodo" class="form-control">
+                    <select id="filtro-periodo" class="form-control" required>
                         <option value="MostrarTodos">Mostrar todos</option>
                         @foreach ($periodos as $periodo)
                             <option value="{{ $periodo->periodo_id }}">{{ $periodo->fecha_inicio->format('Y-m-d') }} -
@@ -56,7 +56,7 @@
 
                 <div class="col-md-4 mx-auto text-center mb-3">
                     <label class="mb-2" for="filtro-nombre">Filtrar por Nombre:</label>
-                    <select id="filtro-nombre" class="form-control">
+                    <select id="filtro-nombre" class="form-control" required>
                         <option value="MostrarTodos">Mostrar todos</option>
                         @foreach ($productosNombre as $nombre)
                             <option value="{{ $nombre }}" @if (request('nombre') == $nombre) selected @endif>
