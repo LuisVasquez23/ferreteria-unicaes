@@ -54,6 +54,13 @@
             </div>
         </div>
     </div>
+    <style>
+        /* Estilo para limitar la altura máxima del modal y permitir desplazamiento vertical */
+        .modal-content {
+            max-height: 80vh; /* Ajusta la altura máxima según lo necesites, aquí se usa el 80% de la altura visible */
+            overflow-y: auto; /* Habilita el desplazamiento vertical si es necesario */
+        }
+    </style>
 
 
     <!-- Modal para el detalle de venta -->
