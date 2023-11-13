@@ -246,7 +246,6 @@ class AdminProductoController extends Controller
             $producto->proveedor_id = $request->input('usuario_id');
             $producto->categoria_id = $request->input('categoria_id');
             $producto->estante_id = $request->input('estante_id');
-            $producto->img_path = '';
             $producto->unidad_medida_id = $request->input('unidad_medida_id');
             $producto->periodo_id = $request->input('periodo_id');
 
