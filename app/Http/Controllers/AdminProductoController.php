@@ -218,7 +218,7 @@ class AdminProductoController extends Controller
 
             // // Define las reglas de validación
             $rules = [
-                'nombre_opcion' => 'required|unique:productos,nombre,' . $id . ',producto_id',
+                'nombre_opcion' => 'required',
                 'descripcion_opcion' => 'required',
                 'imagenProducto' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Ajusta las reglas de validación según tus necesidades
             ];
@@ -250,10 +250,13 @@ class AdminProductoController extends Controller
 
             $producto->actualizado_por = Auth::user()->nombres . ' ' . Auth::user()->apellidos;
 
-            // Sube la imagen del producto a la ubicación deseada
-            $imagenProducto = $request->file('imagenProducto');
 
-            if ($imagenProducto) {
+
+            if ($$request->file('imagenProducto')) {
+
+                // Sube la imagen del producto a la ubicación deseada
+                $imagenProducto = $request->file('imagenProducto');
+
                 $imagenProductoExtension = $imagenProducto->getClientOriginalExtension();
                 $nombreImagen = $request->input('nombre_opcion') . '_' . $request->input('categoria_id') . '_' . $request->input('estante_id') . '.' . $imagenProductoExtension;
                 $imagenProductoName = 'public/upload/productos/' . str_replace(' ', '', $nombreImagen);
