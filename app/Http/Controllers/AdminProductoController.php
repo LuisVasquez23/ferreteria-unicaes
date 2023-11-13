@@ -105,9 +105,6 @@ class AdminProductoController extends Controller
                 'periodo_id.required' => 'El campo del periodo es obligatorio',
                 'estante_id.required' => 'El campo del estante es obligatorio',
                 'unidad_medida_id' => 'El campo del unidad de medida es obligatorio',
-
-
-
             ];
 
             $validator = Validator::make($request->all(), $rules, $messages);
@@ -138,15 +135,20 @@ class AdminProductoController extends Controller
 
             // Sube la imagen del producto a la ubicación deseada
             $imagenProducto = $request->file('imagenProducto');
-            $imagenProductoExtension = $imagenProducto->getClientOriginalExtension();
-            $nombreImagen = $request->input('nombre_opcion') . '_' . $request->input('categoria_id') . '_' . $request->input('estante_id') . '.' . $imagenProductoExtension;
-            $imagenProductoName = 'public/upload/productos/' . str_replace(' ', '', $nombreImagen);
 
-            Storage::put($imagenProductoName, file_get_contents($imagenProducto));
+            if ($imagenProducto) {
+                $imagenProductoExtension = $imagenProducto->getClientOriginalExtension();
+                $nombreImagen = $request->input('nombre_opcion') . '_' . $request->input('categoria_id') . '_' . $request->input('estante_id') . '.' . $imagenProductoExtension;
+                $imagenProductoName = 'public/upload/productos/' . str_replace(' ', '', $nombreImagen);
 
-            // Actualiza el campo de imagen en la tabla de productos
-            // Tendra el siguiente formato: PRODUCTO_1_1.jpeg
-            $producto->img_path =  str_replace(' ', '', $nombreImagen);
+                Storage::put($imagenProductoName, file_get_contents($imagenProducto));
+
+                // Actualiza el campo de imagen en la tabla de productos
+                // Tendra el siguiente formato: PRODUCTO_1_1.jpeg
+                $producto->img_path =  str_replace(' ', '', $nombreImagen);
+            }
+
+
             $producto->save();
 
             // Confirmar la transacción
