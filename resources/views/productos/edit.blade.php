@@ -6,7 +6,7 @@
         <h5 class="card-header">Editar información del producto</h5>
         <div class="card-body">
             <form action="{{ route('producto.update', $producto->producto_id) }}" method="post" class="row needs-validation"
-                novalidate>
+                enctype="multipart/form-data" novalidate>
                 @csrf
                 @method('PUT')
 

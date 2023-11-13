@@ -270,10 +270,9 @@ class AdminProductoController extends Controller
 
             $producto->save();
 
-            return redirect()->route('producto.edit')->with('success', 'Producto actualizado con éxito.');
+            return redirect()->route('productos')->with('success', 'Producto actualizado con éxito.');
         } catch (\Throwable $th) {
-            dd($th);
-            return redirect()->route('producto.edit')->with('error', 'Sucedio un error al actualizar el producto, todos los campos deben ser correctos' . $th->getMessage());
+            return redirect()->route('productos')->with('error', 'Sucedio un error al actualizar el producto, todos los campos deben ser correctos' . $th->getMessage());
         }
     }
 
