@@ -29,6 +29,30 @@
         integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.default.min.css"
+        integrity="sha512-pTaEn+6gF1IeWv3W1+7X7eM60TFu/agjgoHmYhAfLEU8Phuf6JKiiE8YmsNC0aCgQv4192s4Vai8YZ6VNM6vyQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js"
+        integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <style>
+        .selectize-input {
+            border: none !important;
+            margin: 0 !important;
+            background: transparent !important;
+        }
+
+        .selectize-control {
+            padding: 0 !important;
+        }
+
+        .selectize-dropdown {
+            box-shadow: 1px 2px 10px 5px rgb(227, 227, 227);
+        }
+    </style>
+
     @yield('afterCss')
 
 </head>
@@ -320,7 +344,15 @@
         }
     </script>
 
-
+    <script>
+        const initSearchSelect = (id) => {
+            $(`#${id}`).selectize({
+                searchField: ['text',
+                    'value'
+                ], // Especifica los campos en los que se debe realizar la búsqueda
+            });
+        }
+    </script>
 
     @yield('AfterScript')
 

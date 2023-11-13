@@ -34,6 +34,7 @@
                     <label for="direccion">Padre: </label>
                     {!! Form::select('parent_id', ['' => 'Seleccionar ...'] + $menusOption->pluck('nombre', 'id')->toArray(), null, [
                         'class' => 'form-control',
+                        'id' => 'parent_id', // Aquí agregas el atributo 'id'
                     ]) !!}
                     <!-- No se muestra mensaje de error para 'parent_id' -->
                 </div>
@@ -60,4 +61,13 @@
         </div>
     </div>
 
+@endsection
+
+@section('AfterScript')
+    <script>
+        $(document).ready(function() {
+            // Inicializa Selectize
+            initSearchSelect('parent_id')
+        });
+    </script>
 @endsection
