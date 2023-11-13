@@ -11,28 +11,28 @@
                     $randomColor = $colors[array_rand($colors)];
                 @endphp
                 <span class="badge text-bg-{{ $randomColor }}">{{ $detalleRole->role->role }}</span>
-
-                @if ($detalleRole->role->role === 'admin' || $detalleRole->role->role === 'empleado')
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="alert alert-warning mt-3" id="advertencia" style="display: none;">
-                                <span id="advertenciaMensaje"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="card mt-3">
-                                <div class="card-body">
-                                    <h5 class="card-title">Productos con existencias bajas</h5>
-                                    <ul class="list-group list-group-flush" id="listaProductos">
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endif
             @endforeach
         @else
             <p>No se encontraron roles para este usuario.</p>
+        @endif
+
+        @if (strtolower($detalleRole->role->role) === 'admin' || strtolower($detalleRole->role->role) === 'empleado')
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-warning mt-3" id="advertencia" style="display: none;">
+                        <span id="advertenciaMensaje"></span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Productos con existencias bajas</h5>
+                            <ul class="list-group list-group-flush" id="listaProductos">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         @endif
 
 
