@@ -34,10 +34,10 @@
 
                 <!-- IMAGEN DEL PRODUCTO -->
                 <div class="form-group col-md-6 mt-2">
-                    <label for="imagenProducto">Imagen: *</label>
+                    <label for="imagenProducto">Imagen: </label>
 
                     <input type="file" class="form-control {{ $errors->has('imagenProducto') ? 'is-invalid' : '' }}"
-                        name="imagenProducto" id="imagenProducto" accept="image/*"/>
+                        name="imagenProducto" id="imagenProducto" accept="image/*" />
 
                     @if ($errors->has('imagenProducto'))
                         <div class="invalid-feedback">
@@ -158,8 +158,8 @@
         </div>
     </div>
 
-    @endsection
-    @section('AfterScript')
+@endsection
+@section('AfterScript')
     <script>
         // DECLARACION DE VARIABLES
         const d = document;
