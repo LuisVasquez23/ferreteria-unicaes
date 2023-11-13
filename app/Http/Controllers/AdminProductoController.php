@@ -244,27 +244,25 @@ class AdminProductoController extends Controller
             $producto->proveedor_id = $request->input('usuario_id');
             $producto->categoria_id = $request->input('categoria_id');
             $producto->estante_id = $request->input('estante_id');
+            $producto->img_path = '';
             $producto->unidad_medida_id = $request->input('unidad_medida_id');
             $producto->periodo_id = $request->input('periodo_id');
 
             $producto->actualizado_por = Auth::user()->nombres . ' ' . Auth::user()->apellidos;
 
-            // Actualiza la imagen del producto si se proporciona una nueva
-            if ($request->hasFile('imagenProducto')) {
-                $imagenProducto = $request->file('imagenProducto');
+            // Sube la imagen del producto a la ubicación deseada
+            $imagenProducto = $request->file('imagenProducto');
+
+            if ($imagenProducto) {
                 $imagenProductoExtension = $imagenProducto->getClientOriginalExtension();
-                $imagenProductoName = 'public/upload/productos/' . $producto->id . '.' . $imagenProductoExtension;
+                $nombreImagen = $request->input('nombre_opcion') . '_' . $request->input('categoria_id') . '_' . $request->input('estante_id') . '.' . $imagenProductoExtension;
+                $imagenProductoName = 'public/upload/productos/' . str_replace(' ', '', $nombreImagen);
 
-                // Elimina el archivo existente si existe
-                if (Storage::exists($producto->imagen)) {
-                    Storage::delete($producto->imagen);
-                }
-
-                // Sube la nueva imagen
                 Storage::put($imagenProductoName, file_get_contents($imagenProducto));
 
                 // Actualiza el campo de imagen en la tabla de productos
-                $producto->imagen = $imagenProductoName;
+                // Tendra el siguiente formato: PRODUCTO_1_1.jpeg
+                $producto->img_path =  str_replace(' ', '', $nombreImagen);
             }
 
             $producto->save();

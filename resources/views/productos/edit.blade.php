@@ -35,6 +35,21 @@
                     @endif
                 </div>
 
+                <!-- IMAGEN DEL PRODUCTO -->
+                <div class="form-group col-md-6 mt-2">
+                    <label for="imagenProducto">Imagen: </label>
+
+                    <input type="file" class="form-control {{ $errors->has('imagenProducto') ? 'is-invalid' : '' }}"
+                        name="imagenProducto" id="imagenProducto" accept="image/*" />
+
+                    @if ($errors->has('imagenProducto'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('imagenProducto') }}
+                        </div>
+                    @endif
+                </div>
+
+
                 <div class="col-md-6 mt-2">
                     <div class="form-group">
                         <label for="usuario_id">Proveedor:</label>
@@ -120,17 +135,17 @@
 @endsection
 @section('AfterScript')
 
-<script>
-    $(document).ready(function() {
-        // Inicializa Selectize
-        initSearchSelect('usuario_id');
-        initSearchSelect('categoria_id');
-        initSearchSelect('categoria_id');
-        initSearchSelect('estante_id');
-        initSearchSelect('unidad_medida_id');
-        initSearchSelect('periodo_id');
+    <script>
+        $(document).ready(function() {
+            // Inicializa Selectize
+            initSearchSelect('usuario_id');
+            initSearchSelect('categoria_id');
+            initSearchSelect('categoria_id');
+            initSearchSelect('estante_id');
+            initSearchSelect('unidad_medida_id');
+            initSearchSelect('periodo_id');
 
 
-    });
-</script>
+        });
+    </script>
 @endsection
