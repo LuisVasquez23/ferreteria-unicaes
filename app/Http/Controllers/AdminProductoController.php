@@ -89,11 +89,11 @@ class AdminProductoController extends Controller
                 'nombre_opcion' => 'required|unique:productos,nombre',
                 'descripcion_opcion' => 'required',
                 'imagenProducto' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-                'usuario_id'=> 'required',
-                'categoria_id'=> 'required',
+                'usuario_id' => 'required',
+                'categoria_id' => 'required',
                 'periodo_id' => 'required',
-                'estante_id' =>'required',
-                'unidad_medida_id' => 'required',// Ajusta las reglas de validación según tus necesidades
+                'estante_id' => 'required',
+                'unidad_medida_id' => 'required', // Ajusta las reglas de validación según tus necesidades
             ];
 
             $messages = [
@@ -168,9 +168,10 @@ class AdminProductoController extends Controller
         try {
 
             //Proveedores de la db
-            $proveedores = Usuario::whereHas('detalle_roles', function ($query) {
-                $query->where('role_id', 5);
-            })->whereNull('bloqueado_por')->pluck('nombres', 'usuario_id');
+            $proveedores = Usuario::whereHas('detalle_roles.role', function ($query) {
+                $query->where('role', 'Proveedor');
+            })->whereNull('bloqueado_por')
+                ->pluck('nombres', 'usuario_id');
 
             //categorias de la db
 
