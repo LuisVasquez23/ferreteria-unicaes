@@ -76,7 +76,8 @@
                             <label for="producto_id" class="form-label">Producto: *</label>
                             <select class="form-control @error('producto_id') is-invalid @enderror" id="producto_id"
                                 name="producto_id" required>
-                                <option value="" disabled selected>Seleccione un producto</option> <!-- Placeholder -->
+                                <option value="" disabled selected>Seleccione un producto</option>
+                                <!-- Placeholder -->
                                 @foreach ($productos as $producto)
                                     <option value="{{ $producto->producto_id }}" data-precio="{{ $producto->precio }}">
                                         {{ $producto->nombre }} - Proveedor: {{ $producto->usuario->nombres }}
@@ -142,57 +143,59 @@
             </form>
 
             <!-- Lista de productos seleccionados -->
-            <div class="mt-4">
-                <h5 class="mb-3">Productos Seleccionados:</h5>
-                <div style="overflow-x: auto;">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Nombre Producto</th>
-                                <th>Cantidad</th>
-                                <th>Precio Unitario</th>
-                                <th>Fecha de Vencimiento</th>
-                                <th>Precio Total</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody id="lista-productos">
-                            <!-- Aquí se mostrarán los productos seleccionados -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="row">
-                <!-- Columna para mostrar el monto total -->
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label for="monto_totalShow" class="form-label">Monto total:</label>
-                        <input type="text" class="form-control" id="monto_totalShow" readonly disabled>
+            <div class="table-responsive">
+                <div class="mt-4">
+                    <h5 class="mb-3">Productos Seleccionados:</h5>
+                    <div style="overflow-x: auto;">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio Unitario</th>
+                                    <th>Fecha de Vencimiento</th>
+                                    <th>Precio Total</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lista-productos">
+                                <!-- Aquí se mostrarán los productos seleccionados -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
-                <!-- Columna para mostrar el IVA -->
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label for="ivaShow" class="form-label">IVA (13%):</label>
-                        <input type="text" class="form-control" id="ivaShow" readonly disabled>
+                <div class="row">
+                    <!-- Columna para mostrar el monto total -->
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="monto_totalShow" class="form-label">Monto total:</label>
+                            <input type="text" class="form-control" id="monto_totalShow" readonly disabled>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Columna para mostrar el total + IVA -->
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label for="totalFinShow" class="form-label">Total + IVA (13%):</label>
-                        <input type="text" class="form-control" id="totalFinShow" readonly disabled>
+                    <!-- Columna para mostrar el IVA -->
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="ivaShow" class="form-label">IVA (13%):</label>
+                            <input type="text" class="form-control" id="ivaShow" readonly disabled>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Columna para el botón "Finalizar Compra" -->
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <div class="mb-3 mt-2">
-                        <button type="button" class="btn btn-primary" id="finalizar-compra" disabled>Finalizar
-                            Compra</button>
+                    <!-- Columna para mostrar el total + IVA -->
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="totalFinShow" class="form-label">Total + IVA (13%):</label>
+                            <input type="text" class="form-control" id="totalFinShow" readonly disabled>
+                        </div>
+                    </div>
+
+                    <!-- Columna para el botón "Finalizar Compra" -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <div class="mb-3 mt-2">
+                            <button type="button" class="btn btn-primary" id="finalizar-compra" disabled>Finalizar
+                                Compra</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -271,13 +274,13 @@
                     $('#precio_unitario').css('border', '1px solid #ccc');
                     $('#mensaje_errorP').text('');
                 }
-                if(isNaN(productoId) || productoId <=0  ){
+                if (isNaN(productoId) || productoId <= 0) {
                     AlertMessage("Debes seleccionar un producto valido.", "error");
                     $('#producto_id').css('border', '1px solid red');
                     $('#mensaje_errorPructoI').text('Debes seleccionar un producto valido.');
 
                     return;
-                } else{
+                } else {
                     $('#producto_id').css('border', '1px solid #ccc');
                     $('#mensaje_errorPructoI').text('');
                 }
@@ -381,7 +384,7 @@
                             $('#mensaje_errorC').text('');
                             $('#mensaje_errorP').text('');
                             $('#mensaje_errorFe').text('');
-                             $('#mensaje_errorPructoI').text('');
+                            $('#mensaje_errorPructoI').text('');
                             habilitarDeshabilitarBotonFinalizar();
 
 
