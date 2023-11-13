@@ -52,7 +52,8 @@
         div.option.selected:hover,
         div.option.selected,
         div.option.selected.active {
-            background: #787878;
+            background: #b7b7b7;
+            border-radius: 5px;
         }
 
         .selectize-dropdown {
