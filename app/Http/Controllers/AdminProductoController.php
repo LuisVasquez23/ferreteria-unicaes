@@ -157,7 +157,6 @@ class AdminProductoController extends Controller
             return redirect()->route('productos')->with('success', 'El producto se ha agregado con éxito.');
         } catch (\Throwable $th) {
             DB::rollBack();
-            dd($th);
             return redirect()->route('productos')->with('error', 'Sucedio un error al ingresar el producto, todos los campos deben ser correctos');
         }
     }
@@ -238,6 +237,9 @@ class AdminProductoController extends Controller
                     ->withInput();
             }
 
+            // Iniciar una transacción de base de datos
+            DB::beginTransaction();
+
             // Actualiza los campos del producto
             $producto->nombre = $request->input('nombre_opcion');
             $producto->descripcion = $request->input('descripcion_opcion');
@@ -252,11 +254,10 @@ class AdminProductoController extends Controller
 
 
 
-            if ($$request->file('imagenProducto')) {
+            // Sube la imagen del producto a la ubicación deseada
+            $imagenProducto = $request->file('imagenProducto');
 
-                // Sube la imagen del producto a la ubicación deseada
-                $imagenProducto = $request->file('imagenProducto');
-
+            if ($imagenProducto) {
                 $imagenProductoExtension = $imagenProducto->getClientOriginalExtension();
                 $nombreImagen = $request->input('nombre_opcion') . '_' . $request->input('categoria_id') . '_' . $request->input('estante_id') . '.' . $imagenProductoExtension;
                 $imagenProductoName = 'public/upload/productos/' . str_replace(' ', '', $nombreImagen);
@@ -268,7 +269,9 @@ class AdminProductoController extends Controller
                 $producto->img_path =  str_replace(' ', '', $nombreImagen);
             }
 
-            $producto->save();
+
+            // Confirmar la transacción
+            DB::commit();
 
             return redirect()->route('productos')->with('success', 'Producto actualizado con éxito.');
         } catch (\Throwable $th) {
