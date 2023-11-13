@@ -48,8 +48,57 @@
             padding: 0 !important;
         }
 
+        div.option:hover,
+        div.option.selected:hover,
+        div.option.selected,
+        div.option.selected.active {
+            background: #787878;
+        }
+
         .selectize-dropdown {
             box-shadow: 1px 2px 10px 5px rgb(227, 227, 227);
+            padding: 10px 10px;
+            border-radius: 0px 3px;
+        }
+
+        .selectize-dropdown.single {
+            border: none;
+        }
+
+        /* Estilos para WebKit (Chrome, Safari) */
+        .selectize-dropdown-content::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .selectize-dropdown-content::-webkit-scrollbar-thumb {
+            background-color: #a2a2a2;
+            /* Color del fondo de la barra de desplazamiento */
+            border-radius: 5px;
+            /* Radio de borde de la barra de desplazamiento */
+        }
+
+        /* Estilos para Firefox */
+        .selectize-dropdown-content scrollbar {
+            width: 10px;
+        }
+
+        .selectize-dropdown-content thumb {
+            background-color: #a2a2a2;
+            /* Color del fondo de la barra de desplazamiento */
+            border-radius: 5px;
+            /* Radio de borde de la barra de desplazamiento */
+        }
+
+        /* Estilos para Internet Explorer */
+        .selectize-dropdown-content::-ms-scrollbar {
+            width: 8px;
+        }
+
+        .selectize-dropdown-content::-ms-thumb {
+            background-color: #a2a2a2;
+            /* Color del fondo de la barra de desplazamiento */
+            border-radius: 5px;
+            /* Radio de borde de la barra de desplazamiento */
         }
     </style>
 
