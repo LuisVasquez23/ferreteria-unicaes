@@ -16,7 +16,7 @@
             <p>No se encontraron roles para este usuario.</p>
         @endif
 
-        @if ($detalleRole->role->role === 'admin' || $detalleRole->role->role === 'empleado')
+        @if (strtolower($detalleRole->role->role) === 'admin' || strtolower($detalleRole->role->role) === 'empleado')
             <div class="row">
                 <div class="col-md-12">
                     <div class="alert alert-warning mt-3" id="advertencia" style="display: none;">
