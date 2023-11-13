@@ -7,7 +7,7 @@
         <div class="card-body">
             <form method="POST" action="{{ route('reporteCompra.index') }}">
                 @csrf
-            
+
                 <div class="row mb-4">
                     <div class="col-md-4">
                         <label for="periodo_id_inicio" class="form-label">Período de Inicio: *</label>
@@ -26,7 +26,7 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-            
+
                     <div class="col-md-4">
                         <label for="periodo_id_fin" class="form-label">Período de Fin: *</label>
                         <select name="periodo_id_fin" id="periodo_id_fin" class="form-select @error('periodo_id_fin') is-invalid @enderror">
@@ -45,7 +45,7 @@
                         @enderror
                     </div>
                 </div>
-            
+
                 <button type="submit" class="btn btn-success mb-3 ">
                     <i class="fas fa-plus "></i>
                     Consultar
@@ -53,10 +53,10 @@
 
 
             </form>
-            
 
 
-            
+
+
             <div class="table-responsive">
                 <table id="miTabla" class="table text-nowrap mb-0 align-middle table-striped table-bordered">
                     <thead class="text-dark fs-4">
@@ -79,7 +79,7 @@
                             <th class="border-bottom-0">
                                 <b>Acciones</b>
                             </th>
-                            
+
                         </tr>
                     </thead>
                     <tbody>
@@ -93,25 +93,39 @@
 
                             <td>{{ $resultado->creado_por }}</td>
                             <td class="d-flex gap-1 justify-content-center">
-                        
+
                                 <a href="{{ route('reportes.pdf', ['num_factura' => $resultado->numerosfactura]) }}" class="btn btn-danger" title="Generar PDF" target="_blank">
                                     <i class="fas fa-file-pdf"></i>
                                 </a>
-                                
+
 
                             </td>
                         </tr>
                         @endforeach
 
-                       
+
                     </tbody>
                 </table>
             </div>
         </div>
 
-        
+
     </div>
 
 @endsection
+@section('AfterScript')
+    <script>
+        $(document).ready(function() {
+            // Inicializa Selectize
+            initSearchSelect('periodo_id_inicio');
+            initSearchSelect('periodo_id_fin');
+
+
+
+        });
+    </script>
+@endsection
+
+
 
 

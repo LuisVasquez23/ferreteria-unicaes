@@ -39,8 +39,8 @@
 
                 </div>
 
-                
-         
+
+
 
                 <div class="form-group col-md-12 mt-3">
                     <input type="submit" class="btn btn-primary" value="Crear detalle">
@@ -51,3 +51,14 @@
     </div>
 
 @endsection
+@section('AfterScript')
+<script>
+    $(document).ready(function() {
+        // Inicializa Selectize
+        initSearchSelect('usuario_input');
+        initSearchSelect('rol_input');
+
+    });
+</script>
+@endsection
+

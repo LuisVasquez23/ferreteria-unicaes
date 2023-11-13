@@ -23,14 +23,14 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="cliente_id" class="form-label">Cliente:</label>
-                            <select class="form-select" id="cliente_id" name="cliente_id" required>
+                            <select class="form-control" id="cliente_id" name="cliente_id" required>
                                 @foreach ($clientes as $usuario_id => $nombreCompleto)
                                     <option value="{{ $usuario_id }}">{{ $nombreCompleto }}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
-                  
+
 
 
                 </div>
@@ -40,7 +40,7 @@
                              <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="periodo_id" class="form-label">Período: *</label>
-                                    <select name="periodo_id" id="periodo_id" class="form-select">
+                                    <select name="periodo_id" id="periodo_id" class="form-control">
                                         @if ($periodos->isEmpty())
                                             <option value="" disabled selected>No se encontraron períodos</option>
                                         @else
@@ -58,7 +58,7 @@
                     <div class="col-md-4">
                         <div class="mb-3">
                             <label for="producto_id" class="form-label">Producto:</label>
-                            <select class="form-select" id="producto_id" name="producto_id" required>
+                            <select class="form-control" id="producto_id" name="producto_id" required>
                                 @foreach ($productos as $producto)
                                     <option value="{{ $producto->producto_id }}" data-precio="{{ $producto->precio }}">
                                         {{ $producto->nombre }} - Proveedor: {{ $producto->usuario->nombres }}</option>
@@ -90,7 +90,7 @@
 
                             </div>
                         </div>
-                    </div>      
+                    </div>
 
                 <!-- Campo oculto para la lista de productos -->
                 <input type="hidden" name="lista_productos" id="lista_productos_input" value="">
@@ -126,7 +126,7 @@
                 <div class="col-md-4">
                     <div class="mb-3">
                         <label for="monto_totalShow" class="form-label">Monto Total:</label>
-                        <input type="text" class="form-control" id="monto_totalShow" readonly>
+                        <input type="text" class="form-control" id="monto_totalShow" readonly disabled>
                     </div>
                 </div>
 
@@ -134,7 +134,7 @@
                 <div class="col-md-4">
                     <div class="mb-3">
                         <label for="ivaShow" class="form-label">IVA (13%):</label>
-                        <input type="text" class="form-control" id="ivaShow" readonly>
+                        <input type="text" class="form-control" id="ivaShow" readonly disabled>
                     </div>
                 </div>
 
@@ -142,7 +142,7 @@
                 <div class="col-md-4">
                     <div class="mb-3">
                         <label for="totalMasIVA" class="form-label">Total + IVA (13%):</label>
-                        <input type="text" class="form-control" id="totalMasIVAShow" readonly>
+                        <input type="text" class="form-control" id="totalMasIVAShow" readonly disabled>
                     </div>
                 </div>
 
@@ -165,7 +165,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="jsonModalLabel">Seleccion precio</h5>
-        
+
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
@@ -245,10 +245,10 @@
             $('#jsonModal').on('hidden.bs.modal', function () {
                 // Vaciar la tabla
                 $('#jsonTable tbody').empty();
-                
+
                 // Seleccionar la opción por defecto en el grupo de radio buttons
                 $('#mantenerFijo').prop('checked', true);
-                
+
                 // Restablecer el valor del select a la primera opción
                 $('#porcentajeGanancia').val('0.10');
 
@@ -273,7 +273,7 @@
                 var numeroFactura = $('#numero_factura').val();
                 var cantidadNueva = 0;
 
-            
+
 
                 // Validación de cantidad no vacía
                 if (isNaN(cantidad) || cantidad <= 0) {
@@ -701,7 +701,7 @@
                 });
             });
 
-         
+
                 // Agregar un evento change a los elementos input con clase "precio-sugerido"
           // Agregar un evento change a los elementos input con clase "precio-sugerido"
             $('#jsonModal').on('change', 'input.precio-sugerido', function() {
@@ -771,7 +771,7 @@
                 }
             });
 
-          
+
 
 
 
@@ -806,6 +806,14 @@
                 });
             });
 
+        });
+    </script>
+       <script>
+        $(document).ready(function() {
+            // Inicializa Selectize
+            initSearchSelect('producto_id');
+            initSearchSelect('periodo_id');
+            initSearchSelect('cliente_id');
         });
     </script>
 @endsection

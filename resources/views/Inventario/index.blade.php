@@ -45,7 +45,7 @@
             <div class="row">
                 <div class="col-md-4 mx-auto text-center mb-3">
                     <label class="mb-2" for="filtro-periodo">Filtrar por Periodo:</label>
-                    <select id="filtro-periodo" class="form-select">
+                    <select id="filtro-periodo" class="form-control">
                         <option value="MostrarTodos">Mostrar todos</option>
                         @foreach ($periodos as $periodo)
                             <option value="{{ $periodo->periodo_id }}">{{ $periodo->fecha_inicio->format('Y-m-d') }} -
@@ -56,7 +56,7 @@
 
                 <div class="col-md-4 mx-auto text-center mb-3">
                     <label class="mb-2" for="filtro-nombre">Filtrar por Nombre:</label>
-                    <select id="filtro-nombre" class="form-select">
+                    <select id="filtro-nombre" class="form-control">
                         <option value="MostrarTodos">Mostrar todos</option>
                         @foreach ($productosNombre as $nombre)
                             <option value="{{ $nombre }}" @if (request('nombre') == $nombre) selected @endif>
@@ -67,7 +67,7 @@
 
                 <div class="col-md-4 mx-auto text-center mb-3">
                     <label class="mb-2" for="filtro-vencimiento">Filtrar por Fecha de Vencimiento:</label>
-                    <select id="filtro-vencimiento" class="form-select">
+                    <select id="filtro-vencimiento" class="form-control">
                         <option value="MostrarTodos">Mostrar todos</option>
                         @foreach ($fechasVencimiento as $fecha)
                             <option value="{{ $fecha }}" @if (request('vencimiento') == $fecha) selected @endif>
@@ -335,5 +335,15 @@
                 window.location.href = url;
             }
         });
+    </script>
+    <script>
+            $(document).ready(function() {
+                // Inicializa Selectize
+                initSearchSelect('filtro-periodo');
+                initSearchSelect('filtro-nombre');
+                initSearchSelect('filtro-vencimiento');
+
+
+            });
     </script>
 @endsection

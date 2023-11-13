@@ -27,7 +27,7 @@
                         <div class="mb-3">
                             <label for="periodo_id" class="form-label">Período: *</label>
                             <select name="periodo_id" id="periodo_id"
-                                class="form-select @error('periodo_id') is-invalid @enderror">
+                                class="form-control @error('periodo_id') is-invalid @enderror">
                                 @if ($periodos->isEmpty())
                                     <option value="" disabled selected>No se encontraron períodos</option>
                                 @else
@@ -310,8 +310,7 @@
                     }
                 }
 
-                alert(fechaActual);
-                alert(fechaVencimientoDate);
+
 
                 // Calcular la diferencia en milisegundos entre la fecha de vencimiento y la fecha actual
                 var diferenciaFechas = fechaVencimientoDate - fechaActual;
@@ -583,7 +582,9 @@
     <script>
         $(document).ready(function() {
             // Inicializa Selectize
-            initSearchSelect('producto_id')
+            initSearchSelect('producto_id');
+            initSearchSelect('periodo_id');
+
         });
     </script>
 

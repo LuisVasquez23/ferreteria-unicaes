@@ -8,7 +8,7 @@
         <div class="card-body">
             <form method="POST" action="{{ route('reporteVenta.index') }}">
                 @csrf
-            
+
                 <div class="row mb-4">
                     <div class="col-md-4">
                         <label for="periodo_id_inicio" class="form-label">Período de Inicio: *</label>
@@ -27,7 +27,7 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-            
+
                     <div class="col-md-4">
                         <label for "periodo_id_fin" class="form-label">Período de Fin: *</label>
                         <select name="periodo_id_fin" id="periodo_id_fin" class="form-select @error('periodo_id_fin') is-invalid @enderror">
@@ -46,7 +46,7 @@
                         @enderror
                     </div>
                 </div>
-            
+
                 <button type="submit" class="btn btn-success mb-3">
                     <i class="fas fa-search"></i> Consultar
                 </button>
@@ -94,4 +94,16 @@
             </div>
         </div>
     </div>
+@endsection
+@section('AfterScript')
+    <script>
+        $(document).ready(function() {
+            // Inicializa Selectize
+            initSearchSelect('periodo_id_inicio');
+            initSearchSelect('periodo_id_fin');
+
+
+
+        });
+    </script>
 @endsection

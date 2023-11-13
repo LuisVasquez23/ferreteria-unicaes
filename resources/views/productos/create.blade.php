@@ -37,7 +37,7 @@
                     <label for="imagenProducto">Imagen: *</label>
 
                     <input type="file" class="form-control {{ $errors->has('imagenProducto') ? 'is-invalid' : '' }}"
-                        name="imagenProducto" id="imagenProducto" accept="image/*" required />
+                        name="imagenProducto" id="imagenProducto" accept="image/*"/>
 
                     @if ($errors->has('imagenProducto'))
                         <div class="invalid-feedback">
@@ -171,6 +171,19 @@
         d.addEventListener("DOMContentLoaded", () => {
             // Asignar el evento al checkbox
             vencimientoFechaCheck.addEventListener("change", onElementChecked);
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Inicializa Selectize
+            initSearchSelect('usuario_id');
+            initSearchSelect('categoria_id');
+            initSearchSelect('categoria_id');
+            initSearchSelect('estante_id');
+            initSearchSelect('unidad_medida_id');
+            initSearchSelect('periodo_id');
+
+
         });
     </script>
 @endsection
